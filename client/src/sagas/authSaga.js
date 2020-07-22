@@ -5,7 +5,7 @@ import { signInUser, signUpUser } from '../api/http/axios/authController/index';
 export function * authSaga (action ) {
   try {
 
-      const {data: {user}} = action.data.registration ? yield signUpUser(action.data)
+      const {data: {user}} = action.registration ? yield signUpUser(action.data)
                                                       : yield signInUser(action.data)
 
 
