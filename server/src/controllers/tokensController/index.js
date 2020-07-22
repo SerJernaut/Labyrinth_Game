@@ -2,21 +2,10 @@ const tokenQueries = require('../queries/tokenQueries');
 const {AuthorizationError} = require( "../../utils/errors");
 
 
-module.exports.signRefreshTokenByUserId = async (req, res, next) => {
+module.exports.signRefreshToken = async (req, res, next) => {
     try {
-        const userObjId = req.user._id ;
-        req.refreshTokenValue = tokenQueries.signToken({userObjId}, true);
-        next();
-    } catch (e) {
-        next(e);
-    }
-}
-
-module.exports.signRefreshTokenByRefreshTokenUserData = async (req, res, next) => {
-    try {
-        const userObjId = req.refreshToken.user._id;
-        console.log(userObjId)
-        req.refreshTokenValue = tokenQueries.signToken({userObjId}, true);
+        const user = req.user || req.refreshToken.user;
+        req.refreshTokenValue = tokenQueries.signToken({user}, true);
         next();
     } catch (e) {
         next(e);
@@ -26,7 +15,7 @@ module.exports.signRefreshTokenByRefreshTokenUserData = async (req, res, next) =
 
 module.exports.signAccessToken = async (req, res, next) => {
     try {
-        const {user} = req;
+        const user = req.user || req.refreshTokenPayload.user;
         req.accessTokenValue = await tokenQueries.signToken(user, false);
         next();
     } catch (e) {
@@ -57,14 +46,29 @@ module.exports.verifyRefreshToken = async (req, res, next) => {
     }
 };
 
+module.exports.findRefreshToken = async (req, res, next) => {
+    try {
+        const {
+            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {user: {_id}}
+        } = req;
+        req.refreshToken = await tokenQueries.findRefreshTokenByPredicate({
+            user: _id,
+            value: refreshTokenValue,
+        });
+        next();
+    } catch (e) {
+        next(e);
+    }
+};
+
 module.exports.findRefreshTokenWithUser = async (req, res, next) => {
     try {
         const {
-            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {userObjId}
+            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {user: {_id}}
         } = req;
 
-        req.refreshToken = await tokenQueries.findRefreshTokenByPredicate({
-            user: userObjId,
+        req.refreshToken = await tokenQueries.findRefreshTokenByPredicateWithUser({
+            user: _id,
             value: refreshTokenValue,
         });
         next();
@@ -81,7 +85,7 @@ module.exports.updateRefreshToken = async (req, res, next) => {
         next();
     }
     catch(e) {
-        next(new AuthorizationError())
+        next(e);
     }
 };
 
