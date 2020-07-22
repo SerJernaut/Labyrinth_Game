@@ -1,9 +1,9 @@
 import ACTION_TYPES from './actionTypes.js';
 
-export const createAuthRequestAction = values => ( {
+export const createAuthRequestAction = (values, isRegistration) => ( {
   type: ACTION_TYPES.AUTH_REQUEST,
   data: values,
-  registration: true
+  isRegistration
 } );
 
 export const createAuthSuccessAction = user => ( {
