@@ -5,6 +5,7 @@ const {AuthorizationError} = require( "../../utils/errors");
 module.exports.signRefreshToken = async (req, res, next) => {
     try {
         const user = req.user || req.refreshToken.user;
+        console.log(user)
         req.refreshTokenValue = tokenQueries.signToken({user}, true);
         next();
     } catch (e) {
@@ -64,11 +65,11 @@ module.exports.findRefreshToken = async (req, res, next) => {
 module.exports.findRefreshTokenWithUser = async (req, res, next) => {
     try {
         const {
-            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {user: {_id}}
+            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {user}
         } = req;
 
         req.refreshToken = await tokenQueries.findRefreshTokenByPredicateWithUser({
-            user: _id,
+            user,
             value: refreshTokenValue,
         });
         next();

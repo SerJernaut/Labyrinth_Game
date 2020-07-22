@@ -1,0 +1,13 @@
+button {
+  color: white;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+  width: 100px;
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,255,37,1) 0%, rgba(51,158,203,1) 0%, rgba(28,203,127,1) 100%, rgba(0,212,255,1) 100%);
+}
+
+button:hover {
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,255,37,1) 0%, rgba(181,8,237,100) 0%, rgba(28,203,127,1) 100%, rgba(0,212,255,1) 100%);
+
+}
