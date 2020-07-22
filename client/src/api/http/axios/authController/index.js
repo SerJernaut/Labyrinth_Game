@@ -14,10 +14,10 @@ const authenticateUser = async (url, data) => {
     }
 };
 
-export const signInUser = async data => authenticateUser( '/login', data );
-export const signUpUser = async data => authenticateUser( '/sign_up', data );
-export const signInUserByRefreshToken = async () => authenticateUser( '/refresh_sign_in', {  refreshToken: localStorage.getItem( CONSTANTS.REFRESH_TOKEN_KEY )});
-export const refreshTokens = async () => authenticateUser( '/refresh_tokens', {
+export const signInUser = async data => authenticateUser( 'api/login', data );
+export const signUpUser = async data => authenticateUser( 'api/sign_up', data );
+export const signInUserByRefreshToken = async () => authenticateUser( 'api/refresh_sign_in', {  refreshToken: localStorage.getItem( CONSTANTS.REFRESH_TOKEN_KEY )});
+export const refreshTokens = async () => authenticateUser( 'api/refresh_tokens', {
     refreshToken: localStorage.getItem( CONSTANTS.REFRESH_TOKEN_KEY )
 } );
 
