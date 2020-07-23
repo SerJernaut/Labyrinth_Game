@@ -1,11 +1,14 @@
 import React, {lazy, Suspense, useEffect} from 'react';
-import {Route} from "react-router-dom";
 import store from "../store";
 import {createAuthRequestAction} from "../actions/actionCreators";
 import CONSTANTS from "../constants";
+import {Route} from "react-router-dom";
+import privateHOC from "./PrivateHOC";
+import GamePage from "./pages/GamePage";
+import ForNotAuthorizedHOC from "./ForNotAuthorizedHOC";
 
-const SignUpPage = lazy(() => import('./pages/SignUpPage'));
-const LoginPage = lazy(() => import('./pages/LoginPage'));
+const SignUpPage = lazy(() => import('./pages/AuthPages/SignUpPage/SignUpPage'));
+const LoginPage = lazy(() => import('./pages/AuthPages/LoginPage/LoginPage'));
 
 
 function App () {
@@ -20,8 +23,9 @@ function App () {
 
     return (
       <Suspense fallback={ <div>Loading...</div> }>
-        <Route  path={ '/sign_up' } component={ SignUpPage }/>
-        <Route   path={ '/login' } component={ LoginPage }/>
+          <Route exact path='/' component={privateHOC(GamePage)}/>
+          <Route to={ '/' } path={ '/sign_up' } component={ ForNotAuthorizedHOC(SignUpPage) }/>
+          <Route to={ '/' } path={ '/login' } component={ ForNotAuthorizedHOC(LoginPage) }/>
       </Suspense>
   );
 }
