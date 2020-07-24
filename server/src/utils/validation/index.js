@@ -1,9 +1,9 @@
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid');
-const {LOGIN_PATTERN, PASSWORD_PATTERN} = require( "../../constants");
+const {NICKNAME_PATTERN, PASSWORD_PATTERN} = require( "../../constants");
 
 const loginSchema = Joi.string()
-    .pattern( LOGIN_PATTERN );
+    .pattern( NICKNAME_PATTERN );
 const passwordSchema = Joi.string()
     .pattern( PASSWORD_PATTERN );
 
