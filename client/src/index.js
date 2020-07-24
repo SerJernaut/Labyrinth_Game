@@ -6,12 +6,8 @@ import * as serviceWorker from './serviceWorker';
 import store from './store';
 
 ReactDOM.render(
-  (
-    <React.StrictMode>
-      <Root store={ store }/>
-    </React.StrictMode>
-  ),
-  document.getElementById('root'),
+      <Root store={ store }/>,
+      document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change
