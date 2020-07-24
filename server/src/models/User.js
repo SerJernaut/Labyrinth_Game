@@ -5,13 +5,13 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
 
   nickName: {
-    type: Schema.Types.String,
+    type: 'String',
     required: true,
     unique: true,
     match: /^\w{6,16}$/,
   },
   password: {
-    type: Schema.Types.String,
+    type: 'String',
     required: true,
   }
 });

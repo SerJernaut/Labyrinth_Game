@@ -7,5 +7,3 @@ mongoose.connect('mongodb://localhost:27017/labyrinth_db', {
 })
 
 
-module.exports.User = require('./User.js');
-module.exports.RefreshToken = require('./RefreshToken.js');
