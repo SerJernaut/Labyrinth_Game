@@ -8,7 +8,13 @@ const schema = {
         type: Schema.Types.Boolean,
         required: true
     },
-    usersWhoExplored: [...modelRefs.userRef]
+    usersWhoExplored: [...modelRefs.userRef],
+    cellIndex: {
+        type: Schema.Types.Number,
+        required: true,
+        min: 0,
+        max: 24
+    }
 };
 
 const boardCellSchema = mongoose.Schema(schema);
