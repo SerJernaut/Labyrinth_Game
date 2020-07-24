@@ -8,11 +8,11 @@ const PASSWORD_PATTERN_MESSAGE = 'Enter the valid password';
 
 
 const nickName = {nickName: Yup.string().label('Nick Name').matches(NICKNAME_NAME_PATTERN, NICKNAME_PATTERN_MESSAGE).required()};
-const passwordSchema = {password: Yup.string().matches(PASSWORD_PATTERN, PASSWORD_PATTERN_MESSAGE).required()};
+const password = {password: Yup.string().matches(PASSWORD_PATTERN, PASSWORD_PATTERN_MESSAGE).required()};
 
 const authValidationSchema = Yup.object( {
     ...nickName,
-    ...passwordSchema
+    ...password
 } );
 
 export default authValidationSchema;
