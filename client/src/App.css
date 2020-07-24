@@ -1,0 +1,9 @@
+#root {
+    min-height: 100vh;
+}
+
+.primaryLink {
+    color: grey;
+    font-size: 25px;
+    font-weight: 900
+}

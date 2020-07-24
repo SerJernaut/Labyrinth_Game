@@ -9,10 +9,7 @@ const LoginPage = () => {
 
     return (
         <div className={styles.pageContainer}>
-            <h3>
-                Labyrinth - ONLINE GAME
-            </h3>
-            <Link to={ '/sign_up' }>Sign up to play the game</Link>
+            <Link className='primaryLink' to={ '/sign_up' }>Sign up to play the game</Link>
             <LoginForm/>
         </div>
     );
