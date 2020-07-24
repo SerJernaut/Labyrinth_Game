@@ -20,7 +20,7 @@ const schema = {
         required: true,
     },
     players: [modelRefs.userRef],
-    boardCells: [{...boardCellSchema, validate: [this.areaSize.length]}],
+    boardCells: [boardCellSchema],
     treasureBelongsToUser: {...modelRefs.userRef}
 };
 

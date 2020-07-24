@@ -1,4 +1,4 @@
-const User = require('../../../models/User');
+const {User} = require('../../../models/index');
 const { ApplicationError } = require('../../../utils/errors');
 const bcrypt = require('bcrypt');
 

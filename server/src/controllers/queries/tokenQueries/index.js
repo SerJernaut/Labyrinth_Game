@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const CONSTANTS = require("../../../constants");
 const {ApplicationError, AuthorizationError} = require( "../../../utils/errors");
-const RefreshToken = require('../../../models/RefreshToken');
+const {RefreshToken} = require('../../../models/index');
 
 module.exports.signToken = (tokenData, isRefresh) => {
     const token = jwt.sign(tokenData, CONSTANTS.SECRET, {

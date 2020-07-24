@@ -3,12 +3,12 @@ const {modelRefs} = require("./modelRefs");
 const Schema = mongoose.Schema;
 
 const schema = {
-    standingUsers: [...modelRefs.userRef],
+    standingUsers: [modelRefs.userRef],
     hasTreasure: {
         type: Schema.Types.Boolean,
         required: true
     },
-    usersWhoExplored: [...modelRefs.userRef],
+    usersWhoExplored: [modelRefs.userRef],
     cellIndex: {
         type: Schema.Types.Number,
         required: true,
