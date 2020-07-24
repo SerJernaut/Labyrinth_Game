@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const {NICKNAME_PATTERN} = require("../constants");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -8,7 +9,7 @@ const userSchema = new Schema({
     type: 'String',
     required: true,
     unique: true,
-    match: /^\w{6,16}$/,
+    match: NICKNAME_PATTERN,
   },
   password: {
     type: 'String',
