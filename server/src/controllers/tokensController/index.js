@@ -64,11 +64,10 @@ module.exports.findRefreshToken = async (req, res, next) => {
 module.exports.findRefreshTokenWithUser = async (req, res, next) => {
     try {
         const {
-            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {user}
+            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {user: {_id}}
         } = req;
-
         req.refreshToken = await tokenQueries.findRefreshTokenByPredicateWithUser({
-            user,
+            user: _id,
             value: refreshTokenValue,
         });
         next();
