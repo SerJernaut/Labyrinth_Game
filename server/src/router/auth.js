@@ -1,7 +1,7 @@
 const {AUTHENTICATE_USER_SCHEMA} = require("../utils/validation");
 const {createValidationMW} = require("../middlewares/validation/createValidationMW");
 const authRouter = require('express').Router();
-const UserController = require('../controllers/userController/index');
+const userController = require('../controllers/userController/index');
 const tokensController = require('../controllers/tokensController/index');
 const sendUserAndTokenPair = require('../middlewares/authentication/sendUserAndTokenPair');
 const sendTokenPair = require('../middlewares/authentication/sendTokenPair');
@@ -9,7 +9,7 @@ const sendTokenPair = require('../middlewares/authentication/sendTokenPair');
 
 authRouter.post('/sign_up',
     createValidationMW(AUTHENTICATE_USER_SCHEMA),
-    UserController.createUser,
+    userController.createUser,
     tokensController.signRefreshToken,
     tokensController.createRefreshToken,
     tokensController.signAccessToken,
@@ -19,8 +19,8 @@ authRouter.post('/sign_up',
 
 authRouter.post('/login',
     createValidationMW(AUTHENTICATE_USER_SCHEMA),
-    UserController.findUserByNickName,
-    UserController.checkIsPasswordRight,
+    userController.findUserByNickName,
+    userController.checkIsPasswordRight,
     tokensController.signRefreshToken,
     tokensController.createRefreshToken,
     tokensController.signAccessToken,
