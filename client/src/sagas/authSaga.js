@@ -8,9 +8,10 @@ export function * authSaga (action ) {
       const {data: {user}} = action.data ? action.isRegistration ? yield signUpUser(action.data)
                                                       : yield signInUser(action.data)
                                         : yield signInUserByRefreshToken()
+    if (typeof user === 'object') {
+      yield put(createAuthSuccessAction(user));
+    }
 
-
-    yield put(createAuthSuccessAction(user));
   } catch (e) {
     yield put(createAuthErrorAction(e.response));
   }
