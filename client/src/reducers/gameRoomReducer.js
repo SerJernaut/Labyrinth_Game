@@ -1,20 +1,20 @@
 import ACTION_TYPES from '../actions/actionTypes.js';
 
 const initialState = {
-    preparingGameData: new Map(),
+    gameRoomData: new Map(),
     error: null,
     isFetching: false,
 };
 
-const loadDataToMap = preparingGameData => {
+const loadDataToMap = gameRoomData => {
     const map = new Map();
-    preparingGameData.forEach(data => {
+    gameRoomData.forEach(data => {
         map.set(data._id, data);
     });
     return map;
 }
 
-function preparingGameReducer (state = initialState, action) {
+function gameRoomReducer (state = initialState, action) {
     switch (action.type) {
         case ACTION_TYPES.CREATE_GAME_ROOM_REQUEST:
             return {
@@ -25,7 +25,7 @@ function preparingGameReducer (state = initialState, action) {
             return {
                 ...state,
                 isFetching: false,
-                preparingGameData: loadDataToMap(action.preparingGameData),
+                gameRoomData: loadDataToMap(action.gameRoomData),
             };
         case ACTION_TYPES.CREATE_GAME_ROOM_ERROR:
             return {
@@ -38,4 +38,4 @@ function preparingGameReducer (state = initialState, action) {
     }
 }
 
-export default preparingGameReducer;
+export default gameRoomReducer;

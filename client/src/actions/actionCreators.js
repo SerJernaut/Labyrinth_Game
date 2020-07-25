@@ -21,12 +21,12 @@ export const createGameRoomCreationRequestAction = values => ( {
   data: values,
 } );
 
-export const createGameRoomCreationSuccessAction = preparingGameData => ( {
+export const createGameRoomCreationSuccessAction = gameRoomData => ( {
   type: ACTION_TYPES.CREATE_GAME_ROOM_SUCCESS,
-  preparingGameData,
+  gameRoomData,
 } );
 
-export const createGameRoomCreationErrorAction = preparingGameData => ( {
+export const createGameRoomCreationErrorAction = error => ( {
   type: ACTION_TYPES.CREATE_GAME_ROOM_ERROR,
-  preparingGameData,
+  error,
 } );

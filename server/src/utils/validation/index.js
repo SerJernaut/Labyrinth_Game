@@ -19,15 +19,15 @@ const AUTHENTICATE_USER_SCHEMA = userSchema.and(
 const maxPlayersSchema = Joi.number().integer().min(2).max(5);
 const areaSizeSchema = Joi.number().valid(9, 16, 25);
 
-const preparingGameDataSchema = Joi.object( {
+const gameRoomSchema = Joi.object( {
     maxPlayers: maxPlayersSchema.label( 'Max players' ),
     areaSize: areaSizeSchema.label( 'Area size' ),
 } );
 
-const PREPARING_GAME_DATA_SCHEMA = preparingGameDataSchema.and(...['maxPlayers', 'areaSize']);
+const GAME_ROOM_SCHEMA = gameRoomSchema.and(...['maxPlayers', 'areaSize']);
 
 module.exports = {
     AUTHENTICATE_USER_SCHEMA,
-    PREPARING_GAME_DATA_SCHEMA
+    GAME_ROOM_SCHEMA
 }
 

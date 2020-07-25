@@ -6,6 +6,8 @@ import {Route} from "react-router-dom";
 import privateHOC from "./PrivateHOC";
 import GamePage from "./pages/GamePage";
 import ForNotAuthorizedHOC from "./ForNotAuthorizedHOC";
+import GameRoomCreationPage from "./pages/GameRoomCreationPage/GameRoomCreationPage";
+import '../App.css'
 
 const SignUpPage = lazy(() => import('./pages/AuthPages/SignUpPage/SignUpPage'));
 const LoginPage = lazy(() => import('./pages/AuthPages/LoginPage/LoginPage'));
@@ -24,8 +26,10 @@ function App () {
     return (
       <Suspense fallback={ <div>Loading...</div> }>
           <Route exact path='/' component={privateHOC(GamePage)}/>
-          <Route to={ '/' } path={ '/sign_up' } component={ ForNotAuthorizedHOC(SignUpPage) }/>
-          <Route to={ '/' } path={ '/login' } component={ ForNotAuthorizedHOC(LoginPage) }/>
+          <Route path='/create_new_game' component={privateHOC(GameRoomCreationPage)}/>
+          <Route path='/waiting_room/:id' component={privateHOC(GameRoomCreationPage)}/>
+          <Route path={ '/sign_up' } component={ ForNotAuthorizedHOC(SignUpPage) }/>
+          <Route path={ '/login' } component={ ForNotAuthorizedHOC(LoginPage) }/>
       </Suspense>
   );
 }
