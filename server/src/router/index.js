@@ -2,10 +2,12 @@ const {handleApplicationError, handleMongoError, handleValidationError} = requir
 const checkAuthorization = require('../middlewares/authorization/checkAuthorization');
 
 const router = require('express')();
-const authRouter = require('./auth.js');
+const authRouter = require('./auth');
+const gameRouter = require('./game');
 
 router.use(authRouter);
 router.use(checkAuthorization);
+router.use(gameRouter);
 router.use(handleValidationError);
 router.use(handleApplicationError);
 router.use(handleMongoError);

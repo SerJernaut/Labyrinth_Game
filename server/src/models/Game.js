@@ -7,12 +7,15 @@ const schema = {
     gameStatus: {
         type: Schema.Types.String,
         enum: ['EXPECTED', 'PLAYING', 'ENDED'],
-        required: true
+        required: true,
+        default: 'EXPECTED'
     },
     owner: { ...modelRefs.userRef, required: true},
     maxPlayers:  {
         type: Schema.Types.Number,
         required: true,
+        min: 2,
+        max: 5
     },
     areaSize: {
         type: Schema.Types.Number,

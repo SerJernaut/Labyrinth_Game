@@ -5,7 +5,6 @@ const {AuthorizationError} = require( "../../utils/errors");
 module.exports.signRefreshToken = async (req, res, next) => {
     try {
         const user = req.user || req.refreshToken.user;
-        console.log(user)
         req.refreshTokenValue = tokenQueries.signToken({user}, true);
         next();
     } catch (e) {
