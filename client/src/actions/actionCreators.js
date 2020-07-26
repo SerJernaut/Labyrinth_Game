@@ -31,3 +31,17 @@ export const createGameRoomCreationErrorAction = error => ( {
   type: ACTION_TYPES.CREATE_GAME_ROOM_ERROR,
   error,
 } );
+
+export const createGetAllRoomsRequestAction = () => ({
+  type: ACTION_TYPES.GET_ALL_GAME_ROOMS_REQUEST
+})
+
+export const createGetAllRoomsSuccessAction = gameRoomsData => ({
+  type: ACTION_TYPES.GET_ALL_GAME_ROOMS_SUCCESS,
+  gameRoomsData
+})
+
+export const createGetAllRoomsErrorAction = error => ({
+  type: ACTION_TYPES.GET_ALL_GAME_ROOMS_ERROR,
+  error
+})

@@ -5,5 +5,5 @@ import gameRoomsReducer from "./gameRoomsReducer";
 
 export default combineReducers({
     authStore: authReducer,
-    gameRoomStore: gameRoomsReducer
+    gameRoomsStore: gameRoomsReducer
 });
