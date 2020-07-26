@@ -8,4 +8,7 @@ gameRouter.post('/create_game_room',
     createValidationMW(GAME_ROOM_SCHEMA),
     gameController.createGameRoomDataAndSend);
 
+gameRouter.get('/get_all_game_rooms',
+    gameController.getAllGameRoomsAndSend)
+
 module.exports = gameRouter;
