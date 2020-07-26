@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import authReducer from "./authReducer";
-import gameRoomReducer from "./gameRoomReducer";
+import gameRoomsReducer from "./gameRoomsReducer";
 
 
 export default combineReducers({
     authStore: authReducer,
-    gameRoomStore: gameRoomReducer
+    gameRoomStore: gameRoomsReducer
 });

@@ -1,12 +1,11 @@
 import React from 'react';
 
-const GamePage = () => {
-
+const WaitingRoom = () => {
     return (
         <div>
-
+            
         </div>
     );
 };
 
-export default GamePage;
+export default WaitingRoom;

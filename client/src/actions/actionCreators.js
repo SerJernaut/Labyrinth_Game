@@ -16,9 +16,10 @@ export const createAuthErrorAction = error => ( {
   error,
 } );
 
-export const createGameRoomCreationRequestAction = values => ( {
+export const createGameRoomCreationRequestAction = (values, history) => ( {
   type: ACTION_TYPES.CREATE_GAME_ROOM_REQUEST,
   data: values,
+  history
 } );
 
 export const createGameRoomCreationSuccessAction = gameRoomData => ( {
