@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const autoIncrement = require("mongoose-auto-increment");
 const {boardCellSchema} = require("./BoardCell");
 const {modelRefs} = require("./modelRefs");
 const Schema = mongoose.Schema;
@@ -28,6 +29,9 @@ const schema = {
 };
 
 const gameSchema = mongoose.Schema(schema);
+autoIncrement.initialize(mongoose.connection);
+gameSchema.plugin(autoIncrement.plugin, "Game");
 const Game = mongoose.model("Game", gameSchema);
+
 
 module.exports = Game;
