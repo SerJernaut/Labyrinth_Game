@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Root from './components/Root.js';
 import * as serviceWorker from './serviceWorker';
-import store from './store';
+import Setup from "./components/Setup";
 
 ReactDOM.render(
-      <Root store={ store }/>,
+      <Setup/>,
       document.getElementById('root'),
 );
 

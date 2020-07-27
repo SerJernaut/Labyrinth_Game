@@ -4,6 +4,9 @@ const SECRET = 'secret';
 const REFRESH_TOKEN_EXPIRES_TIME = '30d';
 const ACCESS_TOKEN_EXPIRES_TIME = '20s';
 const SALT_ROUNDS = 5;
+const SOCKET = {
+  CONNECTION: 'connection'
+};
 
 module.exports = {
   NICKNAME_PATTERN,
@@ -11,6 +14,7 @@ module.exports = {
   SECRET,
   REFRESH_TOKEN_EXPIRES_TIME,
   ACCESS_TOKEN_EXPIRES_TIME,
-  SALT_ROUNDS
+  SALT_ROUNDS,
+  SOCKET
 };
 
