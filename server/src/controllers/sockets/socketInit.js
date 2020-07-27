@@ -1,5 +1,5 @@
 const socketIo = require('socket.io');
-const GameController = require('../GameController');
+const GameController = require('./GameController');
 
 class SocketController {
     constructor(httpServer) {
