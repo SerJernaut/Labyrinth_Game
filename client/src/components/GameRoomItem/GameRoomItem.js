@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './GameRoomItem.module.sass'
 import classNames from 'classnames';
+import CONSTANTS from "../../constants";
 
 const GameRoomItem = ({gameRoomData: {gameStatus, maxPlayers, areaSize, players, owner: {nickName}}}) => {
 
     const numberOfPlayersClassName = classNames({[styles.enoughForGame]: players.length > 1}, {[styles.notEnoughForGame]: players.length < 1});
-    const gameStatusClassName = classNames({[styles.expected]: gameStatus === 'EXPECTED'});
+    const gameStatusClassName = classNames({[styles.expected]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
 
     return (
         <div className={styles.itemContainer}>
