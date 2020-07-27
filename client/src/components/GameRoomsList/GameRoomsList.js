@@ -24,7 +24,7 @@ const GameRoomsList = ({isFetching, gameRoomsData, getAllGameRooms}) => {
 GameRoomsList.propTypes = {
     getAllGameRooms: PropTypes.func.isRequired,
     isFetching: PropTypes.bool.isRequired,
-    gameRoomData: PropTypes.instanceOf(Map).isRequired
+    gameRoomsData: PropTypes.instanceOf(Map).isRequired
 };
 
 const mapStateToProps = state => state.gameRoomsStore;

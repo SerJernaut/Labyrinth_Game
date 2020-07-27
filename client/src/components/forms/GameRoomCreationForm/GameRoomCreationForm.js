@@ -41,7 +41,7 @@ const GameRoomCreationForm = ({createGameRoom, history, isFetching}) => {
 GameRoomCreationForm.propTypes = {
     createGameRoom: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    isFetching: PropTypes.bool.isRequired
+    isFetching: PropTypes.bool
 };
 
 

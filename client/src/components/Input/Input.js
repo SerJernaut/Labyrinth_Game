@@ -24,6 +24,7 @@ Input.propTypes = {
     invalidStyles: PropTypes.string,
     validStyles: PropTypes.string,
     placeholder: PropTypes.string,
+    children: PropTypes.node.isRequired
 };
 
 Input.defaultProps = {

@@ -8,7 +8,8 @@ import {createGameRoom} from "../api/http/axios/gameController";
 export function * gameRoomCreationSaga (action) {
     try {
         const {data} = yield createGameRoom(action.data);
-        if (typeof data === 'object')  {yield put(createGameRoomCreationSuccessAction(data));
+        if (typeof data === 'object') {
+            yield put(createGameRoomCreationSuccessAction(data));
             action.history.replace(`/waiting_room/${data._id}`);
         }
     } catch (e) {

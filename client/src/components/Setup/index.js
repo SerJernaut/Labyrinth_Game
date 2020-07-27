@@ -6,7 +6,7 @@ import {initSocket} from "../../api/ws/SocketController";
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import history from "../../history";
 
-const Setup = props => {
+const Setup = () => {
 
         const [mainStore] = useState(initSocket(store))
 
