@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid');
-const {NICKNAME_PATTERN, PASSWORD_PATTERN} = require( "../../constants");
+const {NICKNAME_PATTERN, PASSWORD_PATTERN, GET_GAME_ROOMS_LIMIT} = require( "../../constants");
 
 const loginSchema = Joi.string()
     .pattern( NICKNAME_PATTERN );
@@ -26,8 +26,20 @@ const gameRoomSchema = Joi.object( {
 
 const GAME_ROOM_SCHEMA = gameRoomSchema.and(...['maxPlayers', 'areaSize']);
 
+const limitSchema = Joi.number().valid(GET_GAME_ROOMS_LIMIT);
+const skipSchema = Joi.number().integer();
+
+const limitSkipSchema = Joi.object( {
+    limit: limitSchema.label( 'Limit' ),
+    skip: skipSchema.label( 'Skip' ),
+} );
+
+const LIMIT_SKIP_SCHEMA = limitSkipSchema.and(...['limit', 'skip']);
+
+
 module.exports = {
     AUTHENTICATE_USER_SCHEMA,
-    GAME_ROOM_SCHEMA
+    GAME_ROOM_SCHEMA,
+    LIMIT_SKIP_SCHEMA
 }
 

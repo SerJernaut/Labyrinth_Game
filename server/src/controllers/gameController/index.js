@@ -16,11 +16,12 @@ module.exports.createGameRoomDataAndSend = async (req, res, next) => {
     }
 };
 
-module.exports.getAllGameRoomsAndSend = async (req, res, next) => {
+module.exports.getPaginatedGameRoomsAndSend = async (req, res, next) => {
     try{
-        const gameRoomsData = await gameQueries.getGameRoomsByPredicate();
+        const {body: {skip, limit}} = req;
+        const gameRoomsData = await gameQueries.getGameRoomsByPredicate({}, skip, limit);
         const filteredData = gameRoomsData.map(({boardCells, __v, ...rest})=> rest);
-        res.send(filteredData)
+        res.send({filteredData, hasMore: limit <= filteredData.length})
     }
     catch (e) {
         next(e)

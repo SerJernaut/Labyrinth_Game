@@ -10,8 +10,8 @@ module.exports.createGameRoomDataByPredicate = async predicate => {
     throw new ApplicationError('can not create game room');
 }
 
-module.exports.getGameRoomsByPredicate = async predicate => {
-    const foundedGameRooms = await Game.find(predicate).lean().populate('owner', '-password -__v');
+module.exports.getGameRoomsByPredicate = async (predicate, skip, limit) => {
+    const foundedGameRooms = await Game.find(predicate).lean().populate('owner', '-password -__v').skip(skip).limit(limit);
     if (foundedGameRooms) {
         return foundedGameRooms;
     }

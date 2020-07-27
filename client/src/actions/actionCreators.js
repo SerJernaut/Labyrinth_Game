@@ -32,16 +32,18 @@ export const createGameRoomCreationErrorAction = error => ( {
   error,
 } );
 
-export const createGetAllRoomsRequestAction = () => ({
-  type: ACTION_TYPES.GET_ALL_GAME_ROOMS_REQUEST
+export const createGetRoomsRequestAction = (filterObj) => ({
+  type: ACTION_TYPES.GET_GAME_ROOMS_REQUEST,
+  filterObj
 })
 
-export const createGetAllRoomsSuccessAction = gameRoomsData => ({
-  type: ACTION_TYPES.GET_ALL_GAME_ROOMS_SUCCESS,
-  gameRoomsData
+export const createGetRoomsSuccessAction = (gameRoomsData, hasMore) => ({
+  type: ACTION_TYPES.GET_GAME_ROOMS_SUCCESS,
+  gameRoomsData,
+  hasMore
 })
 
-export const createGetAllRoomsErrorAction = error => ({
-  type: ACTION_TYPES.GET_ALL_GAME_ROOMS_ERROR,
+export const createGetRoomsErrorAction = error => ({
+  type: ACTION_TYPES.GET_GAME_ROOMS_ERROR,
   error
 })
