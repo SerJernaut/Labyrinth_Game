@@ -6,7 +6,7 @@ const schema = {
         required: true
     },
     value:  {
-        type: 'String',
+        type: mongoose.Schema.Types.String,
         required: true,
     }
 };

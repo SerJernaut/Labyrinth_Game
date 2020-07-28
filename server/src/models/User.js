@@ -6,13 +6,13 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
 
   nickName: {
-    type: 'String',
+    type: Schema.Types.String,
     required: true,
     unique: true,
     match: NICKNAME_PATTERN,
   },
   password: {
-    type: 'String',
+    type: Schema.Types.String,
     required: true,
   }
 });
