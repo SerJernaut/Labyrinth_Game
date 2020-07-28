@@ -1,11 +1,16 @@
 import React from 'react';
+import {connect} from "react-redux";
 
-const WaitingRoom = () => {
+const WaitingRoom = ({match}) => {
+
     return (
         <div>
-            
         </div>
     );
 };
 
-export default WaitingRoom;
+const mapDispatchToProps = dispatch => ({
+
+})
+
+export default connect(null, mapDispatchToProps)(WaitingRoom);
