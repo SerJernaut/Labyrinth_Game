@@ -10,7 +10,9 @@ const ACTION_TYPES = {
   GET_GAME_ROOMS_ERROR: Symbol(),
   JOIN_GAME_ROOM_REQUEST: Symbol(),
   JOIN_GAME_ROOM_SUCCESS: Symbol(),
-  JOIN_GAME_ROOM_ERROR: Symbol()
+  JOIN_GAME_ROOM_ERROR: Symbol(),
+  CLEAR_AUTH_STORE: Symbol(),
+  CLEAR_GAME_STORE: Symbol()
 };
 
 export default ACTION_TYPES;

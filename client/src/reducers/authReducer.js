@@ -25,6 +25,9 @@ function authReducer (state = initialState, action) {
         isFetching: false,
         error: action.error,
       };
+    case ACTION_TYPES.CLEAR_AUTH_STORE:
+      return initialState;
+
     default:
       return state;
   }

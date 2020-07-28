@@ -62,4 +62,13 @@ export const createJoinGameRoomSuccessAction = gameRoomData => ({
 export const createJoinGameRoomErrorAction = error => ({
   type: ACTION_TYPES.JOIN_GAME_ROOM_ERROR,
   error
-})
+});
+
+export const createClearAuthStore = () => ({
+  type: ACTION_TYPES.CLEAR_AUTH_STORE,
+});
+
+export const createClearGameStore = () => ({
+  type: ACTION_TYPES.CLEAR_GAME_STORE,
+});
+
