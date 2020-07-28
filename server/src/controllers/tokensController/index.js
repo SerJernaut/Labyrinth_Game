@@ -4,7 +4,8 @@ const {AuthorizationError} = require( "../../utils/errors");
 
 module.exports.signRefreshToken = async (req, res, next) => {
     try {
-        const user = req.user || req.refreshToken.user;
+        if (req.refreshToken && req.refreshToken.user) {req.refreshTokenPlain = req.refreshToken.toObject()}
+        const user = req.user || req.refreshTokenPlain.user;
         req.refreshTokenValue = tokenQueries.signToken({user}, true);
         next();
     } catch (e) {
@@ -15,7 +16,7 @@ module.exports.signRefreshToken = async (req, res, next) => {
 
 module.exports.signAccessToken = async (req, res, next) => {
     try {
-        const user = req.user || req.refreshTokenPayload.user;
+        const user = req.user || req.refreshTokenPlain.user;
         req.accessTokenValue = await tokenQueries.signToken(user, false);
         next();
     } catch (e) {
@@ -46,28 +47,13 @@ module.exports.verifyRefreshToken = async (req, res, next) => {
     }
 };
 
-module.exports.findRefreshToken = async (req, res, next) => {
-    try {
-        const {
-            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {user: {_id}}
-        } = req;
-        req.refreshToken = await tokenQueries.findRefreshTokenByPredicate({
-            user: _id,
-            value: refreshTokenValue,
-        });
-        next();
-    } catch (e) {
-        next(e);
-    }
-};
-
 module.exports.findRefreshTokenWithUser = async (req, res, next) => {
     try {
         const {
-            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {user: {_id}}
+            body: {refreshToken: refreshTokenValue}, refreshTokenPayload: {user}
         } = req;
         req.refreshToken = await tokenQueries.findRefreshTokenByPredicateWithUser({
-            user: _id,
+            user,
             value: refreshTokenValue,
         });
         next();

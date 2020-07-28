@@ -30,7 +30,7 @@ authRouter.post('/login',
 authRouter.post(
     '/refresh_tokens',
     tokensController.verifyRefreshToken,
-    tokensController.findRefreshToken,
+    tokensController.findRefreshTokenWithUser,
     tokensController.signRefreshToken,
     tokensController.updateRefreshToken,
     tokensController.signAccessToken,

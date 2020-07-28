@@ -15,14 +15,6 @@ module.exports.signToken = (tokenData, isRefresh) => {
 
 module.exports.verifyToken = async (token) => jwt.verify(token, CONSTANTS.SECRET);
 
-module.exports.findRefreshTokenByPredicate = async predicate => {
-    const foundedToken = await RefreshToken.findOne(predicate);
-    if (foundedToken) {
-        return foundedToken;
-    }
-    throw new ApplicationError('can not find refresh token');
-}
-
 module.exports.findRefreshTokenByPredicateWithUser = async predicate => {
     const foundedToken = await RefreshToken.findOne(predicate).populate('user');
     if (foundedToken) {
