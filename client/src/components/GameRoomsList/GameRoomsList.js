@@ -10,6 +10,8 @@ import GameRoomItem from "../GameRoomItem/GameRoomItem";
 import styles from './GameRoomsList.module.sass';
 import CONSTANTS from "../../constants";
 import {InfiniteScroll} from 'react-simple-infinite-scroll';
+import {Link} from "react-router-dom";
+import Button from "../Button/Button";
 
 const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history, checkIsUserInSomeRoom, currentGameRoomId}) => {
 
@@ -29,7 +31,10 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
 
     return (
         <div className={styles.listContainer}>
-            <h1>Enter existing or create own game room</h1>
+            <h1>Create own game room or join existing</h1>
+            <Link className='primaryLink' to={ '/create_new_game_room' }><Button>
+                Create new game room
+            </Button></Link>
             <InfiniteScroll
                 throttle={100}
                 threshold={300}

@@ -18,15 +18,18 @@ const GameRoomsListPage = ({history, clearAuthStore, clearGameStore}) => {
     }
 
     return (
-        <div className={styles.pageContainer}>
-            <Link className='primaryLink' to={ '/create_new_game_room' }><Button>
-                Create new game room
-            </Button></Link>
-           <Button onClick={logout}>
-                Logout
-            </Button>
-            <GameRoomsList history={history}/>
-        </div>
+        <>
+            <div className={styles.pageContainer}>
+                <div className={styles.btnContainer}>
+                    <Button onClick={logout}>
+                        Logout
+                    </Button>
+                </div>
+                <div className={styles.mainContainer}>
+                    <GameRoomsList history={history}/>
+                </div>
+            </div>
+        </>
     );
 };
 

@@ -27,7 +27,7 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
             <p>
                 Labyrinth area size: <span>{areaSize}</span>
             </p>
-            <Button className={styles.joinGameRoomBtn} disabled={currentGameRoomId || currentGameRoomId === 0 || isFetching} onClick={joinGameRoomById}>Join the game room</Button>
+            <Button disabled={currentGameRoomId || currentGameRoomId === 0 || isFetching} onClick={joinGameRoomById}>Join the game room</Button>
             {currentGameRoomId === _id && <div className={styles.returnBtnContainer}>
                 <Link className='primaryLink' to={ `/waiting_room/${_id}` }><Button>
                     Return to joined room
@@ -46,7 +46,8 @@ GameRoomItem.propTypes = {
         owner: PropTypes.shape({nickName: PropTypes.string.isRequired})
     }),
     isFetching: PropTypes.bool.isRequired,
-    joinGameRoom: PropTypes.func.isRequired
+    joinGameRoom: PropTypes.func.isRequired,
+    currentGameRoomId: PropTypes.number
 };
 
 
