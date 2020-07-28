@@ -7,7 +7,7 @@ import Button from "../Button/Button";
 import {Link} from "react-router-dom";
 
 
-const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, players, owner: {nickName}}, isFetching, joinGameRoom, history, currentGameRoomId}) => {
+const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, players, owner: {nickName}}, isFetching, joinGameRoom, history, currentGameRoom}) => {
 
     const joinGameRoomById = () => joinGameRoom(_id, history);
     const numberOfPlayersClassName = classNames({[styles.enoughForGame]: players.length > 1}, {[styles.notEnoughForGame]: players.length <= 1});
@@ -27,8 +27,8 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
             <p>
                 Labyrinth area size: <span>{areaSize}</span>
             </p>
-            <Button disabled={currentGameRoomId || currentGameRoomId === 0 || isFetching} onClick={joinGameRoomById}>Join the game room</Button>
-            {currentGameRoomId === _id && <div className={styles.returnBtnContainer}>
+            <Button disabled={!!currentGameRoom || isFetching} onClick={joinGameRoomById}>Join the game room</Button>
+            {currentGameRoom && currentGameRoom._id === _id && <div className={styles.returnBtnContainer}>
                 <Link className='primaryLink' to={ `/waiting_room/${_id}` }><Button>
                     Return to joined room
                 </Button></Link>
@@ -47,7 +47,7 @@ GameRoomItem.propTypes = {
     }),
     isFetching: PropTypes.bool.isRequired,
     joinGameRoom: PropTypes.func.isRequired,
-    currentGameRoomId: PropTypes.number
+    currentGameRoom: PropTypes.object
 };
 
 

@@ -76,9 +76,9 @@ export const createCheckIsUserInSomeRoomRequestAction = () => ({
   type: ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_REQUEST
 });
 
-export const createCheckIsUserInSomeRoomSuccessAction = currentGameRoomId => ({
+export const createCheckIsUserInSomeRoomSuccessAction = currentGameRoom => ({
   type: ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS,
-  currentGameRoomId
+  currentGameRoom
 });
 
 export const createCheckIsUserInSomeRoomErrorAction = error => ({

@@ -29,9 +29,9 @@ module.exports.updateGameRoomByPredicate = async (findParam, updateParam) => {
 }
 
 module.exports.checkIsUserInSomeRoom = async (userId) => {
-    const foundedGameRoom = await Game.findOne({players: {"$in": [userId]}}).lean();
+    const foundedGameRoom = await Game.findOne({players: {"$in": [userId]}}).lean().populate('owner', '-password -__v').populate('players', '-password -__v');
     if (foundedGameRoom) {
-        return ((({_id, ...rest})=> ((_id))) (foundedGameRoom))
+        return ((({boardCells, ...rest})=> rest) (foundedGameRoom))
     }
     throw new ApplicationError('can not find the room')
 }

@@ -45,8 +45,8 @@ module.exports.joinGameRoomById = async (req, res, next) => {
 module.exports.checkIsUserInSomeRoomAndSendResult = async (req, res, next) => {
     try{
         const {authorizationData: {_id}} = req;
-        const currentGameRoomId = await gameQueries.checkIsUserInSomeRoom(_id);
-        res.send({currentGameRoomId});
+        const currentGameRoom= await gameQueries.checkIsUserInSomeRoom(_id);
+        res.send(currentGameRoom);
     }
     catch(e) {
         next(e);

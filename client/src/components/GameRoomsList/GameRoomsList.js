@@ -13,7 +13,7 @@ import {InfiniteScroll} from 'react-simple-infinite-scroll';
 import {Link} from "react-router-dom";
 import Button from "../Button/Button";
 
-const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history, checkIsUserInSomeRoom, currentGameRoomId}) => {
+const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history, checkIsUserInSomeRoom, currentGameRoom}) => {
 
 
     const getGameRoomsWithFilter = skip => {
@@ -45,7 +45,7 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
                 }
                 }
             >
-            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history} currentGameRoomId={currentGameRoomId}/>)
+            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history} currentGameRoom={currentGameRoom}/>)
             }
                 {isFetching && 'Loading...'}
             </InfiniteScroll>
@@ -59,7 +59,7 @@ GameRoomsList.propTypes = {
     gameRoomsData: PropTypes.instanceOf(Map).isRequired,
     joinGameRoom: PropTypes.func.isRequired,
     checkIsUserInSomeRoom: PropTypes.func.isRequired,
-    currentGameRoomId: PropTypes.number
+    currentGameRoom: PropTypes.object
 };
 
 const mapStateToProps = state => state.gameRoomsStore;

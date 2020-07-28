@@ -6,7 +6,7 @@ const initialState = {
     error: null,
     isFetching: false,
     hasMore: null,
-    currentGameRoomId: null
+    currentGameRoom: null
 };
 
 
@@ -46,7 +46,7 @@ function gameRoomsReducer (state = initialState, action) {
             return {
                 ...state,
                 isFetching: false,
-                currentGameRoomId: action.currentGameRoomId
+                currentGameRoom: action.currentGameRoom
             }
         case ACTION_TYPES.CREATE_GAME_ROOM_ERROR:
         case ACTION_TYPES.GET_GAME_ROOMS_ERROR:

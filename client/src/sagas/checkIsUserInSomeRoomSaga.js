@@ -9,7 +9,7 @@ export function * checkIsUserInSomeRoomSaga () {
     try {
         const {data} = yield checkIsUserInTheRoom();
         if (typeof data === 'object') {
-            yield put(createCheckIsUserInSomeRoomSuccessAction(data.currentGameRoomId));
+            yield put(createCheckIsUserInSomeRoomSuccessAction(data));
         }
     } catch (e) {
         yield put(createCheckIsUserInSomeRoomErrorAction(e.response));
