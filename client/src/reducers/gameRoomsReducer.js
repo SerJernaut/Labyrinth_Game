@@ -14,12 +14,13 @@ function gameRoomsReducer (state = initialState, action) {
     switch (action.type) {
         case ACTION_TYPES.CREATE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.GET_GAME_ROOMS_REQUEST:
+        case ACTION_TYPES.JOIN_GAME_ROOM_REQUEST:
             return {
                 ...state,
                 isFetching: true,
             };
         case ACTION_TYPES.CREATE_GAME_ROOM_SUCCESS:
-
+        case ACTION_TYPES.JOIN_GAME_ROOM_SUCCESS:
 
             gameRoomsDataClone.set(action.gameRoomData._id, action.gameRoomData)
 
@@ -42,13 +43,16 @@ function gameRoomsReducer (state = initialState, action) {
                 hasMore: action.hasMore
             }
 
+
         case ACTION_TYPES.CREATE_GAME_ROOM_ERROR:
         case ACTION_TYPES.GET_GAME_ROOMS_ERROR:
+        case ACTION_TYPES.JOIN_GAME_ROOM_ERROR:
             return {
                 ...state,
                 isFetching: false,
                 error: action.error,
             };
+
         default:
             return state;
     }

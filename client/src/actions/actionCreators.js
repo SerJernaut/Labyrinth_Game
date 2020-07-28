@@ -47,3 +47,19 @@ export const createGetRoomsErrorAction = error => ({
   type: ACTION_TYPES.GET_GAME_ROOMS_ERROR,
   error
 })
+
+export const createJoinGameRoomRequestAction = (gameRoomId, history) => ({
+  type: ACTION_TYPES.JOIN_GAME_ROOM_REQUEST,
+  gameRoomId,
+  history
+});
+
+export const createJoinGameRoomSuccessAction = gameRoomData => ({
+  type: ACTION_TYPES.JOIN_GAME_ROOM_SUCCESS,
+  gameRoomData
+});
+
+export const createJoinGameRoomErrorAction = error => ({
+  type: ACTION_TYPES.JOIN_GAME_ROOM_ERROR,
+  error
+})

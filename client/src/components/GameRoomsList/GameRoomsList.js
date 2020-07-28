@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {createGetRoomsRequestAction} from "../../actions/actionCreators";
+import {createGetRoomsRequestAction, createJoinGameRoomRequestAction} from "../../actions/actionCreators";
 import PropTypes from 'prop-types';
 import GameRoomItem from "../GameRoomItem/GameRoomItem";
 import styles from './GameRoomsList.module.sass';
 import CONSTANTS from "../../constants";
 import {InfiniteScroll} from 'react-simple-infinite-scroll';
 
-const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms}) => {
+const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history}) => {
 
     const getGameRoomsWithFilter = skip => {
         getGameRooms({
@@ -34,7 +34,7 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms}) => {
                 }
                 }
             >
-            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem key={index} gameRoomData={gameRoomData}/>)
+            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history}/>)
             }
                 {isFetching && 'Loading...'}
             </InfiniteScroll>
@@ -46,11 +46,13 @@ GameRoomsList.propTypes = {
     getGameRooms: PropTypes.func.isRequired,
     isFetching: PropTypes.bool.isRequired,
     gameRoomsData: PropTypes.instanceOf(Map).isRequired,
+    joinGameRoom: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => state.gameRoomsStore;
 const mapDispatchToProps = dispatch => ({
-    getGameRooms: (filterObj)=> dispatch(createGetRoomsRequestAction(filterObj))
+    getGameRooms: (filterObj)=> dispatch(createGetRoomsRequestAction(filterObj)),
+    joinGameRoom: (gameRoomId, history) => dispatch(createJoinGameRoomRequestAction({gameRoomId}, history))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoomsList);

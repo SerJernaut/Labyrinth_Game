@@ -1,5 +1,5 @@
 const gameController = require("../controllers/gameController");
-const {GAME_ROOM_SCHEMA, LIMIT_SKIP_SCHEMA} = require("../utils/validation");
+const {GAME_ROOM_SCHEMA, LIMIT_SKIP_SCHEMA, GAME_ID_SCHEMA} = require("../utils/validation");
 const {createValidationMW} = require("../middlewares/validation/createValidationMW");
 
 const gameRouter = require('express').Router();
@@ -10,6 +10,11 @@ gameRouter.post('/create_game_room',
 
 gameRouter.post('/get_game_rooms',
     createValidationMW(LIMIT_SKIP_SCHEMA),
-    gameController.getPaginatedGameRoomsAndSend)
+    gameController.getPaginatedGameRoomsAndSend);
+
+gameRouter.post('/join_game_room',
+    createValidationMW(GAME_ID_SCHEMA),
+    gameController.joinGameRoomById
+    )
 
 module.exports = gameRouter;

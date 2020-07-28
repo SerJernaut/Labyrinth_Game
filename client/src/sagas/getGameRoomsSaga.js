@@ -8,8 +8,6 @@ import {getGameRooms} from "../api/http/axios/gameController";
 export function * getGameRoomsSaga (action) {
     try {
         const {data: {filteredData, hasMore}} = yield getGameRooms(action.filterObj);
-        console.log(filteredData)
-        console.log(hasMore)
         if (Array.isArray(filteredData) && typeof hasMore === "boolean") {
             yield put(createGetRoomsSuccessAction(filteredData, hasMore));
         }

@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import styles from './GameRoomItem.module.sass'
 import classNames from 'classnames';
 import CONSTANTS from "../../constants";
+import Button from "../Button/Button";
 
-const GameRoomItem = ({gameRoomData: {gameStatus, maxPlayers, areaSize, players, owner: {nickName}}}) => {
 
-    const numberOfPlayersClassName = classNames({[styles.enoughForGame]: players.length > 1}, {[styles.notEnoughForGame]: players.length < 1});
+const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, players, owner: {nickName}}, isFetching, joinGameRoom, history}) => {
+
+    const joinGameRoomById = () => joinGameRoom(_id, history);
+    const numberOfPlayersClassName = classNames({[styles.enoughForGame]: players.length > 1}, {[styles.notEnoughForGame]: players.length <= 1});
     const gameStatusClassName = classNames({[styles.expected]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
 
     return (
@@ -23,6 +26,7 @@ const GameRoomItem = ({gameRoomData: {gameStatus, maxPlayers, areaSize, players,
             <p>
                 Labyrinth area size: <span>{areaSize}</span>
             </p>
+            <Button disabled={isFetching} onClick={joinGameRoomById}>Join the game room</Button>
         </div>
     );
 };
@@ -34,7 +38,11 @@ GameRoomItem.propTypes = {
         areaSize: PropTypes.number.isRequired,
         players: PropTypes.array.isRequired,
         owner: PropTypes.shape({nickName: PropTypes.string.isRequired})
-    })
+    }),
+    isFetching: PropTypes.bool.isRequired,
+    joinGameRoom: PropTypes.func.isRequired
 };
+
+
 
 export default GameRoomItem;

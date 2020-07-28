@@ -36,10 +36,15 @@ const limitSkipSchema = Joi.object( {
 
 const LIMIT_SKIP_SCHEMA = limitSkipSchema.and(...['limit', 'skip']);
 
+const GAME_ID_SCHEMA = Joi.object( {
+    gameRoomId: Joi.number().integer().label('Game id').required()
+})
+
 
 module.exports = {
     AUTHENTICATE_USER_SCHEMA,
     GAME_ROOM_SCHEMA,
-    LIMIT_SKIP_SCHEMA
+    LIMIT_SKIP_SCHEMA,
+    GAME_ID_SCHEMA
 }
 
