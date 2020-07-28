@@ -72,3 +72,18 @@ export const createClearGameStore = () => ({
   type: ACTION_TYPES.CLEAR_GAME_STORE,
 });
 
+export const createCheckIsUserInSomeRoomRequestAction = () => ({
+  type: ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_REQUEST
+});
+
+export const createCheckIsUserInSomeRoomSuccessAction = currentGameRoomId => ({
+  type: ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS,
+  currentGameRoomId
+});
+
+export const createCheckIsUserInSomeRoomErrorAction = error => ({
+  type: ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_ERROR,
+  error
+});
+
+

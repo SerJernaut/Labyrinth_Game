@@ -15,6 +15,10 @@ gameRouter.post('/get_game_rooms',
 gameRouter.post('/join_game_room',
     createValidationMW(GAME_ID_SCHEMA),
     gameController.joinGameRoomById
-    )
+    );
+
+gameRouter.get('/check_is_user_in_some_room',
+    gameController.checkIsUserInSomeRoomAndSendResult
+    );
 
 module.exports = gameRouter;

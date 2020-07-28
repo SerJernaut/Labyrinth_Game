@@ -31,13 +31,24 @@ module.exports.getPaginatedGameRoomsAndSend = async (req, res, next) => {
 module.exports.joinGameRoomById = async (req, res, next) => {
     try{
         const {body: {gameRoomId}, authorizationData: {_id}} = req;
-        console.log(gameRoomId)
         const updatedRoomData = await gameQueries.updateGameRoomByPredicate({_id: gameRoomId}, {
             $push: {players: _id}
-        });const filteredData = ((({boardCells, ...rest})=> rest)(updatedRoomData));
+        });
+        const filteredData = ((({boardCells, ...rest})=> rest)(updatedRoomData));
         res.send(filteredData);
     }
     catch (e) {
         next(e)
+    }
+}
+
+module.exports.checkIsUserInSomeRoomAndSendResult = async (req, res, next) => {
+    try{
+        const {authorizationData: {_id}} = req;
+        const currentGameRoomId = await gameQueries.checkIsUserInSomeRoom(_id);
+        res.send({currentGameRoomId});
+    }
+    catch(e) {
+        next(e);
     }
 }

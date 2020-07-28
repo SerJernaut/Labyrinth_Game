@@ -1,13 +1,18 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {createGetRoomsRequestAction, createJoinGameRoomRequestAction} from "../../actions/actionCreators";
+import {
+    createCheckIsUserInSomeRoomRequestAction,
+    createGetRoomsRequestAction,
+    createJoinGameRoomRequestAction
+} from "../../actions/actionCreators";
 import PropTypes from 'prop-types';
 import GameRoomItem from "../GameRoomItem/GameRoomItem";
 import styles from './GameRoomsList.module.sass';
 import CONSTANTS from "../../constants";
 import {InfiniteScroll} from 'react-simple-infinite-scroll';
 
-const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history}) => {
+const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history, checkIsUserInSomeRoom, currentGameRoomId}) => {
+
 
     const getGameRoomsWithFilter = skip => {
         getGameRooms({
@@ -17,6 +22,7 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
     }
     useEffect(()=> {
         !isFetching && getGameRoomsWithFilter(0);
+        !isFetching && checkIsUserInSomeRoom();
     }, []);
 
     const arrOfGameRoomsData = [...gameRoomsData.values()];
@@ -34,7 +40,7 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
                 }
                 }
             >
-            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history}/>)
+            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history} currentGameRoomId={currentGameRoomId}/>)
             }
                 {isFetching && 'Loading...'}
             </InfiniteScroll>
@@ -46,13 +52,16 @@ GameRoomsList.propTypes = {
     getGameRooms: PropTypes.func.isRequired,
     isFetching: PropTypes.bool.isRequired,
     gameRoomsData: PropTypes.instanceOf(Map).isRequired,
-    joinGameRoom: PropTypes.func.isRequired
+    joinGameRoom: PropTypes.func.isRequired,
+    checkIsUserInSomeRoom: PropTypes.func.isRequired,
+    currentGameRoomId: PropTypes.number
 };
 
 const mapStateToProps = state => state.gameRoomsStore;
 const mapDispatchToProps = dispatch => ({
     getGameRooms: (filterObj)=> dispatch(createGetRoomsRequestAction(filterObj)),
-    joinGameRoom: (gameRoomId, history) => dispatch(createJoinGameRoomRequestAction({gameRoomId}, history))
+    joinGameRoom: (gameRoomId, history) => dispatch(createJoinGameRoomRequestAction({gameRoomId}, history)),
+    checkIsUserInSomeRoom: () => dispatch(createCheckIsUserInSomeRoomRequestAction())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoomsList);

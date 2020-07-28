@@ -3,7 +3,8 @@ const { ApplicationError } = require('../../../utils/errors');
 
 module.exports.createGameRoomDataByPredicate = async (predicate, ownerId) => {
     let createdGame = await Game.create(predicate);
-        createdGame.players.push(ownerId)
+        createdGame.players.push(ownerId);
+        createdGame.save();
         createdGame = await createdGame.populate('owner', '-password -__v').populate('players', '-password -__v').execPopulate();
     if (createdGame) {
         return createdGame;
@@ -25,4 +26,12 @@ module.exports.updateGameRoomByPredicate = async (findParam, updateParam) => {
         return updatedGame;
     }
     throw new ApplicationError('can not update the room')
+}
+
+module.exports.checkIsUserInSomeRoom = async (userId) => {
+    const foundedGameRoom = await Game.findOne({players: {"$in": [userId]}}).lean();
+    if (foundedGameRoom) {
+        return ((({_id, ...rest})=> ((_id))) (foundedGameRoom))
+    }
+    throw new ApplicationError('can not find the room')
 }

@@ -5,7 +5,8 @@ const initialState = {
     gameRoomsData: new Map(),
     error: null,
     isFetching: false,
-    hasMore: null
+    hasMore: null,
+    currentGameRoomId: null
 };
 
 
@@ -15,6 +16,7 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.CREATE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.GET_GAME_ROOMS_REQUEST:
         case ACTION_TYPES.JOIN_GAME_ROOM_REQUEST:
+        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_REQUEST:
             return {
                 ...state,
                 isFetching: true,
@@ -28,7 +30,6 @@ function gameRoomsReducer (state = initialState, action) {
                 isFetching: false,
                 gameRoomsData: gameRoomsDataClone,
             };
-
         case ACTION_TYPES.GET_GAME_ROOMS_SUCCESS:
 
             action.gameRoomsData.forEach(data=>
@@ -41,9 +42,16 @@ function gameRoomsReducer (state = initialState, action) {
                 gameRoomsData: gameRoomsDataClone,
                 hasMore: action.hasMore
             }
+        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                currentGameRoomId: action.currentGameRoomId
+            }
         case ACTION_TYPES.CREATE_GAME_ROOM_ERROR:
         case ACTION_TYPES.GET_GAME_ROOMS_ERROR:
         case ACTION_TYPES.JOIN_GAME_ROOM_ERROR:
+        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_ERROR:
             return {
                 ...state,
                 isFetching: false,
