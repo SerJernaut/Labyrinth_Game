@@ -1,27 +1,30 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {createCheckIsUserInSomeRoomRequestAction} from "../../../actions/actionCreators";
+import {
+    createCheckIsUserInSomeRoomRequestAction,
+} from "../../../actions/actionCreators";
 import PropTypes from 'prop-types';
 import styles from "./WaitingRoom.module.sass";
-import Button from "../../Button/Button";
-import {Link} from "react-router-dom";
 import classNames from "classnames";
 import CONSTANTS from "../../../constants";
 
-const WaitingRoom = ({history, match, currentGameRoom, isFetching, checkIsUserInSomeRoom}) => {
+const WaitingRoom = ({history, match, gameRoomsData, isFetching, checkIsUserInSomeRoom}) => {
+
+    console.log(gameRoomsData)
 
     useEffect(()=> {
-        !currentGameRoom && !isFetching && checkIsUserInSomeRoom();
+        gameRoomsData.size === 0 && !isFetching && checkIsUserInSomeRoom();
     }, []);
 
     useEffect(()=> {
-        if(currentGameRoom && currentGameRoom._id !== +match.params.id) {
+        if(gameRoomsData.size > 0 && gameRoomsData.get(+match.params.id)._id !== +match.params.id) {
             history.replace('/')}
-    })
+    });
 
-    if (!currentGameRoom) {return null}
+    if (gameRoomsData.size === 0) {return null}
 
-    const {gameStatus, owner: {nickName}, players, maxPlayers, areaSize} = currentGameRoom;
+    const {_id, gameStatus, owner: {nickName}, players, maxPlayers, areaSize} = gameRoomsData.get(+match.params.id);
+
     const numberOfPlayersClassName = classNames({["enoughForGame"]: players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS}, {["notEnoughForGame"]: players.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
     const gameStatusClassName = classNames({["expected"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
 
@@ -41,21 +44,23 @@ const WaitingRoom = ({history, match, currentGameRoom, isFetching, checkIsUserIn
                     <p>
                         Labyrinth area size: <span>{areaSize}</span>
                     </p>
-
                 </div>
             </div>
     );
 };
 
 WaitingRoom.propTypes = {
-    getOneGameRoom: PropTypes.func.isRequired,
-    checkIsUserInSomeRoom: PropTypes.func.isRequired
+    checkIsUserInSomeRoom: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
+    gameRoomsData: PropTypes.instanceOf(Map).isRequired,
+    isFetching: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => state.gameRoomsStore;
 
 const mapDispatchToProps = dispatch => ({
-    checkIsUserInSomeRoom: () => dispatch(createCheckIsUserInSomeRoomRequestAction())
+    checkIsUserInSomeRoom: () => dispatch(createCheckIsUserInSomeRoomRequestAction()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WaitingRoom);

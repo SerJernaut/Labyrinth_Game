@@ -18,9 +18,14 @@ module.exports.createGameRoomDataAndSend = async (req, res, next) => {
 
 module.exports.getPaginatedGameRoomsAndSend = async (req, res, next) => {
     try{
-        const {body: {skip, limit}} = req;
+        const {body: {skip, limit}, authorizationData: {_id}} = req;
         const gameRoomsData = await gameQueries.getGameRoomsByPredicate({}, skip, limit);
-        const filteredData = gameRoomsData.map(({boardCells, __v, ...rest})=> rest);
+        let filteredData = gameRoomsData.map(({boardCells, __v, ...rest})=> rest);
+        if (skip === 0) {
+            filteredData[0].players.forEach(player => {
+                filteredData[0].isCurrentRoom = player._id === _id;
+            })
+        }
         res.send({filteredData, hasMore: limit <= filteredData.length})
     }
     catch (e) {
@@ -35,6 +40,7 @@ module.exports.joinGameRoomById = async (req, res, next) => {
             $push: {players: _id}
         });
         const filteredData = ((({boardCells, ...rest})=> rest)(updatedRoomData));
+        filteredData.isCurrentRoom = true;
         res.send(filteredData);
     }
     catch (e) {
@@ -45,7 +51,8 @@ module.exports.joinGameRoomById = async (req, res, next) => {
 module.exports.checkIsUserInSomeRoomAndSendResult = async (req, res, next) => {
     try{
         const {authorizationData: {_id}} = req;
-        const currentGameRoom= await gameQueries.checkIsUserInSomeRoom(_id);
+        const currentGameRoom = await gameQueries.checkIsUserInSomeRoom(_id);
+        currentGameRoom.isCurrentRoom = true;
         res.send(currentGameRoom);
     }
     catch(e) {

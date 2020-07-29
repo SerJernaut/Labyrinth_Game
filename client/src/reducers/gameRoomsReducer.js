@@ -6,7 +6,6 @@ const initialState = {
     error: null,
     isFetching: false,
     hasMore: null,
-    currentGameRoom: null
 };
 
 
@@ -16,22 +15,25 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.CREATE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.GET_GAME_ROOMS_REQUEST:
         case ACTION_TYPES.JOIN_GAME_ROOM_REQUEST:
-        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_REQUEST:
+        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_REQUEST: {
             return {
                 ...state,
                 isFetching: true,
             };
+        }
         case ACTION_TYPES.CREATE_GAME_ROOM_SUCCESS:
-        case ACTION_TYPES.JOIN_GAME_ROOM_SUCCESS:
-            gameRoomsDataClone.set(action.gameRoomData._id, action.gameRoomData)
-
+        case ACTION_TYPES.JOIN_GAME_ROOM_SUCCESS: {
+            const gameRoomsDataArr = gameRoomsDataClone.entries();
+            gameRoomsDataClone.clear();
+            gameRoomsDataClone.set(action.gameRoomData._id, action.gameRoomData);
+            gameRoomsDataArr.forEach(data=> gameRoomsDataClone.set(data[0], data[1]));
             return {
                 ...state,
                 isFetching: false,
                 gameRoomsData: gameRoomsDataClone,
             };
-        case ACTION_TYPES.GET_GAME_ROOMS_SUCCESS:
-
+        }
+        case ACTION_TYPES.GET_GAME_ROOMS_SUCCESS: {
             action.gameRoomsData.forEach(data=>
                 gameRoomsDataClone.set(data._id, data)
             );
@@ -42,21 +44,28 @@ function gameRoomsReducer (state = initialState, action) {
                 gameRoomsData: gameRoomsDataClone,
                 hasMore: action.hasMore
             }
-        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS:
+        }
+        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS: {
+            const gameRoomsDataArr = [...gameRoomsDataClone.entries()];
+            gameRoomsDataClone.clear();
+            gameRoomsDataClone.set(action.currentGameRoom._id, action.currentGameRoom);
+            gameRoomsDataArr.forEach(data=> gameRoomsDataClone.set(data[0], data[1]));
             return {
                 ...state,
                 isFetching: false,
-                currentGameRoom: action.currentGameRoom
+                gameRoomsData: gameRoomsDataClone
             }
+        }
         case ACTION_TYPES.CREATE_GAME_ROOM_ERROR:
         case ACTION_TYPES.GET_GAME_ROOMS_ERROR:
         case ACTION_TYPES.JOIN_GAME_ROOM_ERROR:
-        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_ERROR:
+        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_ERROR: {
             return {
                 ...state,
                 isFetching: false,
                 error: action.error,
             };
+        }
         case ACTION_TYPES.CLEAR_GAME_STORE:
             return initialState;
 

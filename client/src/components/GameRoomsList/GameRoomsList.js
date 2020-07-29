@@ -13,7 +13,7 @@ import {InfiniteScroll} from 'react-simple-infinite-scroll';
 import {Link} from "react-router-dom";
 import Button from "../Button/Button";
 
-const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history, currentGameRoom, checkIsUserInSomeRoom}) => {
+const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history, checkIsUserInSomeRoom}) => {
 
 
     const getGameRoomsWithFilter = skip => {
@@ -28,7 +28,17 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
     }, []);
 
     const arrOfGameRoomsData = [...gameRoomsData.values()];
-    const disabledConditionsForCreateAndJoinBtns = !!currentGameRoom || isFetching;
+    const checkIsCurrentGameRoom = () => {
+        let isCurrentGameRoom = false;
+        arrOfGameRoomsData.forEach(data=> {
+            if (data.isCurrentRoom) {
+                isCurrentGameRoom = true;
+            }
+        });
+        return isCurrentGameRoom;
+    }
+
+    const disabledConditionsForCreateAndJoinBtns = checkIsCurrentGameRoom() || isFetching;
 
     return (
         <div className={styles.listContainer}>
@@ -46,7 +56,7 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
                 }
                 }
             >
-            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history} currentGameRoom={currentGameRoom} disabled={disabledConditionsForCreateAndJoinBtns}/>)
+            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history} disabled={disabledConditionsForCreateAndJoinBtns}/>)
             }
                 {isFetching && 'Loading...'}
             </InfiniteScroll>
@@ -60,7 +70,6 @@ GameRoomsList.propTypes = {
     gameRoomsData: PropTypes.instanceOf(Map).isRequired,
     joinGameRoom: PropTypes.func.isRequired,
     checkIsUserInSomeRoom: PropTypes.func.isRequired,
-    currentGameRoom: PropTypes.object
 };
 
 const mapStateToProps = state => state.gameRoomsStore;

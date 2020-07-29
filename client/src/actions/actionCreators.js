@@ -32,7 +32,7 @@ export const createGameRoomCreationErrorAction = error => ( {
   error,
 } );
 
-export const createGetRoomsRequestAction = (filterObj) => ({
+export const createGetRoomsRequestAction = filterObj => ({
   type: ACTION_TYPES.GET_GAME_ROOMS_REQUEST,
   filterObj
 })
@@ -68,7 +68,7 @@ export const createClearAuthStore = () => ({
   type: ACTION_TYPES.CLEAR_AUTH_STORE,
 });
 
-export const createClearGameStore = () => ({
+export const cCTIreateClearGameStore = () => ({
   type: ACTION_TYPES.CLEAR_GAME_STORE,
 });
 
@@ -85,5 +85,4 @@ export const createCheckIsUserInSomeRoomErrorAction = error => ({
   type: ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_ERROR,
   error
 });
-
 

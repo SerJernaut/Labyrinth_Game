@@ -7,7 +7,7 @@ import Button from "../Button/Button";
 import {Link} from "react-router-dom";
 
 
-const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, players, owner: {nickName}}, joinGameRoom, history, currentGameRoom, disabled}) => {
+const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, players, isCurrentRoom, owner: {nickName}}, joinGameRoom, history, disabled}) => {
 
     const joinGameRoomById = () => joinGameRoom(_id, history);
     const numberOfPlayersClassName = classNames({["enoughForGame"]: players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS}, {["notEnoughForGame"]: players.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
@@ -28,7 +28,7 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
                 Labyrinth area size: <span>{areaSize}</span>
             </p>
             <Button disabled={disabled || players.length === CONSTANTS.NUMBER_OF_PLAYERS.MAX_GAME_PLAYERS} onClick={joinGameRoomById}>Join the game room</Button>
-            {currentGameRoom && currentGameRoom._id === _id && <div className={styles.returnBtnContainer}>
+            {isCurrentRoom && <div className={styles.returnBtnContainer}>
                 <Link className='primaryLink' to={ `/waiting_room/${_id}` }><Button>
                     Return to joined room
                 </Button></Link>
@@ -47,7 +47,6 @@ GameRoomItem.propTypes = {
     }),
     disabled: PropTypes.bool.isRequired,
     joinGameRoom: PropTypes.func.isRequired,
-    currentGameRoom: PropTypes.object
 };
 
 
