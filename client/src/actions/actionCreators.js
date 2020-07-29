@@ -68,7 +68,7 @@ export const createClearAuthStore = () => ({
   type: ACTION_TYPES.CLEAR_AUTH_STORE,
 });
 
-export const cCTIreateClearGameStore = () => ({
+export const createClearGameStore = () => ({
   type: ACTION_TYPES.CLEAR_GAME_STORE,
 });
 
@@ -86,3 +86,19 @@ export const createCheckIsUserInSomeRoomErrorAction = error => ({
   error
 });
 
+export const createLeaveGameRoomRequestAction = (gameRoomId, history) => ({
+  type: ACTION_TYPES.LEAVE_GAME_ROOM_REQUEST,
+  gameRoomId,
+  history
+})
+
+export const createLeaveGameRoomSuccessAction = (updatedRoomPlayers, gameRoomId) => ({
+  type: ACTION_TYPES.LEAVE_GAME_ROOM_SUCCESS,
+  updatedRoomPlayers,
+  gameRoomId
+})
+
+export const createLeaveGameRoomErrorAction = error => ({
+  type: ACTION_TYPES.LEAVE_GAME_ROOM_ERROR,
+  error
+})

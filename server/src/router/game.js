@@ -21,4 +21,7 @@ gameRouter.get('/check_is_user_in_some_room',
     gameController.checkIsUserInSomeRoomAndSendResult
     );
 
+gameRouter.post('/leave_game_room_by_id',
+    gameController.leaveGameRoomById)
+
 module.exports = gameRouter;

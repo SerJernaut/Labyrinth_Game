@@ -35,3 +35,11 @@ module.exports.checkIsUserInSomeRoom = async (userId) => {
     }
     throw new ApplicationError('can not find the room')
 }
+
+module.exports.findGameRoomDataByPredicate = async (predicate) => {
+    const foundedGameRoom = await Game.findOne(predicate);
+    if (foundedGameRoom) {
+        return foundedGameRoom;
+    }
+    throw new ApplicationError('can not find game room');
+}

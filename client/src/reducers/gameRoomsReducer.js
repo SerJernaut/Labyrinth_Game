@@ -15,7 +15,8 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.CREATE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.GET_GAME_ROOMS_REQUEST:
         case ACTION_TYPES.JOIN_GAME_ROOM_REQUEST:
-        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_REQUEST: {
+        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_REQUEST:
+        case ACTION_TYPES.LEAVE_GAME_ROOM_REQUEST:{
             return {
                 ...state,
                 isFetching: true,
@@ -49,7 +50,21 @@ function gameRoomsReducer (state = initialState, action) {
             const gameRoomsDataArr = [...gameRoomsDataClone.entries()];
             gameRoomsDataClone.clear();
             gameRoomsDataClone.set(action.currentGameRoom._id, action.currentGameRoom);
-            gameRoomsDataArr.forEach(data=> gameRoomsDataClone.set(data[0], data[1]));
+            gameRoomsDataArr.forEach(data=> { if (data[0] !== action.currentGameRoom._id){
+                gameRoomsDataClone.set(data[0], data[1])
+            }
+                });
+            return {
+                ...state,
+                isFetching: false,
+                gameRoomsData: gameRoomsDataClone
+            }
+        }
+        case ACTION_TYPES.LEAVE_GAME_ROOM_SUCCESS: {
+            const {gameRoomId, updatedRoomPlayers} = action;
+            const gameRoomsDataObj = gameRoomsDataClone.get(gameRoomId);
+            gameRoomsDataObj.players = updatedRoomPlayers;
+            gameRoomsDataClone.set(gameRoomId, gameRoomsDataObj);
             return {
                 ...state,
                 isFetching: false,
@@ -59,7 +74,8 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.CREATE_GAME_ROOM_ERROR:
         case ACTION_TYPES.GET_GAME_ROOMS_ERROR:
         case ACTION_TYPES.JOIN_GAME_ROOM_ERROR:
-        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_ERROR: {
+        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_ERROR:
+        case ACTION_TYPES.LEAVE_GAME_ROOM_ERROR:{
             return {
                 ...state,
                 isFetching: false,
