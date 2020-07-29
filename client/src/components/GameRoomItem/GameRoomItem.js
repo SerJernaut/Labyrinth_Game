@@ -7,11 +7,11 @@ import Button from "../Button/Button";
 import {Link} from "react-router-dom";
 
 
-const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, players, owner: {nickName}}, isFetching, joinGameRoom, history, currentGameRoom}) => {
+const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, players, owner: {nickName}}, joinGameRoom, history, currentGameRoom, disabled}) => {
 
     const joinGameRoomById = () => joinGameRoom(_id, history);
-    const numberOfPlayersClassName = classNames({[styles.enoughForGame]: players.length > 1}, {[styles.notEnoughForGame]: players.length <= 1});
-    const gameStatusClassName = classNames({[styles.expected]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
+    const numberOfPlayersClassName = classNames({["enoughForGame"]: players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS}, {["notEnoughForGame"]: players.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
+    const gameStatusClassName = classNames({["expected"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
 
     return (
         <div className={styles.itemContainer}>
@@ -27,7 +27,7 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
             <p>
                 Labyrinth area size: <span>{areaSize}</span>
             </p>
-            <Button disabled={!!currentGameRoom || isFetching} onClick={joinGameRoomById}>Join the game room</Button>
+            <Button disabled={disabled || players.length === CONSTANTS.NUMBER_OF_PLAYERS.MAX_GAME_PLAYERS} onClick={joinGameRoomById}>Join the game room</Button>
             {currentGameRoom && currentGameRoom._id === _id && <div className={styles.returnBtnContainer}>
                 <Link className='primaryLink' to={ `/waiting_room/${_id}` }><Button>
                     Return to joined room
@@ -45,7 +45,7 @@ GameRoomItem.propTypes = {
         players: PropTypes.array.isRequired,
         owner: PropTypes.shape({nickName: PropTypes.string.isRequired})
     }),
-    isFetching: PropTypes.bool.isRequired,
+    disabled: PropTypes.bool.isRequired,
     joinGameRoom: PropTypes.func.isRequired,
     currentGameRoom: PropTypes.object
 };

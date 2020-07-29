@@ -7,6 +7,10 @@ const CONSTANTS = {
         EXPECTED: 'EXPECTED',
         PLAYING: 'PLAYING',
         ENDED: 'ENDED'
+    },
+    NUMBER_OF_PLAYERS: {
+        MIN_GAME_PLAYERS: 2,
+        MAX_GAME_PLAYERS: 5
     }
 }
 

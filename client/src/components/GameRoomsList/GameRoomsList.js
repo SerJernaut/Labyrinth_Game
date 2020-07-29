@@ -13,7 +13,7 @@ import {InfiniteScroll} from 'react-simple-infinite-scroll';
 import {Link} from "react-router-dom";
 import Button from "../Button/Button";
 
-const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history, checkIsUserInSomeRoom, currentGameRoom}) => {
+const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history, currentGameRoom, checkIsUserInSomeRoom}) => {
 
 
     const getGameRoomsWithFilter = skip => {
@@ -28,11 +28,12 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
     }, []);
 
     const arrOfGameRoomsData = [...gameRoomsData.values()];
+    const disabledConditionsForCreateAndJoinBtns = !!currentGameRoom || isFetching;
 
     return (
         <div className={styles.listContainer}>
             <h1>Create own game room or join existing</h1>
-            <Link className='primaryLink' to={ '/create_new_game_room' }><Button>
+            <Link className='primaryLink' to={ '/create_new_game_room' }><Button disabled={disabledConditionsForCreateAndJoinBtns}>
                 Create new game room
             </Button></Link>
             <InfiniteScroll
@@ -45,7 +46,7 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
                 }
                 }
             >
-            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history} currentGameRoom={currentGameRoom}/>)
+            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history} currentGameRoom={currentGameRoom} disabled={disabledConditionsForCreateAndJoinBtns}/>)
             }
                 {isFetching && 'Loading...'}
             </InfiniteScroll>
