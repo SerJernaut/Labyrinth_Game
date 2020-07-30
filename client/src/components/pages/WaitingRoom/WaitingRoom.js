@@ -12,11 +12,11 @@ import Button from "../../Button/Button";
 const WaitingRoom = ({history, match, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom}) => {
 
     useEffect(()=> {
-        gameRoomsData.size === 0 && !isFetching && checkIsUserInSomeRoom();
+        gameRoomsData && gameRoomsData.size === 0 && !isFetching && checkIsUserInSomeRoom();
     }, []);
 
     useEffect(()=> {
-        if(gameRoomsData.size > 0 && gameRoomsData.get(+match.params.id)._id !== +match.params.id) {
+        if(gameRoomsData && gameRoomsData.size === 0 || (gameRoomsData && gameRoomsData.size > 0 && gameRoomsData.get(+match.params.id)._id !== +match.params.id)) {
             history.replace('/')}
     });
 
