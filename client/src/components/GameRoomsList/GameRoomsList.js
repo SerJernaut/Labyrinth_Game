@@ -28,14 +28,9 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
     }, []);
 
     const arrOfGameRoomsData = [...gameRoomsData.values()];
+
     const checkIsCurrentGameRoom = () => {
-        let isCurrentGameRoom = false;
-        arrOfGameRoomsData.forEach(data=> {
-            if (data.isCurrentRoom) {
-                isCurrentGameRoom = true;
-            }
-        });
-        return isCurrentGameRoom;
+        return !!arrOfGameRoomsData.find(data => data.isCurrentRoom);
     }
 
     const disabledConditionsForCreateAndJoinBtns = checkIsCurrentGameRoom() || isFetching;
@@ -56,7 +51,14 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
                 }
                 }
             >
-            {arrOfGameRoomsData.length > 0 && arrOfGameRoomsData.map((gameRoomData, index)=> <GameRoomItem isFetching={isFetching} key={index} gameRoomData={gameRoomData} joinGameRoom={joinGameRoom} history={history} disabled={disabledConditionsForCreateAndJoinBtns}/>)
+            {arrOfGameRoomsData.length > 0 &&
+             arrOfGameRoomsData.map((gameRoomData, index)=>
+                 <GameRoomItem isFetching={isFetching}
+                               key={index} g
+                               ameRoomData={gameRoomData}
+                               joinGameRoom={joinGameRoom}
+                               history={history}
+                               disabled={disabledConditionsForCreateAndJoinBtns}/>)
             }
                 {isFetching && 'Loading...'}
             </InfiniteScroll>

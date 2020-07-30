@@ -1,120 +1,143 @@
-import ACTION_TYPES from './actionTypes.js';
+import ACTION_TYPES from "./actionTypes";
+const {AUTH_REQUEST,
+  AUTH_SUCCESS,
+  AUTH_ERROR,
+  CREATE_GAME_ROOM_REQUEST,
+  CREATE_GAME_ROOM_SUCCESS,
+  CREATE_GAME_ROOM_ERROR,
+  GET_GAME_ROOMS_REQUEST,
+  GET_GAME_ROOMS_SUCCESS,
+  GET_GAME_ROOMS_ERROR,
+  JOIN_GAME_ROOM_REQUEST,
+  JOIN_GAME_ROOM_SUCCESS,
+  JOIN_GAME_ROOM_ERROR,
+  CLEAR_AUTH_STORE,
+  CLEAR_GAME_STORE,
+  CHECK_IS_USER_IN_SOME_ROOM_REQUEST,
+  CHECK_IS_USER_IN_SOME_ROOM_SUCCESS,
+  CHECK_IS_USER_IN_SOME_ROOM_ERROR,
+  LEAVE_GAME_ROOM_REQUEST,
+  LEAVE_GAME_ROOM_SUCCESS,
+  LEAVE_GAME_ROOM_ERROR,
+  REMOVE_GAME_ROOM_REQUEST,
+  REMOVE_GAME_ROOM_SUCCESS,
+  REMOVE_GAME_ROOM_ERROR} = ACTION_TYPES;
 
 export const createAuthRequestAction = (values, isRegistration) => ( {
-  type: ACTION_TYPES.AUTH_REQUEST,
+  type: AUTH_REQUEST,
   data: values,
   isRegistration
 } );
 
 export const createAuthSuccessAction = user => ( {
-  type: ACTION_TYPES.AUTH_SUCCESS,
+  type: AUTH_SUCCESS,
   user,
 } );
 
 export const createAuthErrorAction = error => ( {
-  type: ACTION_TYPES.AUTH_ERROR,
+  type: AUTH_ERROR,
   error,
 } );
 
 export const createGameRoomCreationRequestAction = (values, history) => ( {
-  type: ACTION_TYPES.CREATE_GAME_ROOM_REQUEST,
+  type: CREATE_GAME_ROOM_REQUEST,
   data: values,
   history
 } );
 
 export const createGameRoomCreationSuccessAction = gameRoomData => ( {
-  type: ACTION_TYPES.CREATE_GAME_ROOM_SUCCESS,
+  type: CREATE_GAME_ROOM_SUCCESS,
   gameRoomData,
 } );
 
 export const createGameRoomCreationErrorAction = error => ( {
-  type: ACTION_TYPES.CREATE_GAME_ROOM_ERROR,
+  type: CREATE_GAME_ROOM_ERROR,
   error,
 } );
 
 export const createGetRoomsRequestAction = filterObj => ({
-  type: ACTION_TYPES.GET_GAME_ROOMS_REQUEST,
+  type: GET_GAME_ROOMS_REQUEST,
   filterObj
 })
 
 export const createGetRoomsSuccessAction = (gameRoomsData, hasMore) => ({
-  type: ACTION_TYPES.GET_GAME_ROOMS_SUCCESS,
+  type: GET_GAME_ROOMS_SUCCESS,
   gameRoomsData,
   hasMore
 })
 
 export const createGetRoomsErrorAction = error => ({
-  type: ACTION_TYPES.GET_GAME_ROOMS_ERROR,
+  type: GET_GAME_ROOMS_ERROR,
   error
 })
 
 export const createJoinGameRoomRequestAction = (gameRoomId, history) => ({
-  type: ACTION_TYPES.JOIN_GAME_ROOM_REQUEST,
+  type: JOIN_GAME_ROOM_REQUEST,
   gameRoomId,
   history
 });
 
 export const createJoinGameRoomSuccessAction = gameRoomData => ({
-  type: ACTION_TYPES.JOIN_GAME_ROOM_SUCCESS,
+  type: JOIN_GAME_ROOM_SUCCESS,
   gameRoomData
 });
 
 export const createJoinGameRoomErrorAction = error => ({
-  type: ACTION_TYPES.JOIN_GAME_ROOM_ERROR,
+  type: JOIN_GAME_ROOM_ERROR,
   error
 });
 
 export const createClearAuthStore = () => ({
-  type: ACTION_TYPES.CLEAR_AUTH_STORE,
+  type: CLEAR_AUTH_STORE,
 });
 
 export const createClearGameStore = () => ({
-  type: ACTION_TYPES.CLEAR_GAME_STORE,
+  type: CLEAR_GAME_STORE,
 });
 
 export const createCheckIsUserInSomeRoomRequestAction = () => ({
-  type: ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_REQUEST
+  type: CHECK_IS_USER_IN_SOME_ROOM_REQUEST
 });
 
 export const createCheckIsUserInSomeRoomSuccessAction = gameRoomData => ({
-  type: ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS,
+  type: CHECK_IS_USER_IN_SOME_ROOM_SUCCESS,
   gameRoomData
 });
 
 export const createCheckIsUserInSomeRoomErrorAction = error => ({
-  type: ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_ERROR,
+  type: CHECK_IS_USER_IN_SOME_ROOM_ERROR,
   error
 });
 
 export const createLeaveGameRoomRequestAction = (gameRoomId, history) => ({
-  type: ACTION_TYPES.LEAVE_GAME_ROOM_REQUEST,
+  type: LEAVE_GAME_ROOM_REQUEST,
   gameRoomId,
   history
 })
 
 export const createLeaveGameRoomSuccessAction = (updatedRoomPlayers, gameRoomId) => ({
-  type: ACTION_TYPES.LEAVE_GAME_ROOM_SUCCESS,
+  type: LEAVE_GAME_ROOM_SUCCESS,
   updatedRoomPlayers,
   gameRoomId
 })
 
 export const createLeaveGameRoomErrorAction = error => ({
-  type: ACTION_TYPES.LEAVE_GAME_ROOM_ERROR,
+  type: LEAVE_GAME_ROOM_ERROR,
   error
 })
 
 export const createRemoveGameRoomRequestAction = (gameRoomId, history) => ({
-  type: ACTION_TYPES.REMOVE_GAME_ROOM_REQUEST,
+  type: REMOVE_GAME_ROOM_REQUEST,
   gameRoomId,
   history
 })
 
 export const createRemoveGameRoomSuccessAction = (gameRoomId) => ({
-  type: ACTION_TYPES.REMOVE_GAME_ROOM_SUCCESS,
+  type: REMOVE_GAME_ROOM_SUCCESS,
   gameRoomId
 })
 
 export const createRemoveGameRoomErrorAction = error => ({
-  type: ACTION_TYPES.REMOVE_GAME_ROOM_ERROR,
+  type: REMOVE_GAME_ROOM_ERROR,
   error
 })
