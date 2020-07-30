@@ -23,11 +23,12 @@ function gameRoomsReducer (state = initialState, action) {
             };
         }
         case ACTION_TYPES.CREATE_GAME_ROOM_SUCCESS:
-        case ACTION_TYPES.JOIN_GAME_ROOM_SUCCESS: {
-            const gameRoomsDataArr = gameRoomsDataClone.entries();
+        case ACTION_TYPES.JOIN_GAME_ROOM_SUCCESS:
+        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS:{
+            const gameRoomsDataArr = [...gameRoomsDataClone.entries()];
             gameRoomsDataClone.clear();
             gameRoomsDataClone.set(action.gameRoomData._id, action.gameRoomData);
-            gameRoomsDataArr.forEach(data=> gameRoomsDataClone.set(data[0], data[1]));
+            gameRoomsDataArr.forEach(data=> data[0] !== action.gameRoomData._id && gameRoomsDataClone.set(data[0], data[1]));
             return {
                 ...state,
                 isFetching: false,
@@ -44,20 +45,6 @@ function gameRoomsReducer (state = initialState, action) {
                 isFetching: false,
                 gameRoomsData: gameRoomsDataClone,
                 hasMore: action.hasMore
-            }
-        }
-        case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS: {
-            const gameRoomsDataArr = [...gameRoomsDataClone.entries()];
-            gameRoomsDataClone.clear();
-            gameRoomsDataClone.set(action.currentGameRoom._id, action.currentGameRoom);
-            gameRoomsDataArr.forEach(data=> { if (data[0] !== action.currentGameRoom._id){
-                gameRoomsDataClone.set(data[0], data[1])
-            }
-                });
-            return {
-                ...state,
-                isFetching: false,
-                gameRoomsData: gameRoomsDataClone
             }
         }
         case ACTION_TYPES.LEAVE_GAME_ROOM_SUCCESS: {
