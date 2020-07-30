@@ -102,3 +102,19 @@ export const createLeaveGameRoomErrorAction = error => ({
   type: ACTION_TYPES.LEAVE_GAME_ROOM_ERROR,
   error
 })
+
+export const createRemoveGameRoomRequestAction = (gameRoomId, history) => ({
+  type: ACTION_TYPES.REMOVE_GAME_ROOM_REQUEST,
+  gameRoomId,
+  history
+})
+
+export const createRemoveGameRoomSuccessAction = (gameRoomId) => ({
+  type: ACTION_TYPES.REMOVE_GAME_ROOM_SUCCESS,
+  gameRoomId
+})
+
+export const createRemoveGameRoomErrorAction = error => ({
+  type: ACTION_TYPES.REMOVE_GAME_ROOM_ERROR,
+  error
+})

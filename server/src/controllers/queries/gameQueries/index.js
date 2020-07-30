@@ -31,7 +31,7 @@ module.exports.updateGameRoomByPredicate = async (findParam, updateParam) => {
 module.exports.checkIsUserInSomeRoom = async (userId) => {
     const foundedGameRoom = await Game.findOne({players: {"$in": [userId]}}).lean().populate('owner', '-password -__v').populate('players', '-password -__v');
     if (foundedGameRoom) {
-        return ((({boardCells, ...rest})=> rest) (foundedGameRoom))
+        return ((({boardCells, __v, ...rest})=> rest) (foundedGameRoom))
     }
     throw new ApplicationError('can not find the room')
 }
@@ -42,4 +42,12 @@ module.exports.findGameRoomDataByPredicate = async (predicate) => {
         return foundedGameRoom;
     }
     throw new ApplicationError('can not find game room');
+}
+
+module.exports.removeGameRoomByPredicate = async (predicate) => {
+    const result = await Game.deleteOne(predicate);
+    if (result) {
+        return result;
+    }
+    throw new ApplicationError('can not delete game room')
 }

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {
-    createCheckIsUserInSomeRoomRequestAction, createLeaveGameRoomRequestAction,
+    createCheckIsUserInSomeRoomRequestAction, createLeaveGameRoomRequestAction, createRemoveGameRoomRequestAction,
 } from "../../../actions/actionCreators";
 import PropTypes from 'prop-types';
 import styles from "./WaitingRoom.module.sass";
@@ -9,7 +9,7 @@ import classNames from "classnames";
 import CONSTANTS from "../../../constants";
 import Button from "../../Button/Button";
 
-const WaitingRoom = ({history, match, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom}) => {
+const WaitingRoom = ({history, match, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom}) => {
 
     useEffect(()=> {
         gameRoomsData && gameRoomsData.size === 0 && !isFetching && checkIsUserInSomeRoom();
@@ -22,10 +22,14 @@ const WaitingRoom = ({history, match, gameRoomsData, isFetching, checkIsUserInSo
 
     if (gameRoomsData.size === 0) {return null}
 
-    const {_id, gameStatus, owner: {nickName}, players, maxPlayers, areaSize} = gameRoomsData.get(+match.params.id);
+    const {_id, gameStatus, owner: {nickName}, players, maxPlayers, areaSize, isOwner} = gameRoomsData.get(+match.params.id);
 
     const leaveGameRoomById = () => {
         leaveGameRoom(_id, history)
+    }
+
+    const removeGameRoomById = () => {
+        removeGameRoom(_id, history)
     }
 
     const numberOfPlayersClassName = classNames({["enoughForGame"]: players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS}, {["notEnoughForGame"]: players.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
@@ -47,7 +51,8 @@ const WaitingRoom = ({history, match, gameRoomsData, isFetching, checkIsUserInSo
                     <p>
                         Labyrinth area size: <span>{areaSize}</span>
                     </p>
-                    <Button onClick={leaveGameRoomById}>Leave game room</Button>
+                    {!isOwner && <Button onClick={leaveGameRoomById}>Leave game room</Button>}
+                    {isOwner && <Button onClick={removeGameRoomById}>Remove game room</Button>}
                 </div>
             </div>
     );
@@ -59,14 +64,16 @@ WaitingRoom.propTypes = {
     match: PropTypes.object.isRequired,
     gameRoomsData: PropTypes.instanceOf(Map).isRequired,
     isFetching: PropTypes.bool.isRequired,
-    leaveGameRoom: PropTypes.func.isRequired
+    leaveGameRoom: PropTypes.func.isRequired,
+    removeGameRoom: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => state.gameRoomsStore;
 
 const mapDispatchToProps = dispatch => ({
     checkIsUserInSomeRoom: () => dispatch(createCheckIsUserInSomeRoomRequestAction()),
-    leaveGameRoom: (gameRoomId, history) => dispatch(createLeaveGameRoomRequestAction(gameRoomId, history))
+    leaveGameRoom: (gameRoomId, history) => dispatch(createLeaveGameRoomRequestAction(gameRoomId, history)),
+    removeGameRoom: (gameRoomId, history) => dispatch(createRemoveGameRoomRequestAction(gameRoomId, history))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WaitingRoom);

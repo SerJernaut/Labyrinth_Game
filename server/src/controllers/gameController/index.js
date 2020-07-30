@@ -8,6 +8,7 @@ module.exports.createGameRoomDataAndSend = async (req, res, next) => {
         const gameRoomData = await gameQueries.createGameRoomDataByPredicate({owner: id, ...body}, id);
         const objGameRoomData = gameRoomData.toObject();
         const {boardCells, _v, ...rest} = objGameRoomData;
+        rest.isOwner = true;
         res.send (
                 rest
         )
@@ -22,11 +23,12 @@ module.exports.getPaginatedGameRoomsAndSend = async (req, res, next) => {
         let gameRoomsData = await gameQueries.getGameRoomsByPredicate({}, skip, limit);
         gameRoomsData = gameRoomsData.map(({boardCells, __v, ...rest})=> rest);
         if (skip === 0) {
-            gameRoomsData[0] && gameRoomsData[0].players.forEach(player => {
-                gameRoomsData[0].isCurrentRoom = player == _id;
-            })
-            if (gameRoomsData[0].players.length === 0) {
-                gameRoomsData[0].isCurrentRoom = false;
+            const firstGameRoomData = gameRoomsData[0];
+            if (firstGameRoomData) {
+                firstGameRoomData.players.forEach(player => {
+                    firstGameRoomData.isCurrentRoom = player == _id;
+                });
+                firstGameRoomData.isOwner = firstGameRoomData.owner._id == _id
             }
         }
         res.send({gameRoomsData, hasMore: limit <= gameRoomsData.length})
@@ -55,6 +57,7 @@ module.exports.checkIsUserInSomeRoomAndSendResult = async (req, res, next) => {
     try{
         const {authorizationData: {_id}} = req;
         const currentGameRoom = await gameQueries.checkIsUserInSomeRoom(_id);
+        currentGameRoom.isOwner = currentGameRoom.owner._id == _id;
         currentGameRoom.isCurrentRoom = true;
         res.send(currentGameRoom);
     }
@@ -71,6 +74,30 @@ module.exports.leaveGameRoomById = async (req, res, next) => {
         foundedGameRoomData.players = filteredPlayers;
         foundedGameRoomData.save();
         res.send(filteredPlayers);
+    }
+    catch(e) {
+        next(e);
+    }
+}
+
+module.exports.findGameRoomById = async (req, res, next) => {
+    try{
+        const {body: {gameRoomId}} = req;
+        req.foundedGameRoomData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});
+        next();
+    }
+    catch(e) {
+        next(e);
+    }
+}
+
+module.exports.removeGameRoomById = async (req, res, next) => {
+    try {
+        const {body: {gameRoomId}} = req;
+        const result = await gameQueries.removeGameRoomByPredicate({_id: gameRoomId});
+        if (result) {
+            res.end()
+        }
     }
     catch(e) {
         next(e);

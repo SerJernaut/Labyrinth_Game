@@ -1,6 +1,8 @@
 const gameController = require("../controllers/gameController");
 const {GAME_ROOM_SCHEMA, LIMIT_SKIP_SCHEMA, GAME_ID_SCHEMA} = require("../utils/validation");
 const {createValidationMW} = require("../middlewares/validation/createValidationMW");
+const onlyForGameRoomOwner = require('../middlewares/game/onlyForGameRoomOwner');
+
 
 const gameRouter = require('express').Router();
 
@@ -14,14 +16,19 @@ gameRouter.post('/get_game_rooms',
 
 gameRouter.post('/join_game_room',
     createValidationMW(GAME_ID_SCHEMA),
-    gameController.joinGameRoomById
-    );
+    gameController.joinGameRoomById);
 
 gameRouter.get('/check_is_user_in_some_room',
-    gameController.checkIsUserInSomeRoomAndSendResult
-    );
+    gameController.checkIsUserInSomeRoomAndSendResult);
 
 gameRouter.post('/leave_game_room_by_id',
-    gameController.leaveGameRoomById)
+    createValidationMW(GAME_ID_SCHEMA),
+    gameController.leaveGameRoomById);
+
+gameRouter.post('/remove_game_room_by_id',
+    createValidationMW(GAME_ID_SCHEMA),
+    gameController.findGameRoomById,
+    onlyForGameRoomOwner,
+    gameController.removeGameRoomById);
 
 module.exports = gameRouter;
