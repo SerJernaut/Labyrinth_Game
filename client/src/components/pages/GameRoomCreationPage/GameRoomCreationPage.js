@@ -1,10 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
 import GameRoomCreationForm from "../../forms/GameRoomCreationForm/GameRoomCreationForm";
 import styles from './GameRoomCreationPage.module.sass';
+import {connect} from "react-redux";
+import {
+    createCheckIsUserInSomeRoomRequestAction,
+} from "../../../actions/actionCreators";
+import PropTypes from 'prop-types'
 
 
-const GameRoomCreationPage = ({history}) => {
+const GameRoomCreationPage = ({gameRoomsData, history, isFetching, checkIsUserInSomeRoom}) => {
+
+    useEffect(()=> {
+        !isFetching && checkIsUserInSomeRoom();
+    }, [])
+
+    useEffect(()=> {
+        if(gameRoomsData && gameRoomsData.size > 0 && [...gameRoomsData.values()][0].isCurrentRoom) {
+            history.replace('/')}
+    });
 
     return (
         <div className={styles.pageContainer}>
@@ -14,4 +28,17 @@ const GameRoomCreationPage = ({history}) => {
     );
 };
 
-export default GameRoomCreationPage;
+const mapStateToProps = state => state.gameRoomsStore;
+
+const mapDispatchToProps = dispatch => ({
+    checkIsUserInSomeRoom: () => dispatch(createCheckIsUserInSomeRoomRequestAction())
+})
+
+GameRoomCreationPage.propTypes = {
+    gameRoomsData: PropTypes.instanceOf(Map).isRequired,
+    history: PropTypes.object.isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    checkIsUserInSomeRoom: PropTypes.func.isRequired
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameRoomCreationPage);
