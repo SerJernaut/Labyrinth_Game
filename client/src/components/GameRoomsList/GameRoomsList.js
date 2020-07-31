@@ -33,12 +33,13 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
         return !!arrOfGameRoomsData.find(data => data.isCurrentRoom);
     }
 
-    const disabledConditionsForCreateAndJoinBtns = checkIsCurrentGameRoom() || isFetching;
+    const disabled = checkIsCurrentGameRoom() || isFetching;
 
     return (
         <div className={styles.listContainer}>
-            <h1>Create own game room or join existing</h1>
-            <Link className='primaryLink' to={ '/create_new_game_room' }><Button disabled={disabledConditionsForCreateAndJoinBtns}>
+            {checkIsCurrentGameRoom() && <h1>Return to joined room below, you can't be in two rooms simultaneously</h1>}
+            {!checkIsCurrentGameRoom() && <h1>Create own game room or join existing</h1>}
+            <Link className='primaryLink' to={ '/create_new_game_room' }><Button disabled={disabled}>
                 Create new game room
             </Button></Link>
             <InfiniteScroll
@@ -58,7 +59,7 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
                                gameRoomData={gameRoomData}
                                joinGameRoom={joinGameRoom}
                                history={history}
-                               disabled={disabledConditionsForCreateAndJoinBtns}/>)
+                               disabled={disabled}/>)
             }
                 {isFetching && 'Loading...'}
             </InfiniteScroll>
