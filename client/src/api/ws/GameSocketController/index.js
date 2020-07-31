@@ -1,6 +1,7 @@
 import WebSocket from "../WebSocket";
 import CONSTANTS from "../../../constants";
-const {SOCKET: {SUBSCRIBE, UNSUBSCRIBE}} = CONSTANTS
+import {createJoinGameRoomSuccessAction} from "../../../actions/actionCreators";
+const {SOCKET: {SUBSCRIBE, UNSUBSCRIBE, JOIN_GAME_ROOM}} = CONSTANTS
 
 class GameSocketController extends WebSocket{
     constructor(dispatch, getState, room) {
@@ -9,7 +10,7 @@ class GameSocketController extends WebSocket{
 
     /**@override*/
     anotherSubscribes = () => {
-
+        this.joinGameRoom()
     };
 
     subscribe = (id) => {
@@ -19,6 +20,13 @@ class GameSocketController extends WebSocket{
     unsubscribe = (id) => {
         this.socket.emit(UNSUBSCRIBE, id);
     }
+
+    joinGameRoom = () => {
+        this.socket.on(JOIN_GAME_ROOM, (data) => {
+            this.dispatch(createJoinGameRoomSuccessAction(data));
+        })
+    }
+
 }
 
 export default GameSocketController;

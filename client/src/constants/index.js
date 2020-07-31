@@ -12,7 +12,8 @@ const CONSTANTS = {
     SOCKET: {
         SUBSCRIBE: 'subscribe',
         UNSUBSCRIBE: 'unsubscribe',
-        CONNECTION: 'connect'
+        CONNECTION: 'connect',
+        JOIN_GAME_ROOM: 'joinGameRoom'
     },
     NUMBER_OF_PLAYERS: {
         MIN_GAME_PLAYERS: 2,

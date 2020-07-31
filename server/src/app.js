@@ -21,4 +21,4 @@ server.listen(PORT, () =>
 
 const socketController = new SocketConnectionController(server);
 
-module.exports.controller = socketController;
+module.exports.socketController = socketController;
