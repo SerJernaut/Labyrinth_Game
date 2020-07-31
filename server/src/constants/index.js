@@ -7,7 +7,8 @@ const SALT_ROUNDS = 5;
 const GET_GAME_ROOMS_LIMIT = 10;
 const SOCKET = {
   CONNECTION: 'connection',
-  JOIN_GAME_ROOM: 'joinGameRoom'
+  JOIN_GAME_ROOM: 'joinGameRoom',
+  LEAVE_GAME_ROOM: 'leaveGameRoom'
 };
 const SERVER_PORT = 3001;
 const MONGODB_URL = 'mongodb://localhost:27017/labyrinth_db';
