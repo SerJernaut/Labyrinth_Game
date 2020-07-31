@@ -54,8 +54,8 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
             {arrOfGameRoomsData.length > 0 &&
              arrOfGameRoomsData.map((gameRoomData, index)=>
                  <GameRoomItem isFetching={isFetching}
-                               key={index} g
-                               ameRoomData={gameRoomData}
+                               key={index}
+                               gameRoomData={gameRoomData}
                                joinGameRoom={joinGameRoom}
                                history={history}
                                disabled={disabledConditionsForCreateAndJoinBtns}/>)

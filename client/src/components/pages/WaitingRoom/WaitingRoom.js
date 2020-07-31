@@ -12,17 +12,20 @@ import Button from "../../Button/Button";
 const WaitingRoom = ({history, match, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom}) => {
 
     useEffect(()=> {
-        gameRoomsData && gameRoomsData.size === 0 && !isFetching && checkIsUserInSomeRoom();
+        gameRoomsData
+        && gameRoomsData.size === 0
+        && !isFetching
+        && checkIsUserInSomeRoom();
     }, []);
 
     useEffect(()=> {
-        if(gameRoomsData && gameRoomsData.size === 0 || (gameRoomsData && gameRoomsData.size > 0 && gameRoomsData.get(+match.params.id)._id !== +match.params.id)) {
+        if(gameRoomsData && gameRoomsData.size > 0 && [...gameRoomsData.values()][0]._id !== +match.params.id) {
             history.replace('/')}
     });
 
     if (gameRoomsData.size === 0) {return null}
 
-    const {_id, gameStatus, owner: {nickName}, players, maxPlayers, areaSize, isOwner} = gameRoomsData.get(+match.params.id);
+    const {_id, gameStatus, owner: {nickName}, players, maxPlayers, areaSize, isOwner} = [...gameRoomsData.values()][0];
 
     const leaveGameRoomById = () => {
         leaveGameRoom(_id, history)

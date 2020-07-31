@@ -6,17 +6,21 @@ import {connect} from "react-redux";
 import {
     createCheckIsUserInSomeRoomRequestAction,
 } from "../../../actions/actionCreators";
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import { useLastLocation } from 'react-router-last-location';
 
 
 const GameRoomCreationPage = ({gameRoomsData, history, isFetching, checkIsUserInSomeRoom}) => {
+
+    const lastLocation = useLastLocation();
 
     useEffect(()=> {
         !isFetching && checkIsUserInSomeRoom();
     }, [])
 
     useEffect(()=> {
-        if(gameRoomsData && gameRoomsData.size > 0 && [...gameRoomsData.values()][0].isCurrentRoom) {
+
+        if(!lastLocation && gameRoomsData && gameRoomsData.size > 0 && [...gameRoomsData.values()][0] && [...gameRoomsData.values()][0].isCurrentRoom) {
             history.replace('/')}
     });
 

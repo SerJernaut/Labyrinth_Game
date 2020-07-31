@@ -46,6 +46,7 @@
   "devDependencies": {
     "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
+    "react-router-last-location": "^2.0.1",
     "react-simple-infinite-scroll": "0.0.1"
   }
 }
