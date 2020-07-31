@@ -1,7 +1,7 @@
 const socketIo = require('socket.io');
 const GameController = require('./GameController');
 
-class SocketController {
+class SocketConnectionController {
     constructor(httpServer) {
         this.io = socketIo.listen(httpServer);
         this._gameController = new GameController();
@@ -14,4 +14,4 @@ class SocketController {
 
 }
 
-module.exports = SocketController;
+module.exports = SocketConnectionController;

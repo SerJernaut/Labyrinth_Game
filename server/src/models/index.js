@@ -3,8 +3,9 @@ const User = require('./User');
 const RefreshToken = require('./RefreshToken');
 const Game = require('./Game');
 const {BoardCell} = require('./BoardCell');
+const {MONGODB_URL} = require('../constants')
 
-mongoose.connect('mongodb://localhost:27017/labyrinth_db', {
+mongoose.connect(MONGODB_URL, {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true,
