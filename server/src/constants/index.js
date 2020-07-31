@@ -8,6 +8,8 @@ const GET_GAME_ROOMS_LIMIT = 10;
 const SOCKET = {
   CONNECTION: 'connection',
 };
+const SERVER_PORT = 3001;
+const MONGODB_URL = 'mongodb://localhost:27017/labyrinth_db';
 
 module.exports = {
   NICKNAME_PATTERN,
@@ -17,6 +19,8 @@ module.exports = {
   ACCESS_TOKEN_EXPIRES_TIME,
   SALT_ROUNDS,
   GET_GAME_ROOMS_LIMIT,
-  SOCKET
+  SOCKET,
+  SERVER_PORT,
+  MONGODB_URL
 };
 
