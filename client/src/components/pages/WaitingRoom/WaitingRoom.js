@@ -9,7 +9,7 @@ import classNames from "classnames";
 import CONSTANTS from "../../../constants";
 import Button from "../../Button/Button";
 
-const WaitingRoom = ({history, match, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom}) => {
+const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom}) => {
 
     useEffect(()=> {
         gameRoomsData
@@ -19,7 +19,9 @@ const WaitingRoom = ({history, match, gameRoomsData, isFetching, checkIsUserInSo
     }, []);
 
     useEffect(()=> {
-        if(gameRoomsData && gameRoomsData.size > 0 && [...gameRoomsData.values()][0]._id !== +match.params.id) {
+        if((error && error.status === 404) ||
+            (gameRoomsData && gameRoomsData.size > 0 &&
+                [...gameRoomsData.values()][0]._id !== +match.params.id)) {
             history.replace('/')}
     });
 
@@ -68,7 +70,8 @@ WaitingRoom.propTypes = {
     gameRoomsData: PropTypes.instanceOf(Map).isRequired,
     isFetching: PropTypes.bool.isRequired,
     leaveGameRoom: PropTypes.func.isRequired,
-    removeGameRoom: PropTypes.func.isRequired
+    removeGameRoom: PropTypes.func.isRequired,
+    error: PropTypes.object
 }
 
 const mapStateToProps = state => state.gameRoomsStore;

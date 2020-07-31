@@ -1,5 +1,5 @@
 const {Game} = require('../../../models/index');
-const { ApplicationError } = require('../../../utils/errors');
+const { ApplicationError, NotFoundError } = require('../../../utils/errors');
 
 module.exports.createGameRoomDataByPredicate = async (predicate, ownerId) => {
     let createdGame = await Game.create(predicate);
@@ -33,7 +33,7 @@ module.exports.checkIsUserInSomeRoom = async (userId) => {
     if (foundedGameRoom) {
         return ((({boardCells, __v, ...rest})=> rest) (foundedGameRoom))
     }
-    throw new ApplicationError('can not find the room')
+    throw new NotFoundError('can not find the room')
 }
 
 module.exports.findGameRoomDataByPredicate = async (predicate) => {

@@ -21,7 +21,8 @@ const {AUTH_REQUEST,
   LEAVE_GAME_ROOM_ERROR,
   REMOVE_GAME_ROOM_REQUEST,
   REMOVE_GAME_ROOM_SUCCESS,
-  REMOVE_GAME_ROOM_ERROR} = ACTION_TYPES;
+  REMOVE_GAME_ROOM_ERROR,
+  CLEAR_ERROR} = ACTION_TYPES;
 
 export const createAuthRequestAction = (values, isRegistration) => ( {
   type: AUTH_REQUEST,
@@ -141,3 +142,7 @@ export const createRemoveGameRoomErrorAction = error => ({
   type: REMOVE_GAME_ROOM_ERROR,
   error
 })
+
+export const createClearError = () => ({
+  type: CLEAR_ERROR,
+});
