@@ -5,15 +5,20 @@ class WebSocket {
     constructor(dispatch, getState, room) {
         this.dispatch = dispatch;
         this.getState = getState;
-        this.socket = socketIoClient(`${CONSTANTS.REST_API_URL}${room}`, {origins: "localhost:*"});
+        this.socket = socketIoClient(`${CONSTANTS.NODE_URL}${room}`, {origins: "localhost:*"});
         this.listen();
     }
 
     listen = () => {
-        this.socket.on('connect', () => {
+        this.socket.on(CONSTANTS.SOCKET.CONNECTION, () => {
             this.anotherSubscribes();
         });
     };
+
+    //this method should be overridden
+    anotherSubscribes (socket) {
+
+    }
 }
 
 export default WebSocket;
