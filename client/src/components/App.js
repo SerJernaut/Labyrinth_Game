@@ -1,12 +1,13 @@
 import React, {lazy, Suspense, useEffect} from 'react';
-import store from "../store";
 import {createAuthRequestAction} from "../actions/actionCreators";
 import CONSTANTS from "../constants";
 import {Route, Switch} from "react-router-dom";
 import privateHOC from "./PrivateHOC";
 import ForNotAuthorizedHOC from "./ForNotAuthorizedHOC";
 import '../App.css'
-import NotFound from "./NotFound";
+import NotFound from "./NotFound/NotFound";
+import {connect} from "react-redux";
+import PropTypes from 'prop-types';
 
 const SignUpPage = lazy(() => import('./pages/AuthPages/SignUpPage/SignUpPage'));
 const LoginPage = lazy(() => import('./pages/AuthPages/LoginPage/LoginPage'));
@@ -15,12 +16,12 @@ const GameRoomCreationPage = lazy(()=> import('./pages/GameRoomCreationPage/Game
 const GameRoomsListPage = lazy(()=> import('./pages/GameRoomsListPage/GameRoomsListPage'));
 
 
-function App () {
+function App ({refreshSignIn}) {
 
     useEffect( () => {
         const refreshToken = localStorage.getItem(CONSTANTS.REFRESH_TOKEN_KEY)
         if (refreshToken) {
-            store.dispatch(createAuthRequestAction());
+            refreshSignIn();
         }
     }, []);
 
@@ -39,4 +40,13 @@ function App () {
     );
 }
 
-export default App;
+const mapStateToProps = state => state.authStore;
+const mapDispatchToProps = dispatch => ({
+    refreshSignIn: () => dispatch(createAuthRequestAction())
+})
+
+App.propTypes = {
+    refreshSignIn: PropTypes.func.isRequired
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
