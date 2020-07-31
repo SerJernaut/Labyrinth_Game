@@ -10,7 +10,7 @@ const initialState = {
 
 
 function gameRoomsReducer (state = initialState, action) {
-    const gameRoomsDataClone = _.clone(state.gameRoomsData);
+    const gameRoomsDataClone = _.cloneDeep(state.gameRoomsData);
     switch (action.type) {
         case ACTION_TYPES.CREATE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.GET_GAME_ROOMS_REQUEST:
@@ -81,6 +81,13 @@ function gameRoomsReducer (state = initialState, action) {
         }
         case ACTION_TYPES.CLEAR_GAME_STORE:
             return initialState;
+
+        case ACTION_TYPES.CLEAR_ERROR: {
+            return {
+                ...state,
+                error: null
+            }
+        }
 
         default:
             return state;
