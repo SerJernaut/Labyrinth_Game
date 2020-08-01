@@ -1,11 +1,15 @@
 const WebSocket = require('./WebSocket');
-const {SOCKET: {JOIN_GAME_ROOM, LEAVE_GAME_ROOM, REMOVE_GAME_ROOM}} = require('../../constants')
+const {SOCKET: {CREATE_GAME_ROOM, JOIN_GAME_ROOM, LEAVE_GAME_ROOM, REMOVE_GAME_ROOM}} = require('../../constants')
 
 
 class AppController extends WebSocket{
 
     /**@override*/
     anotherSubscribes (socket) {
+    }
+
+    emitCreateGameRoom (gameRoomData) {
+        this.io.emit(CREATE_GAME_ROOM, gameRoomData)
     }
 
     emitJoinGameRoom (gameRoomData) {

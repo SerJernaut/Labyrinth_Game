@@ -7,6 +7,7 @@ const SALT_ROUNDS = 5;
 const GET_GAME_ROOMS_LIMIT = 10;
 const SOCKET = {
   CONNECTION: 'connection',
+  CREATE_GAME_ROOM: 'createGameRoom',
   JOIN_GAME_ROOM: 'joinGameRoom',
   LEAVE_GAME_ROOM: 'leaveGameRoom',
   SEND_JOINED_GAME_ROOM_PLAYER: 'sendJoinedGameRoomPlayer',

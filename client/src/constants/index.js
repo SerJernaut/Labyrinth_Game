@@ -13,6 +13,7 @@ const CONSTANTS = {
         SUBSCRIBE: 'subscribe',
         UNSUBSCRIBE: 'unsubscribe',
         CONNECTION: 'connect',
+        CREATE_GAME_ROOM: 'createGameRoom',
         JOIN_GAME_ROOM: 'joinGameRoom',
         LEAVE_GAME_ROOM: 'leaveGameRoom',
         SUBSCRIBE_GAME_ROOM: 'subscribeGameRoom',
