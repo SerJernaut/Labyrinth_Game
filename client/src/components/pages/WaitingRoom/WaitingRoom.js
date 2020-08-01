@@ -8,6 +8,7 @@ import styles from "./WaitingRoom.module.sass";
 import classNames from "classnames";
 import CONSTANTS from "../../../constants";
 import Button from "../../Button/Button";
+import {Link} from "react-router-dom";
 
 const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom}) => {
 
@@ -58,6 +59,7 @@ const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsU
                     </p>
                     {!isOwner && <Button onClick={leaveGameRoomById}>Leave game room</Button>}
                     {isOwner && <Button onClick={removeGameRoomById}>Remove game room</Button>}
+                    <Link className='primaryLink' to={ '/' }>Show another existing play rooms</Link>
                 </div>
             </div>
     );
