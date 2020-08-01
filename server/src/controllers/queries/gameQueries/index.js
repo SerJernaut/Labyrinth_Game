@@ -37,7 +37,7 @@ module.exports.checkIsUserInSomeRoom = async (userId) => {
 }
 
 module.exports.findGameRoomDataByPredicate = async (predicate) => {
-    const foundedGameRoom = await Game.findOne(predicate);
+    const foundedGameRoom = await Game.findOne(predicate).populate('players', '-password -__v');
     if (foundedGameRoom) {
         return foundedGameRoom;
     }

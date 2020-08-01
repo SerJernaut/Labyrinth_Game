@@ -11,6 +11,7 @@ const SOCKET = {
   JOIN_GAME_ROOM: 'joinGameRoom',
   LEAVE_GAME_ROOM: 'leaveGameRoom',
   SEND_JOINED_GAME_ROOM_PLAYER: 'sendJoinedGameRoomPlayer',
+  SEND_LEFT_GAME_ROOM_PLAYER: 'sendLeftGameRoomPlayer',
   SUBSCRIBE_GAME_ROOM: 'subscribeGameRoom',
   UNSUBSCRIBE_GAME_ROOM: 'unsubscribeGameRoom',
   REMOVE_GAME_ROOM: 'removeGameRoom',
