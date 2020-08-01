@@ -13,7 +13,7 @@ const SOCKET = {
   SEND_JOINED_GAME_ROOM_PLAYER: 'sendJoinedGameRoomPlayer',
   SUBSCRIBE_GAME_ROOM: 'subscribeGameRoom',
   UNSUBSCRIBE_GAME_ROOM: 'unsubscribeGameRoom',
-  REMOVE_GAME_ROOM: 'removeGameRoom'
+  REMOVE_GAME_ROOM: 'removeGameRoom',
 };
 const SERVER_PORT = 3001;
 const MONGODB_URL = 'mongodb://localhost:27017/labyrinth_db';

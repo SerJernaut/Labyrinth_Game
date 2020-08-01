@@ -1,5 +1,5 @@
 const WebSocket = require('./WebSocket');
-const {SOCKET: {SUBSCRIBE_GAME_ROOM, UNSUBSCRIBE_GAME_ROOM}} = require('../../constants')
+const {SOCKET: {SUBSCRIBE_GAME_ROOM, UNSUBSCRIBE_GAME_ROOM, SEND_JOINED_GAME_ROOM_PLAYER}} = require('../../constants')
 
 
 class GameController extends WebSocket{
@@ -20,6 +20,10 @@ class GameController extends WebSocket{
         socket.on(UNSUBSCRIBE_GAME_ROOM, (gameId)=> {
             socket.leave(gameId)
         })
+    }
+
+    emitSendJoinedGameRoomPlayer (gameRoomId, nickName) {
+        this.io.to(gameRoomId).emit(SEND_JOINED_GAME_ROOM_PLAYER, nickName)
     }
 }
 

@@ -10,6 +10,8 @@ import CONSTANTS from "../../../constants";
 import Button from "../../Button/Button";
 import {Link} from "react-router-dom";
 import {gameController} from "../../../api/ws/initSocket";
+import {ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom}) => {
 
@@ -48,7 +50,19 @@ const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsU
     const gameStatusClassName = classNames({["expected"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
 
     return (
-        !isFetching &&
+        <>
+        <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnVisibilityChange
+            draggable
+            pauseOnHover
+        />
+            {!isFetching &&
             <div className={styles.pageContainer}>
                 <div className={styles.waitingRoomContainer}>
                     <p>
@@ -67,7 +81,8 @@ const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsU
                     {isOwner && <Button onClick={removeGameRoomById}>Remove game room</Button>}
                     <Link className='primaryLink' to={ '/' }>Show another existing play rooms</Link>
                 </div>
-            </div>
+            </div>}
+            </>
     );
 };
 

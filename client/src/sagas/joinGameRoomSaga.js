@@ -4,6 +4,7 @@ import {
     createJoinGameRoomErrorAction, createClearError,
 } from "../actions/actionCreators";
 import {joinGameRoom} from "../api/http/axios/gameController";
+import {toast} from "react-toastify";
 
 export function * joinGameRoomSaga (action) {
     try {
@@ -15,6 +16,7 @@ export function * joinGameRoomSaga (action) {
             }
             yield put(createJoinGameRoomSuccessAction(data));
             action.history.replace(`/waiting_room/${data._id}`);
+            toast.success('You joined the room')
         }
     } catch (e) {
         yield put(createJoinGameRoomErrorAction(e.response));
