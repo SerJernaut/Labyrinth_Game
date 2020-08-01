@@ -1,4 +1,5 @@
 const gameQueries = require('../queries/gameQueries');
+const socketController = require("../../app");
 
 
 
@@ -8,6 +9,7 @@ module.exports.createGameRoomDataAndSend = async (req, res, next) => {
         const gameRoomData = await gameQueries.createGameRoomDataByPredicate({owner: id, ...body}, id);
         const objGameRoomData = gameRoomData.toObject();
         const {boardCells, _v, ...rest} = objGameRoomData;
+        rest.isCurrentRoom = true;
         rest.isOwner = true;
         res.send (
                 rest
@@ -45,6 +47,7 @@ module.exports.joinGameRoomById = async (req, res, next) => {
             $push: {players: _id}
         });
         const filteredData = ((({boardCells, ...rest})=> rest)(updatedRoomData));
+        socketController.socketController.gameController.emitJoinGameRoom(filteredData);
         filteredData.isCurrentRoom = true;
         res.send(filteredData);
     }
@@ -73,6 +76,7 @@ module.exports.leaveGameRoomById = async (req, res, next) => {
         const filteredPlayers = foundedGameRoomData.players.filter(player=> player != _id);
         foundedGameRoomData.players = filteredPlayers;
         foundedGameRoomData.save();
+        socketController.socketController.gameController.emitLeaveGameRoom(filteredPlayers, gameRoomId);
         res.send(filteredPlayers);
     }
     catch(e) {
