@@ -1,17 +1,18 @@
 import React from 'react';
-import {Link} from "react-router-dom";
 import Button from "../../Button/Button";
 import styles from './GameRoomsListPage.module.sass';
 import GameRoomsList from "../../GameRoomsList/GameRoomsList";
 import {connect} from "react-redux";
 import {createClearAuthStore, createClearGameStore} from "../../../actions/actionCreators";
 import PropTypes from "prop-types";
+import {gameController} from "../../../api/ws/initSocket";
 
-const GameRoomsListPage = ({history, clearAuthStore, clearGameStore}) => {
+const GameRoomsListPage = ({history, user: {_id}, clearAuthStore, clearGameStore}) => {
 
     const logout = () => {
         sessionStorage.clear();
         localStorage.clear();
+        gameController.unsubscribe(_id)
         clearAuthStore();
         clearGameStore();
         history.replace('/login')
@@ -38,9 +39,11 @@ GameRoomsListPage.propTypes = {
     clearGameStore: PropTypes.func.isRequired
 };
 
+const mapStateToProps = state => state.authStore;
+
 const mapDispatchToProps = dispatch => ({
     clearAuthStore: ()=> dispatch(createClearAuthStore()),
     clearGameStore: ()=> dispatch(createClearGameStore())
 })
 
-export default connect(null, mapDispatchToProps)(GameRoomsListPage);
+export default connect(mapStateToProps, mapDispatchToProps)(GameRoomsListPage);
