@@ -24,7 +24,6 @@ function gameRoomsReducer (state = initialState, action) {
             };
         }
         case ACTION_TYPES.CREATE_GAME_ROOM_SUCCESS:
-        case ACTION_TYPES.JOIN_GAME_ROOM_SUCCESS:
         case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS:{
             const gameRoomsDataArr = [...gameRoomsDataClone.entries()];
             gameRoomsDataClone.clear();
@@ -36,6 +35,20 @@ function gameRoomsReducer (state = initialState, action) {
                 gameRoomsData: gameRoomsDataClone,
             };
         }
+        case ACTION_TYPES.JOIN_GAME_ROOM_SUCCESS: {
+            const {gameRoomData} = action;
+            const gameRoomsDataArr = [...gameRoomsDataClone.entries()];
+            const isOwner = gameRoomsDataClone.get(gameRoomData._id).isOwner;
+            gameRoomsDataClone.clear();
+            gameRoomsDataClone.set(gameRoomData._id, {...gameRoomData, isOwner});
+            gameRoomsDataArr.forEach(data=> data[0] !== gameRoomData._id && gameRoomsDataClone.set(data[0], data[1]));
+            return {
+                ...state,
+                isFetching: false,
+                gameRoomsData: gameRoomsDataClone,
+            };
+        }
+
         case ACTION_TYPES.GET_GAME_ROOMS_SUCCESS: {
             action.gameRoomsData.forEach(data=>
                 gameRoomsDataClone.set(data._id, data)
