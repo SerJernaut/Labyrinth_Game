@@ -5,14 +5,14 @@ import GameRoomsList from "../../GameRoomsList/GameRoomsList";
 import {connect} from "react-redux";
 import {createClearAuthStore, createClearGameStore} from "../../../actions/actionCreators";
 import PropTypes from "prop-types";
-import {gameController} from "../../../api/ws/initSocket";
+import {appController} from "../../../api/ws/initSocket";
 
 const GameRoomsListPage = ({history, user: {_id}, clearAuthStore, clearGameStore}) => {
 
     const logout = () => {
         sessionStorage.clear();
         localStorage.clear();
-        gameController.unsubscribe(_id)
+        appController.unsubscribe(_id)
         clearAuthStore();
         clearGameStore();
         history.replace('/login')

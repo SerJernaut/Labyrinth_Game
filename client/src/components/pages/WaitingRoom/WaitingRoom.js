@@ -9,6 +9,7 @@ import classNames from "classnames";
 import CONSTANTS from "../../../constants";
 import Button from "../../Button/Button";
 import {Link} from "react-router-dom";
+import {gameController} from "../../../api/ws/initSocket";
 
 const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom}) => {
 
@@ -24,6 +25,11 @@ const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsU
             (gameRoomsData && gameRoomsData.size > 0 &&
                 [...gameRoomsData.values()][0]._id !== +match.params.id)) {
             history.replace('/')}
+        else {
+            gameRoomsData && gameRoomsData.size > 0 && gameController.subscribeGameRoom([...gameRoomsData.values()][0]._id);
+        }
+
+        return () => gameRoomsData && gameRoomsData.size > 0 && gameController.unsubscribeGameRoom([...gameRoomsData.values()][0]._id);
     });
 
     if (gameRoomsData.size === 0) {return null}

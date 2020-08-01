@@ -1,7 +1,7 @@
 import { put } from 'redux-saga/effects';
 import { createAuthErrorAction, createAuthSuccessAction } from '../actions/actionCreators';
 import {signInUser, signInUserByRefreshToken, signUpUser} from '../api/http/axios/authController/index';
-import {gameController} from "../api/ws/initSocket";
+import {appController} from "../api/ws/initSocket";
 
 export function * authSaga (action ) {
   try {
@@ -11,7 +11,7 @@ export function * authSaga (action ) {
                                         : yield signInUserByRefreshToken()
     if (typeof user === 'object') {
       yield put(createAuthSuccessAction(user));
-      gameController.subscribe(user._id);
+      appController.subscribe(user._id);
     }
 
   } catch (e) {

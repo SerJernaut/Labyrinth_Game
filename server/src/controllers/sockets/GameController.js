@@ -1,23 +1,26 @@
 const WebSocket = require('./WebSocket');
-const {SOCKET: {JOIN_GAME_ROOM, LEAVE_GAME_ROOM}} = require('../../constants')
+const {SOCKET: {SUBSCRIBE_GAME_ROOM, UNSUBSCRIBE_GAME_ROOM}} = require('../../constants')
+
 
 class GameController extends WebSocket{
 
     /**@override*/
     anotherSubscribes (socket) {
-
+        this.onSubscribeGame(socket);
+        this.onUnsubscribeGame(socket)
     }
 
-    emitJoinGameRoom (gameRoomData) {
-        this.io.emit(JOIN_GAME_ROOM,
-            gameRoomData)
+    onSubscribeGame (socket) {
+        socket.on(SUBSCRIBE_GAME_ROOM, (gameId)=> {
+            socket.join(gameId)
+        })
     }
 
-    emitLeaveGameRoom (updatedRoomPlayers, gameRoomId) {
-        this.io.emit(LEAVE_GAME_ROOM,
-            {updatedRoomPlayers, gameRoomId})
+    onUnsubscribeGame (socket) {
+        socket.on(UNSUBSCRIBE_GAME_ROOM, (gameId)=> {
+            socket.leave(gameId)
+        })
     }
-
 }
 
 module.exports = GameController;

@@ -14,7 +14,9 @@ const CONSTANTS = {
         UNSUBSCRIBE: 'unsubscribe',
         CONNECTION: 'connect',
         JOIN_GAME_ROOM: 'joinGameRoom',
-        LEAVE_GAME_ROOM: 'leaveGameRoom'
+        LEAVE_GAME_ROOM: 'leaveGameRoom',
+        SUBSCRIBE_GAME_ROOM: 'subscribeGameRoom',
+        UNSUBSCRIBE_GAME_ROOM: 'unsubscribeGameRoom',
     },
     NUMBER_OF_PLAYERS: {
         MIN_GAME_PLAYERS: 2,
