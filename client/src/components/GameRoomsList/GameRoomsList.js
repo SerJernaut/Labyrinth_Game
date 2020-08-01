@@ -12,6 +12,7 @@ import CONSTANTS from "../../constants";
 import {InfiniteScroll} from 'react-simple-infinite-scroll';
 import {Link} from "react-router-dom";
 import Button from "../Button/Button";
+import {Col, Container, Row} from "react-bootstrap";
 
 const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGameRoom, history, checkIsUserInSomeRoom}) => {
 
@@ -35,35 +36,52 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
 
     const disabled = checkIsCurrentGameRoom() || isFetching;
 
+    const col8Offset2 = {
+        span: 8,
+        offset: 2
+    };
+
+    const col10Offset1 = {
+        span: 10,
+        offset: 1
+    }
+
+
     return (
-        <div className={styles.listContainer}>
-            {checkIsCurrentGameRoom() && <h1>Return to joined room below, you can't be in two rooms simultaneously</h1>}
-            {!checkIsCurrentGameRoom() && <h1>Create own game room or join existing</h1>}
-            <Link className='primaryLink' to={ '/create_new_game_room' }><Button disabled={disabled}>
-                Create new game room
-            </Button></Link>
-            <InfiniteScroll
-                throttle={100}
-                threshold={300}
-                isLoading={isFetching}
-                hasMore={hasMore}
-                onLoadMore={() => {
-                    getGameRoomsWithFilter(arrOfGameRoomsData.length)
-                }
-                }
-            >
-            {arrOfGameRoomsData.length > 0 &&
-             arrOfGameRoomsData.map((gameRoomData, index)=>
-                 <GameRoomItem isFetching={isFetching}
-                               key={index}
-                               gameRoomData={gameRoomData}
-                               joinGameRoom={joinGameRoom}
-                               history={history}
-                               disabled={disabled}/>)
-            }
-                {isFetching && 'Loading...'}
-            </InfiniteScroll>
-        </div>
+        <Container fluid>
+            <Row>
+                <Col xs={col10Offset1} sm={col10Offset1} md={col10Offset1} lg={col8Offset2}  >
+                    {checkIsCurrentGameRoom() && <h1 className={styles.header}>Return to joined room below, <br/> you can't be in two rooms simultaneously</h1>}
+                    {!checkIsCurrentGameRoom() && <h1 className={styles.header}>Create own game room or join existing</h1>}
+                        <div className="d-flex justify-content-center">
+                            <Link className='primaryLink' to={ '/create_new_game_room' }><Button disabled={disabled}>
+                                Create new game room
+                            </Button></Link>
+                        </div>
+                    <InfiniteScroll
+                        throttle={100}
+                        threshold={300}
+                        isLoading={isFetching}
+                        hasMore={hasMore}
+                        onLoadMore={() => {
+                            getGameRoomsWithFilter(arrOfGameRoomsData.length)
+                        }
+                        }
+                    >
+                        {arrOfGameRoomsData.length > 0 &&
+                        arrOfGameRoomsData.map((gameRoomData, index)=>
+                            <GameRoomItem isFetching={isFetching}
+                                          key={index}
+                                          gameRoomData={gameRoomData}
+                                          joinGameRoom={joinGameRoom}
+                                          history={history}
+                                          disabled={disabled}/>)
+                        }
+                        {isFetching && 'Loading...'}
+                    </InfiniteScroll>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

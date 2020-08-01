@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import Setup from "./components/Setup";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
       <Setup/>,
