@@ -28,3 +28,9 @@
 .ended {
     color: red;
 }
+
+.welcome {
+    color: aqua;
+    font-weight: 900;
+    text-align: center;
+}

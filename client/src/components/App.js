@@ -19,7 +19,7 @@ const GameRoomCreationPage = lazy(()=> import('./pages/GameRoomCreationPage/Game
 const GameRoomsListPage = lazy(()=> import('./pages/GameRoomsListPage/GameRoomsListPage'));
 
 
-function App ({refreshSignIn}) {
+function App ({refreshSignIn, user}) {
 
     useEffect( () => {
         const refreshToken = localStorage.getItem(CONSTANTS.REFRESH_TOKEN_KEY)
@@ -42,6 +42,7 @@ function App ({refreshSignIn}) {
                 draggable
                 pauseOnHover
             />
+            <h1 className="welcome">Welcome, {user && user.nickName}</h1>
             <Switch>
                 <Route exact path='/' component={privateHOC(GameRoomsListPage)}/>
                 <Route path='/create_new_game_room' component={privateHOC(GameRoomCreationPage)}/>
