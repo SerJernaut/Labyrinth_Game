@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {connect} from "react-redux";
 import {
     createChangeReadyStatusRequestAction,
@@ -14,8 +14,18 @@ import Button from "../../Button/Button";
 import {Link} from "react-router-dom";
 import {gameController} from "../../../api/ws/initSocket";
 
+const usePrevious = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
+
 
 const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, setRandomBoardCells}) => {
+
+    const prevState = usePrevious({gameRoomsData});
 
     useEffect(()=> {
         gameRoomsData
@@ -37,7 +47,7 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
     });
 
     useEffect(()=> {
-        if((error && error.status === 404) || gameRoomsData && gameRoomsData.size === 0) {
+        if((error && error.status === 404) || prevState && prevState.gameRoomsData.size > 0 && gameRoomsData && gameRoomsData.size === 0) {
             history.replace('/')
         }
     })
