@@ -16,7 +16,6 @@ export function * checkIsUserInSomeRoomSaga () {
             yield put(createCheckIsUserInSomeRoomSuccessAction(data));
         }
     } catch (e) {
-        console.log(e.response)
         yield put(createCheckIsUserInSomeRoomErrorAction(e.response));
     }
 }

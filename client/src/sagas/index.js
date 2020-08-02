@@ -7,6 +7,7 @@ import {joinGameRoomSaga} from "./joinGameRoomSaga";
 import {checkIsUserInSomeRoomSaga} from "./checkIsUserInSomeRoomSaga";
 import {leaveGameRoomSaga} from "./leaveGameRoomSaga";
 import {removeGameRoomSaga} from "./removeGameRoomSaga";
+import {changeReadyStatusSaga} from "./changeReadyStatusSaga";
 
 export default function * () {
     yield takeLatest(ACTION_TYPES.AUTH_REQUEST, authSaga);
@@ -15,5 +16,6 @@ export default function * () {
     yield takeLatest(ACTION_TYPES.JOIN_GAME_ROOM_REQUEST, joinGameRoomSaga);
     yield takeLatest(ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_REQUEST, checkIsUserInSomeRoomSaga);
     yield takeLatest(ACTION_TYPES.LEAVE_GAME_ROOM_REQUEST, leaveGameRoomSaga);
-    yield takeLatest(ACTION_TYPES.REMOVE_GAME_ROOM_REQUEST, removeGameRoomSaga)
+    yield takeLatest(ACTION_TYPES.REMOVE_GAME_ROOM_REQUEST, removeGameRoomSaga);
+    yield takeLatest(ACTION_TYPES.CHANGE_READY_STATUS_REQUEST, changeReadyStatusSaga);
 }

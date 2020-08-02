@@ -22,7 +22,10 @@ const {AUTH_REQUEST,
   REMOVE_GAME_ROOM_REQUEST,
   REMOVE_GAME_ROOM_SUCCESS,
   REMOVE_GAME_ROOM_ERROR,
-  CLEAR_ERROR} = ACTION_TYPES;
+  CLEAR_ERROR,
+  CHANGE_READY_STATUS_REQUEST,
+  CHANGE_READY_STATUS_SUCCESS,
+  CHANGE_READY_STATUS_ERROR} = ACTION_TYPES;
 
 export const createAuthRequestAction = (values, isRegistration) => ( {
   type: AUTH_REQUEST,
@@ -78,7 +81,7 @@ export const createJoinGameRoomRequestAction = (gameRoomId, history) => ({
   history
 });
 
-export const createJoinGameRoomSuccessAction = gameRoomData => ({
+export const createJoinGameRoomSuccessAction = (gameRoomData) => ({
   type: JOIN_GAME_ROOM_SUCCESS,
   gameRoomData
 });
@@ -146,3 +149,21 @@ export const createRemoveGameRoomErrorAction = error => ({
 export const createClearError = () => ({
   type: CLEAR_ERROR,
 });
+
+export const createChangeReadyStatusRequestAction = (neededIsReadyStatus, gameRoomId) => ({
+  type: CHANGE_READY_STATUS_REQUEST,
+  neededIsReadyStatus,
+  gameRoomId
+});
+
+export const createChangeReadyStatusSuccessAction = (changedIsReadyStatus, gameRoomId, playerId) => ({
+  type: CHANGE_READY_STATUS_SUCCESS,
+  changedIsReadyStatus,
+  gameRoomId,
+  playerId
+})
+
+export const createChangeReadyStatusErrorAction = error => ({
+  type: CHANGE_READY_STATUS_ERROR,
+  error
+})

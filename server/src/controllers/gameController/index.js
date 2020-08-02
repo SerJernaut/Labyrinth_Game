@@ -1,16 +1,15 @@
 const gameQueries = require('../queries/gameQueries');
 const socketController = require("../../app");
 
-
-
 module.exports.createGameRoomDataAndSend = async (req, res, next) => {
     try {
         const {authorizationData: {_id: id}, body} = req;
         const gameRoomData = await gameQueries.createGameRoomDataByPredicate({owner: id, ...body}, id);
         const objGameRoomData = gameRoomData.toObject();
         const {boardCells, _v, ...rest} = objGameRoomData;
-        rest.isCurrentRoom = true;
+        socketController.socketController.appController.emitCreateGameRoom(rest);
         rest.isOwner = true;
+        rest.isCurrentRoom = true;
         res.send (
                 rest
         )
@@ -47,8 +46,11 @@ module.exports.joinGameRoomById = async (req, res, next) => {
             $push: {players: _id}
         });
         const filteredData = ((({boardCells, ...rest})=> rest)(updatedRoomData));
-        socketController.socketController.gameController.emitJoinGameRoom(filteredData);
+        socketController.socketController.appController.emitJoinGameRoom(filteredData);
+        const newPlayerNickName = filteredData.players[filteredData.players.length - 1].nickName;
+        socketController.socketController.gameController.emitSendJoinedGameRoomPlayer(gameRoomId, newPlayerNickName);
         filteredData.isCurrentRoom = true;
+        filteredData.isReady = false;
         res.send(filteredData);
     }
     catch (e) {
@@ -60,7 +62,9 @@ module.exports.checkIsUserInSomeRoomAndSendResult = async (req, res, next) => {
     try{
         const {authorizationData: {_id}} = req;
         const currentGameRoom = await gameQueries.checkIsUserInSomeRoom(_id);
+        const player = currentGameRoom.players.find(player=> player._id == _id);
         currentGameRoom.isOwner = currentGameRoom.owner._id == _id;
+        currentGameRoom.isReady = player.isReady;
         currentGameRoom.isCurrentRoom = true;
         res.send(currentGameRoom);
     }
@@ -73,10 +77,12 @@ module.exports.leaveGameRoomById = async (req, res, next) => {
     try{
         const {authorizationData: {_id}, body: {gameRoomId}} = req;
         const foundedGameRoomData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});
-        const filteredPlayers = foundedGameRoomData.players.filter(player=> player != _id);
+        const leftGamePlayer = foundedGameRoomData.players.find(player=> player._id == _id);
+        const filteredPlayers = foundedGameRoomData.players.filter(player=> player._id != _id);
         foundedGameRoomData.players = filteredPlayers;
         foundedGameRoomData.save();
-        socketController.socketController.gameController.emitLeaveGameRoom(filteredPlayers, gameRoomId);
+        socketController.socketController.appController.emitLeaveGameRoom(filteredPlayers, gameRoomId);
+        socketController.socketController.gameController.emitSendLeftGameRoomPlayer(gameRoomId, leftGamePlayer.nickName);
         res.send(filteredPlayers);
     }
     catch(e) {
@@ -100,6 +106,7 @@ module.exports.removeGameRoomById = async (req, res, next) => {
         const {body: {gameRoomId}} = req;
         const result = await gameQueries.removeGameRoomByPredicate({_id: gameRoomId});
         if (result) {
+            socketController.socketController.appController.emitRemoveGameRoom(gameRoomId);
             res.end()
         }
     }

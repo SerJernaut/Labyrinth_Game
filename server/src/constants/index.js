@@ -15,6 +15,7 @@ const SOCKET = {
   SUBSCRIBE_GAME_ROOM: 'subscribeGameRoom',
   UNSUBSCRIBE_GAME_ROOM: 'unsubscribeGameRoom',
   REMOVE_GAME_ROOM: 'removeGameRoom',
+  CHANGE_READY_STATUS: 'changeReadyStatus'
 };
 const SERVER_PORT = 3001;
 const MONGODB_URL = 'mongodb://localhost:27017/labyrinth_db';

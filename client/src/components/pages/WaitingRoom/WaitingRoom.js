@@ -1,7 +1,10 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {
-    createCheckIsUserInSomeRoomRequestAction, createLeaveGameRoomRequestAction, createRemoveGameRoomRequestAction,
+    createChangeReadyStatusRequestAction,
+    createCheckIsUserInSomeRoomRequestAction,
+    createLeaveGameRoomRequestAction,
+    createRemoveGameRoomRequestAction,
 } from "../../../actions/actionCreators";
 import PropTypes from 'prop-types';
 import styles from "./WaitingRoom.module.sass";
@@ -10,10 +13,9 @@ import CONSTANTS from "../../../constants";
 import Button from "../../Button/Button";
 import {Link} from "react-router-dom";
 import {gameController} from "../../../api/ws/initSocket";
-import {ToastContainer} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
-const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom}) => {
+
+const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady}) => {
 
     useEffect(()=> {
         gameRoomsData
@@ -36,7 +38,7 @@ const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsU
 
     if (gameRoomsData.size === 0) {return null}
 
-    const {_id, gameStatus, owner: {nickName}, players, maxPlayers, areaSize, isOwner} = [...gameRoomsData.values()][0];
+    const {_id, gameStatus, owner: {nickName}, players, maxPlayers, areaSize, isOwner, isReady} = [...gameRoomsData.values()][0];
 
     const leaveGameRoomById = () => {
         leaveGameRoom(_id, history)
@@ -46,30 +48,32 @@ const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsU
         removeGameRoom(_id, history)
     }
 
-    const numberOfPlayersClassName = classNames({["enoughForGame"]: players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS}, {["notEnoughForGame"]: players.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
-    const gameStatusClassName = classNames({["expected"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
+    const numberOfPlayersClassName = classNames(
+        {["enoughForGame"]: players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS},
+        {["notEnoughForGame"]: players.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
+    const gameStatusClassName = classNames(
+        {["expected"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
+
+    const readyPlayers = [];
+    const numberOfReadyPlayersClassName = classNames({["enoughForGame"]: readyPlayers.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS}, {["notEnoughForGame"]: readyPlayers.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
+    players.forEach(player=> player.isReady && readyPlayers.push(player.nickName));
+    const changeReadyStatus = () => changeReady(!isReady, _id);
 
     return (
-        <>
-        <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnVisibilityChange
-            draggable
-            pauseOnHover
-        />
-            {!isFetching &&
             <div className={styles.pageContainer}>
                 <div className={styles.waitingRoomContainer}>
+                    {!isOwner && <Button onClick={changeReadyStatus}>{isReady ? 'Not': ''} ready </Button>}
                     <p>
                         Game room status: <span className={gameStatusClassName}>{gameStatus}</span>
                     </p>
                     <p>
                         Number of players: <span className={numberOfPlayersClassName}>{players.length}</span><span>/{maxPlayers}</span>
+                    </p>
+                    <p>
+                        Number of ready players: <span className={numberOfReadyPlayersClassName}>{readyPlayers.length}</span><span>/{maxPlayers}</span>
+                    </p>
+                    <p>
+                        Ready players: <span>{readyPlayers.join(",")}</span>
                     </p>
                     <p>
                         Room owner: <span>{nickName}</span>
@@ -79,10 +83,10 @@ const WaitingRoom = ({history, match, error, gameRoomsData, isFetching, checkIsU
                     </p>
                     {!isOwner && <Button onClick={leaveGameRoomById}>Leave game room</Button>}
                     {isOwner && <Button onClick={removeGameRoomById}>Remove game room</Button>}
+
                     <Link className='primaryLink' to={ '/' }>Show another existing play rooms</Link>
                 </div>
-            </div>}
-            </>
+            </div>
     );
 };
 
@@ -94,6 +98,7 @@ WaitingRoom.propTypes = {
     isFetching: PropTypes.bool.isRequired,
     leaveGameRoom: PropTypes.func.isRequired,
     removeGameRoom: PropTypes.func.isRequired,
+    changeReady: PropTypes.func.isRequired,
     error: PropTypes.object
 }
 
@@ -102,7 +107,8 @@ const mapStateToProps = state => state.gameRoomsStore;
 const mapDispatchToProps = dispatch => ({
     checkIsUserInSomeRoom: () => dispatch(createCheckIsUserInSomeRoomRequestAction()),
     leaveGameRoom: (gameRoomId, history) => dispatch(createLeaveGameRoomRequestAction(gameRoomId, history)),
-    removeGameRoom: (gameRoomId, history) => dispatch(createRemoveGameRoomRequestAction(gameRoomId, history))
+    removeGameRoom: (gameRoomId, history) => dispatch(createRemoveGameRoomRequestAction(gameRoomId, history)),
+    changeReady: (isReady, gameRoomId) => dispatch(createChangeReadyStatusRequestAction(isReady, gameRoomId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WaitingRoom);

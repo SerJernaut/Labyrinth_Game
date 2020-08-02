@@ -23,7 +23,7 @@ const schema = {
         enum: [9, 16, 25],
         required: true,
     },
-    players: [{...modelRefs.userRef, required: true}],
+    players: [modelRefs.userRef],
     boardCells: [boardCellSchema],
     treasureBelongsToUser: {...modelRefs.userRef}
 };

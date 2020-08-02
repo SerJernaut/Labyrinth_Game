@@ -8,6 +8,9 @@ import '../App.css'
 import NotFound from "./NotFound/NotFound";
 import {connect} from "react-redux";
 import PropTypes from 'prop-types';
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const SignUpPage = lazy(() => import('./pages/AuthPages/SignUpPage/SignUpPage'));
 const LoginPage = lazy(() => import('./pages/AuthPages/LoginPage/LoginPage'));
@@ -28,6 +31,17 @@ function App ({refreshSignIn}) {
 
     return (
         <Suspense fallback={ <div>Loading...</div> }>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnVisibilityChange
+                draggable
+                pauseOnHover
+            />
             <Switch>
                 <Route exact path='/' component={privateHOC(GameRoomsListPage)}/>
                 <Route path='/create_new_game_room' component={privateHOC(GameRoomCreationPage)}/>

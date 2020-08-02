@@ -17,6 +17,7 @@ const CONSTANTS = {
         JOIN_GAME_ROOM: 'joinGameRoom',
         SEND_JOINED_GAME_ROOM_PLAYER: 'sendJoinedGameRoomPlayer',
         SEND_LEFT_GAME_ROOM_PLAYER: 'sendLeftGameRoomPlayer',
+        CHANGE_READY_STATUS: 'changeReadyStatus',
         LEAVE_GAME_ROOM: 'leaveGameRoom',
         SUBSCRIBE_GAME_ROOM: 'subscribeGameRoom',
         UNSUBSCRIBE_GAME_ROOM: 'unsubscribeGameRoom',
