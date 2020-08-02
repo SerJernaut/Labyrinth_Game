@@ -25,19 +25,28 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
     }, []);
 
     useEffect(()=> {
-        if((error && error.status === 404) || (gameRoomsData && gameRoomsData.size > 0 && [...gameRoomsData.values()][0]._id !== +match.params.id )) {
+        if(gameRoomsData
+            && gameRoomsData.size > 0
+            && [...gameRoomsData.values()][0]._id !== +match.params.id) {
                 [...gameRoomsData.values()].find(gameRoomData=> gameRoomData.isCurrentRoom)
                 ?
                 history.replace(`/game_room/${[...gameRoomsData.values()].find(gameRoomData=> gameRoomData.isCurrentRoom)._id}`)
                 :
                 history.replace('/')
         }
-        else {
-            gameRoomsData && gameRoomsData.size > 0 && gameController.subscribeGameRoom([...gameRoomsData.values()][0]._id);
-        }
-
-        return () => gameRoomsData && gameRoomsData.size > 0 && gameController.unsubscribeGameRoom([...gameRoomsData.values()][0]._id);
     });
+
+    useEffect(()=> {
+        if((error && error.status === 404) || gameRoomsData && gameRoomsData.size === 0) {
+            history.replace('/')
+        }
+    })
+
+    useEffect(()=> {
+        gameRoomsData && gameRoomsData.size > 0 && gameController.subscribeGameRoom([...gameRoomsData.values()][0]._id);
+        return () => gameRoomsData && gameRoomsData.size > 0 && gameController.unsubscribeGameRoom([...gameRoomsData.values()][0]._id);
+    })
+
 
     if (gameRoomsData.size === 0) {return null}
 
@@ -95,18 +104,26 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
 
     const readyPlayers = [];
     const ownerIndex = players.findIndex(player=> player.nickName === owner.nickName);
-    players[ownerIndex].isReady = true;
+    if(ownerIndex) {
+        players[ownerIndex].isReady = true;
+    }
     players.forEach(player=> player.isReady && readyPlayers.push(player.nickName));
+
     const numberOfReadyPlayersClassName = classNames({["enoughForGame"]: readyPlayers.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && readyPlayers.length === players.length}, {["notEnoughForGame"]: readyPlayers.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS || readyPlayers.length < players.length});
+
     const changeReadyStatus = () => changeReady(!isReady, _id);
+
     const playersNickNamesArr = players.map(player=> player.nickName);
 
     return (
            gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED && <div className={styles.pageContainer}>
                 <div className={styles.waitingRoomContainer}>
-                    {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && players.every(player=> player.isReady) && <Button onClick={startGame}>Start game</Button>}
+                    {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && players.every(player=> player.isReady)
+                        ?
+                        <Button onClick={startGame}>Start game</Button>
+                        :
+                        <p className={styles.msgForOwner}>Wait until all players press ready</p>}
                     {isOwner && players.length === 1 && <p className={styles.msgForOwner}>You can not start the game solo, wait until other players join the game</p>}
-                    {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && !players.every(player=> player.isReady) && <p className={styles.msgForOwner}>Wait until all players press ready</p>}
                     {!isOwner && <Button onClick={changeReadyStatus}>I'm {isReady ? 'not': ''} ready to play</Button>}
                     <p>
                         Game room status: <span className={gameStatusClassName}>{gameStatus}</span>
