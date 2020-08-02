@@ -104,7 +104,7 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
 
     const readyPlayers = [];
     const ownerIndex = players.findIndex(player=> player.nickName === owner.nickName);
-    if(ownerIndex) {
+    if(typeof ownerIndex === 'number') {
         players[ownerIndex].isReady = true;
     }
     players.forEach(player=> player.isReady && readyPlayers.push(player.nickName));
