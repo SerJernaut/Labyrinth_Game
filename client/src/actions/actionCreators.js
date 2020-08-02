@@ -25,7 +25,10 @@ const {AUTH_REQUEST,
   CLEAR_ERROR,
   CHANGE_READY_STATUS_REQUEST,
   CHANGE_READY_STATUS_SUCCESS,
-  CHANGE_READY_STATUS_ERROR} = ACTION_TYPES;
+  CHANGE_READY_STATUS_ERROR,
+  SET_GAME_BOARD_CELLS_REQUEST,
+  SET_GAME_BOARD_CELLS_SUCCESS,
+  SET_GAME_BOARD_CELLS_ERROR} = ACTION_TYPES;
 
 export const createAuthRequestAction = (values, isRegistration) => ( {
   type: AUTH_REQUEST,
@@ -136,9 +139,10 @@ export const createRemoveGameRoomRequestAction = (gameRoomId, history) => ({
   history
 })
 
-export const createRemoveGameRoomSuccessAction = (gameRoomId) => ({
+export const createRemoveGameRoomSuccessAction = (gameRoomId, history) => ({
   type: REMOVE_GAME_ROOM_SUCCESS,
-  gameRoomId
+  gameRoomId,
+  history
 })
 
 export const createRemoveGameRoomErrorAction = error => ({
@@ -165,5 +169,22 @@ export const createChangeReadyStatusSuccessAction = (changedIsReadyStatus, gameR
 
 export const createChangeReadyStatusErrorAction = error => ({
   type: CHANGE_READY_STATUS_ERROR,
+  error
+})
+
+export const createSetBoardCellsRequestAction = (gameRoomId, boardCells) => ({
+  type: SET_GAME_BOARD_CELLS_REQUEST,
+  gameRoomId,
+  boardCells
+})
+
+export const createSetBoardCellsSuccessAction = (gameRoomId, boardCells) => ({
+  type: SET_GAME_BOARD_CELLS_SUCCESS,
+  gameRoomId,
+  boardCells,
+})
+
+export const createSetBoardCellsErrorAction = error => ({
+  type: SET_GAME_BOARD_CELLS_ERROR,
   error
 })

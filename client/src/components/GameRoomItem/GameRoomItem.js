@@ -12,8 +12,11 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
 
     const joinGameRoomById = () => joinGameRoom(_id, history);
     const numberOfPlayersClassName = classNames({["enoughForGame"]: players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS}, {["notEnoughForGame"]: players.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
-    const gameStatusClassName = classNames({["expected"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
-
+    const gameStatusClassName = classNames(
+        {["expected"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED},
+        {["playing"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.PLAYING},
+        {["ended"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.ENDED}
+    );
     const col8Offset2 = {
         span: 8,
         offset: 2
@@ -55,10 +58,18 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
                     <div className="mb-md-2 mb-lg-2 mr-2 mr-md-0 mr-lg-0">
                         <Button className="mb-1 mb-md-0 mb-lg-0" disabled={disabled || players.length === CONSTANTS.NUMBER_OF_PLAYERS.MAX_GAME_PLAYERS} onClick={joinGameRoomById}>Join the game room</Button>
                     </div>
-                {isCurrentRoom && <div >
-                    <Link className='primaryLink' to={ `/waiting_room/${_id}` }><Button>
+                {isCurrentRoom && gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED && <div>
+                    <Link className='primaryLink' to={ `/game_room/${_id}` }><Button>
                         Return to joined room
                     </Button></Link>
+                </div>}
+                {isCurrentRoom && gameStatus === CONSTANTS.GAME_ROOM_STATUS.PLAYING && <div>
+                <Link className='primaryLink' to={ `/game_room/${_id}` }><Button>
+                    Return to started game
+                </Button></Link>
+                </div>}
+                {gameStatus === CONSTANTS.GAME_ROOM_STATUS.ENDED && <div>
+                    <p>Game was ended</p>
                 </div>}
             </div>
         </Container>

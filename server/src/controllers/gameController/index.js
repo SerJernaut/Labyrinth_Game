@@ -7,7 +7,7 @@ module.exports.createGameRoomDataAndSend = async (req, res, next) => {
         const {authorizationData: {_id: id}, body} = req;
         const gameRoomData = await gameQueries.createGameRoomDataByPredicate({owner: id, ...body}, id);
         const objGameRoomData = gameRoomData.toObject();
-        const {boardCells, _v, ...rest} = objGameRoomData;
+        const {_v, ...rest} = objGameRoomData;
         socketController.socketController.appController.emitCreateGameRoom(rest);
         rest.isOwner = true;
         rest.isCurrentRoom = true;
@@ -23,7 +23,7 @@ module.exports.getPaginatedGameRoomsAndSend = async (req, res, next) => {
     try{
         const {body: {skip, limit}, authorizationData: {_id}} = req;
         let gameRoomsData = await gameQueries.getGameRoomsByPredicate({}, skip, limit);
-        gameRoomsData = gameRoomsData.map(({boardCells, __v, ...rest})=> rest);
+        gameRoomsData = gameRoomsData.map(({__v, ...rest})=> rest);
         if (skip === 0) {
             const firstGameRoomData = gameRoomsData[0];
             if (firstGameRoomData) {
@@ -46,13 +46,12 @@ module.exports.joinGameRoomById = async (req, res, next) => {
         const updatedRoomData = await gameQueries.updateGameRoomByPredicate({_id: gameRoomId}, {
             $push: {players: _id}
         });
-        const filteredData = ((({boardCells, ...rest})=> rest)(updatedRoomData));
-        socketController.socketController.appController.emitJoinGameRoom(filteredData);
-        const newPlayerNickName = filteredData.players[filteredData.players.length - 1].nickName;
+        socketController.socketController.appController.emitJoinGameRoom(updatedRoomData);
+        const newPlayerNickName = updatedRoomData.players[updatedRoomData.players.length - 1].nickName;
         socketController.socketController.gameController.emitSendJoinedGameRoomPlayer(gameRoomId, newPlayerNickName);
-        filteredData.isCurrentRoom = true;
-        filteredData.isReady = false;
-        res.send(filteredData);
+        updatedRoomData.isCurrentRoom = true;
+        updatedRoomData.isReady = false;
+        res.send(updatedRoomData);
     }
     catch (e) {
         next(e)

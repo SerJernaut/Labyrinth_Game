@@ -15,7 +15,7 @@ export function * joinGameRoomSaga (action) {
                 yield put(createClearError());
             }
             yield put(createJoinGameRoomSuccessAction(data));
-            action.history.replace(`/waiting_room/${data._id}`);
+            action.history.replace(`/game_room/${data._id}`);
             toast.success('You joined the room')
         }
     } catch (e) {

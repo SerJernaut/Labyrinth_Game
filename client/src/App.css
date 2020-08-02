@@ -20,3 +20,11 @@
 .expected {
     color: yellow
 }
+
+.playing {
+    color: lawngreen;
+}
+
+.ended {
+    color: red;
+}

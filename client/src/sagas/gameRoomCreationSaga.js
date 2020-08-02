@@ -14,7 +14,7 @@ export function * gameRoomCreationSaga (action) {
                 yield put(createClearError());
             }
             yield put(createGameRoomCreationSuccessAction(data));
-            action.history.replace(`/waiting_room/${data._id}`);
+            action.history.replace(`/game_room/${data._id}`);
         }
     } catch (e) {
         yield put(createGameRoomCreationErrorAction(e.response));
