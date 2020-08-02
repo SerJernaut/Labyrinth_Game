@@ -1,5 +1,6 @@
 const gameQueries = require('../queries/gameQueries');
 const socketController = require("../../app");
+const {GAME_STATUS} = require('../../constants')
 
 module.exports.createGameRoomDataAndSend = async (req, res, next) => {
     try {
@@ -104,11 +105,25 @@ module.exports.findGameRoomById = async (req, res, next) => {
 module.exports.removeGameRoomById = async (req, res, next) => {
     try {
         const {body: {gameRoomId}} = req;
-        const result = await gameQueries.removeGameRoomByPredicate({_id: gameRoomId});
-        if (result) {
-            socketController.socketController.appController.emitRemoveGameRoom(gameRoomId);
-            res.end()
-        }
+        await gameQueries.removeGameRoomByPredicate({_id: gameRoomId});
+        socketController.socketController.appController.emitRemoveGameRoom(gameRoomId);
+        res.end()
+
+    }
+    catch(e) {
+        next(e);
+    }
+}
+
+module.exports.setBoardCellsToRoomById = async (req, res, next) => {
+    try {
+        const {body: {gameRoomId, boardCells}} = req;
+        const gameData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});
+        gameData.boardCells = boardCells;
+        gameData.gameStatus = GAME_STATUS.PLAYING;
+        gameData.save();
+        socketController.socketController.gameController.emitSendBoardCells(gameRoomId, boardCells);
+        res.send(gameData);
     }
     catch(e) {
         next(e);

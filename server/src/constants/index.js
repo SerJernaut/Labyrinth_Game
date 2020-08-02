@@ -15,10 +15,16 @@ const SOCKET = {
   SUBSCRIBE_GAME_ROOM: 'subscribeGameRoom',
   UNSUBSCRIBE_GAME_ROOM: 'unsubscribeGameRoom',
   REMOVE_GAME_ROOM: 'removeGameRoom',
-  CHANGE_READY_STATUS: 'changeReadyStatus'
+  CHANGE_READY_STATUS: 'changeReadyStatus',
+  SEND_BOARD_CELLS: 'sendBoardCells'
 };
 const SERVER_PORT = 3001;
 const MONGODB_URL = 'mongodb://localhost:27017/labyrinth_db';
+const GAME_STATUS = {
+  EXPECTED: 'EXPECTED',
+  PLAYING: 'PLAYING',
+  ENDED: 'ENDED'
+}
 
 module.exports = {
   NICKNAME_PATTERN,
@@ -30,6 +36,7 @@ module.exports = {
   GET_GAME_ROOMS_LIMIT,
   SOCKET,
   SERVER_PORT,
-  MONGODB_URL
+  MONGODB_URL,
+  GAME_STATUS
 };
 

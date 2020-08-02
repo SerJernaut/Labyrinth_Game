@@ -3,13 +3,14 @@ const autoIncrement = require("mongoose-auto-increment");
 const {boardCellSchema} = require("./BoardCell");
 const {modelRefs} = require("./modelRefs");
 const Schema = mongoose.Schema;
+const {GAME_STATUS} = require('../constants')
 
 const schema = {
     gameStatus: {
         type: Schema.Types.String,
-        enum: ['EXPECTED', 'PLAYING', 'ENDED'],
+        enum: [GAME_STATUS.EXPECTED, GAME_STATUS.PLAYING, GAME_STATUS.ENDED],
         required: true,
-        default: 'EXPECTED'
+        default: GAME_STATUS.EXPECTED
     },
     owner: { ...modelRefs.userRef, required: true},
     maxPlayers:  {
@@ -23,7 +24,7 @@ const schema = {
         enum: [9, 16, 25],
         required: true,
     },
-    players: [modelRefs.userRef],
+    players: [{...modelRefs.userRef, unique: true, required: true}],
     boardCells: [boardCellSchema],
     treasureBelongsToUser: {...modelRefs.userRef}
 };

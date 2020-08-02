@@ -36,15 +36,26 @@ const limitSkipSchema = Joi.object( {
 
 const LIMIT_SKIP_SCHEMA = limitSkipSchema.and(...['limit', 'skip']);
 
+const gameIdSchema = Joi.number().integer();
+const boardCellsSchema = Joi.array()
+
 const GAME_ID_SCHEMA = Joi.object( {
-    gameRoomId: Joi.number().integer().label('Game id').required()
+    gameRoomId: gameIdSchema.label('Game id').required()
 })
+
+const setBoardCellsSchema = Joi.object( {
+    gameRoomId: gameIdSchema.label('Game id'),
+    boardCells: boardCellsSchema.label('Board cells')
+})
+
+const SET_BOARD_CELLS_SCHEMA = setBoardCellsSchema.and(...['gameRoomId', 'boardCells']);
 
 
 module.exports = {
     AUTHENTICATE_USER_SCHEMA,
     GAME_ROOM_SCHEMA,
     LIMIT_SKIP_SCHEMA,
-    GAME_ID_SCHEMA
+    GAME_ID_SCHEMA,
+    SET_BOARD_CELLS_SCHEMA
 }
 
