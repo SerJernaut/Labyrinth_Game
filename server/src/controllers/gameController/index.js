@@ -26,13 +26,9 @@ module.exports.getPaginatedGameRoomsAndSend = async (req, res, next) => {
         gameRoomsData = gameRoomsData.map(({__v, ...rest})=> rest);
         if (skip === 0) {
             const firstGameRoomData = gameRoomsData[0];
-            if (firstGameRoomData) {
-                firstGameRoomData.players.forEach(player => {
-                    firstGameRoomData.isCurrentRoom = player == _id;
-                });
-                firstGameRoomData.isOwner = firstGameRoomData.owner._id == _id
+            firstGameRoomData.isCurrentRoom = !!firstGameRoomData.players.find(p => p == _id);
+            firstGameRoomData.isOwner = firstGameRoomData.owner._id == _id
             }
-        }
         res.send({gameRoomsData, hasMore: limit <= gameRoomsData.length})
     }
     catch (e) {
@@ -118,11 +114,25 @@ module.exports.setBoardCellsToRoomById = async (req, res, next) => {
     try {
         const {body: {gameRoomId, boardCells}} = req;
         const gameData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});
+        req.playersIdArr = gameData.players.map(({_id, ...rest})=> _id );
         gameData.boardCells = boardCells;
         gameData.gameStatus = GAME_STATUS.PLAYING;
+        gameData.whoseMove = gameData.players[0]._id;
         gameData.save();
-        socketController.socketController.gameController.emitSendBoardCells(gameRoomId, boardCells);
-        res.end();
+        next()
+    }
+    catch(e) {
+        next(e);
+    }
+}
+
+module.exports.checkOnWhatBoardCellStayingUser = async (req, res, next) => {
+    try{
+        const {body: {boardCells}, authorizationData: {_id}} = req;
+        boardCells.forEach(boardCell=> {
+            boardCell.isStaying = !!boardCell.standingUsers.find(id => id === _id);
+        });
+        res.send(boardCells);
     }
     catch(e) {
         next(e);
