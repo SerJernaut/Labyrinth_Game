@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import {connect} from "react-redux";
 import {
     createChangeReadyStatusRequestAction,
-    createCheckIsUserInSomeRoomRequestAction,
+    createCheckIsUserInSomeRoomRequestAction, createCheckOnWhatBoardCellStayingUserRequestAction,
     createLeaveGameRoomRequestAction,
     createRemoveGameRoomRequestAction, createSetBoardCellsRequestAction,
 } from "../../../actions/actionCreators";
@@ -37,7 +37,7 @@ const chunkArray = (arr, chunk_size) =>{
 }
 
 
-const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, setRandomBoardCells}) => {
+const GameRoom = ({history, match, error, gameRoomsStore: {gameRoomsData, isFetching}, authStore: {user: {_id: userId}}, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, setRandomBoardCells}) => {
 
     const prevState = usePrevious({gameRoomsData});
 
@@ -67,7 +67,9 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
     })
 
     useEffect(()=> {
-        gameRoomsData && gameRoomsData.size > 0 && gameController.subscribeGameRoom([...gameRoomsData.values()][0]._id);
+        gameRoomsData
+        && gameRoomsData.size > 0
+        && gameController.subscribeGameRoom([...gameRoomsData.values()][0]._id);
         return () => gameRoomsData && gameRoomsData.size > 0 && gameController.unsubscribeGameRoom([...gameRoomsData.values()][0]._id);
     })
 
@@ -142,13 +144,16 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
 
     const boardCellsRows = [];
 
-    boardCellsPreparedRows.forEach(boardCellsRow=> (
+    boardCellsPreparedRows.forEach((boardCellsRow, index)=> (
         boardCellsRows.push(
-                <Row>
+                <Row key={index}>
                     {boardCellsRow.map((boardCell, index)=> (
                         <Col key={index + boardCell.cellIndex} className="p-0">
-                            <div className={classNames(styles.boardCellContainer ,"border border-secondary")}>
-                                <div className={styles.plug}></div>
+                            <div className={classNames(styles.boardCellContainer ,{["border border-secondary"]: boardCell.usersWhoExplored.find(id=> id === userId)})}>
+                                <div className={classNames(styles.plug, "d-flex justify-content-center align-items-center")}>
+                                    {boardCell.standingUsers.find(id => id === userId) && <div className={styles.stayingCircle}>
+                                    </div>}
+                                </div>
                             </div>
                         </Col>
                     ))}
@@ -213,17 +218,21 @@ GameRoom.propTypes = {
     removeGameRoom: PropTypes.func.isRequired,
     changeReady: PropTypes.func.isRequired,
     setRandomBoardCells: PropTypes.func.isRequired,
+    checkOnWhatBoardCellStayingUser: PropTypes.func.isRequired,
     error: PropTypes.object
 }
 
-const mapStateToProps = state => state.gameRoomsStore;
+const mapStateToProps = state => ({gameRoomsStore: state.gameRoomsStore,
+    authStore: state.authStore
+    }
+);
 
 const mapDispatchToProps = dispatch => ({
     checkIsUserInSomeRoom: () => dispatch(createCheckIsUserInSomeRoomRequestAction()),
     leaveGameRoom: (gameRoomId, history) => dispatch(createLeaveGameRoomRequestAction(gameRoomId, history)),
     removeGameRoom: (gameRoomId, history) => dispatch(createRemoveGameRoomRequestAction(gameRoomId, history)),
     changeReady: (isReady, gameRoomId) => dispatch(createChangeReadyStatusRequestAction(isReady, gameRoomId)),
-    setRandomBoardCells: (gameRoomId, boardCells) => dispatch(createSetBoardCellsRequestAction(gameRoomId, boardCells))
+    setRandomBoardCells: (gameRoomId, boardCells) => dispatch(createSetBoardCellsRequestAction(gameRoomId, boardCells)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
