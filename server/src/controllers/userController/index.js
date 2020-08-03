@@ -47,7 +47,6 @@ module.exports.setIsReadyFalseMW = async (req, res, next) => {
 module.exports.setIsReadyFalseAndEmit = async (req, res, next) => {
     try{
         const {authorizationData: {_id}, body: {gameRoomId}} = req;
-        console.log(gameRoomId)
         const neededIsReadyStatus = false;
         await userQueries.updateUserByPredicate(_id, {$set: {isReady: neededIsReadyStatus}});
         socketController.socketController.gameController.emitChangeReadyStatus(neededIsReadyStatus, gameRoomId, _id)
@@ -67,6 +66,26 @@ module.exports.setIsReadyTrueAndEmit = async (req, res, next) => {
         res.end()
     }
     catch(e) {
+        next(e);
+    }
+}
+
+module.exports.setAllPlayersReadyNull = async (req, res, next) => {
+    try{
+        const {playersIdArr, body: {gameRoomId, boardCells}} = req;
+        const queryArr = [];
+        playersIdArr.forEach(
+            playerId=> {
+                queryArr.push(userQueries.updateUserByPredicate(playerId, {$set: {isReady: null}}))
+            }
+        )
+        await Promise.all([
+            ...queryArr
+        ]);
+        socketController.socketController.gameController.emitSendBoardCells(gameRoomId, boardCells);
+        res.end();
+    }
+    catch (e) {
         next(e);
     }
 }

@@ -2,9 +2,10 @@ import React, {useEffect, useRef} from 'react';
 import {connect} from "react-redux";
 import {
     createChangeReadyStatusRequestAction,
-    createCheckIsUserInSomeRoomRequestAction, createCheckOnWhatBoardCellStayingUserRequestAction,
+    createCheckIsUserInSomeRoomRequestAction,
     createLeaveGameRoomRequestAction,
-    createRemoveGameRoomRequestAction, createSetBoardCellsRequestAction,
+    createRemoveGameRoomRequestAction,
+    createStartGameRequestAction,
 } from "../../../actions/actionCreators";
 import PropTypes from 'prop-types';
 import styles from "./GameRoom.module.sass";
@@ -14,6 +15,7 @@ import Button from "../../Button/Button";
 import {Link} from "react-router-dom";
 import {gameController} from "../../../api/ws/initSocket";
 import {Col, Container, Row} from "react-bootstrap";
+
 
 const usePrevious = (value) => {
     const ref = useRef();
@@ -37,7 +39,7 @@ const chunkArray = (arr, chunk_size) =>{
 }
 
 
-const GameRoom = ({history, match, error, gameRoomsStore: {gameRoomsData, isFetching}, authStore: {user: {_id: userId}}, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, setRandomBoardCells}) => {
+const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, error}, authStore: {user: {_id: userId}}, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, startGame}) => {
 
     const prevState = usePrevious({gameRoomsData});
 
@@ -61,7 +63,7 @@ const GameRoom = ({history, match, error, gameRoomsStore: {gameRoomsData, isFetc
     });
 
     useEffect(()=> {
-        if((error && error.status === 404) || prevState && prevState.gameRoomsData.size > 0 && gameRoomsData && gameRoomsData.size === 0) {
+        if((error && error.status === 404) || (prevState && prevState.gameRoomsData.size > 0 && gameRoomsData && gameRoomsData.size === 0)) {
             history.replace('/')
         }
     })
@@ -75,7 +77,7 @@ const GameRoom = ({history, match, error, gameRoomsStore: {gameRoomsData, isFetc
 
     if (gameRoomsData.size === 0) {return null}
 
-    const {_id, gameStatus, owner, players, maxPlayers, areaSize, isOwner, isReady, boardCells} = [...gameRoomsData.values()][0];
+    const {_id, gameStatus, owner, players, maxPlayers, areaSize, isOwner, isReady, boardCells, whoseMove} = [...gameRoomsData.values()][0];
 
     const leaveGameRoomById = () => {
         leaveGameRoom(_id, history)
@@ -117,8 +119,8 @@ const GameRoom = ({history, match, error, gameRoomsStore: {gameRoomsData, isFetc
         return boardCells;
     }
 
-    const startGame = () => {
-        setRandomBoardCells(_id, generateBoardCellsInfoForStartGame());
+    const startGameById = () => {
+        startGame(_id, generateBoardCellsInfoForStartGame());
     }
 
     const numberOfPlayersClassName = classNames(
@@ -142,14 +144,13 @@ const GameRoom = ({history, match, error, gameRoomsStore: {gameRoomsData, isFetc
 
     const boardCellsPreparedRows = chunkArray(boardCells, Math.sqrt(areaSize));
 
-    const boardCellsRows = [];
 
-    boardCellsPreparedRows.forEach((boardCellsRow, index)=> (
-        boardCellsRows.push(
+    const boardCellsRows = boardCellsPreparedRows.map((boardCellsRow, index)=> (
+      (
                 <Row key={index}>
                     {boardCellsRow.map((boardCell, index)=> (
                         <Col key={index + boardCell.cellIndex} className="p-0">
-                            <div className={classNames(styles.boardCellContainer ,{["border border-secondary"]: boardCell.usersWhoExplored.find(id=> id === userId)})}>
+                            <div className={classNames(styles.boardCellContainer ,{[styles.explored]: boardCell.usersWhoExplored.find(id=> id === userId)})}>
                                 <div className={classNames(styles.plug, "d-flex justify-content-center align-items-center")}>
                                     {boardCell.standingUsers.find(id => id === userId) && <div className={styles.stayingCircle}>
                                     </div>}
@@ -158,16 +159,16 @@ const GameRoom = ({history, match, error, gameRoomsStore: {gameRoomsData, isFetc
                         </Col>
                     ))}
                 </Row>
-            )
+
         )
-    )
+    ))
 
     return (
         <>
             {gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED && <div className={styles.pageContainer}>
                 <div className={styles.waitingRoomContainer}>
                     {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && players.every(player=> player.isReady) &&
-                        <Button onClick={startGame}>Start game</Button>}
+                        <Button onClick={startGameById}>Start game</Button>}
                     {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && !players.every(player=> player.isReady) &&
                     <p className={styles.msgForOwner}>Wait until all players press ready</p>}
                     {isOwner && players.length === 1 && <p className={styles.msgForOwner}>You can not start the game solo, wait until other players join the game</p>}
@@ -200,9 +201,13 @@ const GameRoom = ({history, match, error, gameRoomsStore: {gameRoomsData, isFetc
                 </div>
             </div>}
             {gameStatus === CONSTANTS.GAME_ROOM_STATUS.PLAYING &&
+                <>
                 <Container fluid className='w-50'>
                     {boardCellsRows}
                 </Container>
+                {whoseMove && whoseMove._id === userId && <h1 className="h1">Take a step, all players waiting until you take a step</h1>}
+                {whoseMove._id !== userId && <h1 className="h1">Wait until {whoseMove.nickName} take a step</h1>}
+                </>
             }
         </>
     );
@@ -212,13 +217,12 @@ GameRoom.propTypes = {
     checkIsUserInSomeRoom: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
-    gameRoomsData: PropTypes.instanceOf(Map).isRequired,
+    gameRoomsData: PropTypes.instanceOf(Map),
     isFetching: PropTypes.bool.isRequired,
     leaveGameRoom: PropTypes.func.isRequired,
     removeGameRoom: PropTypes.func.isRequired,
     changeReady: PropTypes.func.isRequired,
-    setRandomBoardCells: PropTypes.func.isRequired,
-    checkOnWhatBoardCellStayingUser: PropTypes.func.isRequired,
+    startGame: PropTypes.func.isRequired,
     error: PropTypes.object
 }
 
@@ -232,7 +236,7 @@ const mapDispatchToProps = dispatch => ({
     leaveGameRoom: (gameRoomId, history) => dispatch(createLeaveGameRoomRequestAction(gameRoomId, history)),
     removeGameRoom: (gameRoomId, history) => dispatch(createRemoveGameRoomRequestAction(gameRoomId, history)),
     changeReady: (isReady, gameRoomId) => dispatch(createChangeReadyStatusRequestAction(isReady, gameRoomId)),
-    setRandomBoardCells: (gameRoomId, boardCells) => dispatch(createSetBoardCellsRequestAction(gameRoomId, boardCells)),
+    startGame: (gameRoomId, boardCells) => dispatch(createStartGameRequestAction(gameRoomId, boardCells)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);

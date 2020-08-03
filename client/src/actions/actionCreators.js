@@ -26,9 +26,10 @@ const {AUTH_REQUEST,
   CHANGE_READY_STATUS_REQUEST,
   CHANGE_READY_STATUS_SUCCESS,
   CHANGE_READY_STATUS_ERROR,
-  SET_GAME_BOARD_CELLS_REQUEST,
-  SET_GAME_BOARD_CELLS_SUCCESS,
-  SET_GAME_BOARD_CELLS_ERROR} = ACTION_TYPES;
+  START_GAME_REQUEST,
+  START_GAME_SUCCESS,
+  START_GAME_ERROR,
+  } = ACTION_TYPES;
 
 export const createAuthRequestAction = (values, isRegistration) => ( {
   type: AUTH_REQUEST,
@@ -173,19 +174,19 @@ export const createChangeReadyStatusErrorAction = error => ({
   error
 })
 
-export const createSetBoardCellsRequestAction = (gameRoomId, boardCells) => ({
-  type: SET_GAME_BOARD_CELLS_REQUEST,
+export const createStartGameRequestAction = (gameRoomId, boardCells) => ({
+  type: START_GAME_REQUEST,
   gameRoomId,
   boardCells
 })
 
-export const createSetBoardCellsSuccessAction = (gameRoomId, boardCells) => ({
-  type: SET_GAME_BOARD_CELLS_SUCCESS,
+export const createStartGameSuccessAction = (gameRoomId, boardCells) => ({
+  type: START_GAME_SUCCESS,
   gameRoomId,
   boardCells,
 })
 
-export const createSetBoardCellsErrorAction = error => ({
-  type: SET_GAME_BOARD_CELLS_ERROR,
+export const createStartGameErrorAction = error => ({
+  type: START_GAME_ERROR,
   error
 })

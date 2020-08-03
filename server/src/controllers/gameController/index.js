@@ -26,8 +26,10 @@ module.exports.getPaginatedGameRoomsAndSend = async (req, res, next) => {
         gameRoomsData = gameRoomsData.map(({__v, ...rest})=> rest);
         if (skip === 0) {
             const firstGameRoomData = gameRoomsData[0];
-            firstGameRoomData.isCurrentRoom = !!firstGameRoomData.players.find(p => p == _id);
-            firstGameRoomData.isOwner = firstGameRoomData.owner._id == _id
+            if (firstGameRoomData) {
+                firstGameRoomData.isCurrentRoom = !!firstGameRoomData.players.find(p => p == _id);
+                firstGameRoomData.isOwner = firstGameRoomData.owner._id == _id
+            }
             }
         res.send({gameRoomsData, hasMore: limit <= gameRoomsData.length})
     }
@@ -110,7 +112,7 @@ module.exports.removeGameRoomById = async (req, res, next) => {
     }
 }
 
-module.exports.setBoardCellsToRoomById = async (req, res, next) => {
+module.exports.startGame = async (req, res, next) => {
     try {
         const {body: {gameRoomId, boardCells}} = req;
         const gameData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});

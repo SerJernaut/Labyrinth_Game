@@ -42,7 +42,7 @@ function App ({refreshSignIn, user}) {
                 draggable
                 pauseOnHover
             />
-            <h1 className="welcome">Welcome, {user && user.nickName}</h1>
+            <h1 className="h1">Welcome, {user && user.nickName}</h1>
             <Switch>
                 <Route exact path='/' component={privateHOC(GameRoomsListPage)}/>
                 <Route path='/create_new_game_room' component={privateHOC(GameRoomCreationPage)}/>

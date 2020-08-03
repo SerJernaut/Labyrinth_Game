@@ -25,6 +25,7 @@ const schema = {
         required: true,
     },
     players: [{...modelRefs.userRef, unique: true, required: true}],
+    whoseMove: { ...modelRefs.userRef, required: false},
     boardCells: [boardCellSchema],
     treasureBelongsToUser: {...modelRefs.userRef}
 };

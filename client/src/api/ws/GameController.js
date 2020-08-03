@@ -1,7 +1,10 @@
 import WebSocket from "./WebSocket";
 import CONSTANTS from "../../constants";
 import {toast} from "react-toastify";
-import {createChangeReadyStatusSuccessAction, createSetBoardCellsSuccessAction} from "../../actions/actionCreators";
+import {
+    createChangeReadyStatusSuccessAction,
+    createStartGameSuccessAction
+} from "../../actions/actionCreators";
 
 const {SOCKET: {
     SUBSCRIBE_GAME_ROOM,
@@ -52,7 +55,7 @@ class GameController extends WebSocket{
 
     onSendBoardCells = () => {
         this.socket.on(SEND_BOARD_CELLS, ({gameRoomId, boardCells})=> {
-            this.dispatch(createSetBoardCellsSuccessAction(gameRoomId, boardCells))
+            this.dispatch(createStartGameSuccessAction(gameRoomId, boardCells))
         })
     }
 }

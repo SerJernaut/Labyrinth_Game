@@ -29,7 +29,7 @@ module.exports.updateGameRoomByPredicate = async (findParam, updateParam) => {
 }
 
 module.exports.checkIsUserInSomeRoom = async (userId) => {
-    const foundedGameRoom = await Game.findOne({players: {"$in": [userId]}}).lean().populate('owner', '-password -__v').populate('players', '-password -__v');
+    const foundedGameRoom = await Game.findOne({players: {"$in": [userId]}}).lean().populate('owner', '-password -__v').populate('players', '-password -__v').populate('whoseMove', '-password -__v');
     if (foundedGameRoom) {
         return ((({__v, ...rest})=> rest) (foundedGameRoom))
     }

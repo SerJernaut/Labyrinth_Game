@@ -22,7 +22,7 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.LEAVE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.REMOVE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.CHANGE_READY_STATUS_REQUEST:
-        case ACTION_TYPES.SET_GAME_BOARD_CELLS_REQUEST:{
+        case ACTION_TYPES.START_GAME_REQUEST: {
             return {
                 ...state,
                 isFetching: true,
@@ -118,11 +118,13 @@ function gameRoomsReducer (state = initialState, action) {
                 gameRoomsData: gameRoomsDataClone
             }
         }
-        case ACTION_TYPES.SET_GAME_BOARD_CELLS_SUCCESS: {
+        case ACTION_TYPES.START_GAME_SUCCESS: {
             const {gameRoomId, boardCells} = action;
             const gameRoomData = gameRoomsDataClone.get(gameRoomId);
             gameRoomData.boardCells = boardCells;
             gameRoomData.gameStatus = GAME_ROOM_STATUS.PLAYING;
+            gameRoomData.players =  gameRoomData.players.map(({isReady, ...rest})=> rest);
+            gameRoomData.whoseMove = gameRoomData.players[0];
             gameRoomsDataClone.set(gameRoomId, gameRoomData);
             return {
                 ...state,
@@ -137,7 +139,7 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.LEAVE_GAME_ROOM_ERROR:
         case ACTION_TYPES.REMOVE_GAME_ROOM_ERROR:
         case ACTION_TYPES.CHANGE_READY_STATUS_ERROR:
-        case ACTION_TYPES.SET_GAME_BOARD_CELLS_ERROR:{
+        case ACTION_TYPES.START_GAME_ERROR: {
             return {
                 ...state,
                 isFetching: false,
