@@ -9,3 +9,4 @@ export const removeGameRoomById = data => axiosInstance.post('/remove_game_room_
 export const getReadyPlayer = (data) => axiosInstance.post('/get_ready_player', data);
 export const getUnreadyPlayer = (data) => axiosInstance.post('/get_unready_player', data);
 export const startGame = (data) => axiosInstance.post('/start_game', data);
+export const setBoardCells = (data) => axiosInstance.post('/set_board_cells', data);

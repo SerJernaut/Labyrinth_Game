@@ -44,7 +44,10 @@ gameRouter.post('/get_unready_player',
 gameRouter.post('/start_game',
     createValidationMW(SET_BOARD_CELLS_SCHEMA),
     gameController.startGame,
-    userController.setAllPlayersReadyNull
-    )
+    userController.setAllPlayersReadyNull);
+
+gameRouter.post('/set_board_cells',
+    createValidationMW(SET_BOARD_CELLS_SCHEMA),
+    gameController.setBoardCellsAndEmit)
 
 module.exports = gameRouter;

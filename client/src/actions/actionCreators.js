@@ -29,6 +29,9 @@ const {AUTH_REQUEST,
   START_GAME_REQUEST,
   START_GAME_SUCCESS,
   START_GAME_ERROR,
+  SET_BOARD_CELLS_REQUEST,
+  SET_BOARD_CELLS_SUCCESS,
+  SET_BOARD_CELLS_ERROR
   } = ACTION_TYPES;
 
 export const createAuthRequestAction = (values, isRegistration) => ( {
@@ -190,3 +193,23 @@ export const createStartGameErrorAction = error => ({
   type: START_GAME_ERROR,
   error
 })
+
+export const createSetBoardCellsRequestAction = (gameRoomId, boardCells) => ({
+  type: SET_BOARD_CELLS_REQUEST,
+  gameRoomId,
+  boardCells
+})
+
+export const createSetBoardCellsSuccessAction = (gameRoomId, boardCells, whoseMove) => ({
+  type: SET_BOARD_CELLS_SUCCESS,
+  gameRoomId,
+  boardCells,
+  whoseMove
+})
+
+export const createSetBoardCellsErrorAction = error => ({
+  type: SET_BOARD_CELLS_ERROR,
+  error
+})
+
+

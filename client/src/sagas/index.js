@@ -9,6 +9,7 @@ import {leaveGameRoomSaga} from "./leaveGameRoomSaga";
 import {removeGameRoomSaga} from "./removeGameRoomSaga";
 import {changeReadyStatusSaga} from "./changeReadyStatusSaga";
 import {startGameSaga} from "./startGameSaga";
+import {setBoardCellsSaga} from "./setBoardCellsSaga";
 
 export default function * () {
     yield takeLatest(ACTION_TYPES.AUTH_REQUEST, authSaga);
@@ -20,4 +21,5 @@ export default function * () {
     yield takeLatest(ACTION_TYPES.REMOVE_GAME_ROOM_REQUEST, removeGameRoomSaga);
     yield takeLatest(ACTION_TYPES.CHANGE_READY_STATUS_REQUEST, changeReadyStatusSaga);
     yield takeLatest(ACTION_TYPES.START_GAME_REQUEST, startGameSaga);
+    yield takeLatest(ACTION_TYPES.SET_BOARD_CELLS_REQUEST, setBoardCellsSaga)
 }

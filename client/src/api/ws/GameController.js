@@ -2,7 +2,7 @@ import WebSocket from "./WebSocket";
 import CONSTANTS from "../../constants";
 import {toast} from "react-toastify";
 import {
-    createChangeReadyStatusSuccessAction,
+    createChangeReadyStatusSuccessAction, createSetBoardCellsSuccessAction,
     createStartGameSuccessAction
 } from "../../actions/actionCreators";
 
@@ -54,8 +54,13 @@ class GameController extends WebSocket{
     }
 
     onSendBoardCells = () => {
-        this.socket.on(SEND_BOARD_CELLS, ({gameRoomId, boardCells})=> {
-            this.dispatch(createStartGameSuccessAction(gameRoomId, boardCells))
+        this.socket.on(SEND_BOARD_CELLS, ({gameRoomId, boardCells, whoseMove})=> {
+            if (!whoseMove) {
+                this.dispatch(createStartGameSuccessAction(gameRoomId, boardCells))
+            }
+            else {
+                this.dispatch(createSetBoardCellsSuccessAction(gameRoomId, boardCells, whoseMove))
+            }
         })
     }
 }

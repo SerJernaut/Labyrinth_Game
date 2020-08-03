@@ -40,8 +40,8 @@ class GameController extends WebSocket{
         this.io.to(gameRoomId).emit(CHANGE_READY_STATUS, {changedIsReadyStatus, gameRoomId, playerId})
     }
 
-    emitSendBoardCells (gameRoomId, boardCells) {
-        this.io.to(gameRoomId).emit(SEND_BOARD_CELLS, {gameRoomId, boardCells})
+    emitSendBoardCells (gameRoomId, boardCells, whoseMove) {
+        this.io.to(gameRoomId).emit(SEND_BOARD_CELLS, {gameRoomId, boardCells, whoseMove})
     }
 }
 

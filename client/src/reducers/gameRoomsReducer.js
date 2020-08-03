@@ -22,7 +22,8 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.LEAVE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.REMOVE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.CHANGE_READY_STATUS_REQUEST:
-        case ACTION_TYPES.START_GAME_REQUEST: {
+        case ACTION_TYPES.START_GAME_REQUEST:
+        case ACTION_TYPES.SET_BOARD_CELLS_REQUEST:{
             return {
                 ...state,
                 isFetching: true,
@@ -132,6 +133,25 @@ function gameRoomsReducer (state = initialState, action) {
                 gameRoomsData: gameRoomsDataClone
             }
         }
+        case ACTION_TYPES.SET_BOARD_CELLS_SUCCESS: {
+            const {gameRoomId, boardCells} = action;
+            const gameRoomData = gameRoomsDataClone.get(gameRoomId);
+            gameRoomData.boardCells = boardCells;
+            const prevMovedPlayerIndex = gameRoomData.players.findIndex(player=> _.isEqual(player,gameRoomData.whoseMove));
+            const currentMovePlayerIndex =  prevMovedPlayerIndex + 1;
+            if (currentMovePlayerIndex <= gameRoomData.players.length - 1) {
+                gameRoomData.whoseMove = gameRoomData.players[prevMovedPlayerIndex + 1];
+            }
+            else {
+                gameRoomData.whoseMove = gameRoomData.players[0];
+            }
+            gameRoomsDataClone.set(gameRoomId, gameRoomData);
+            return {
+                ...state,
+                isFetching: false,
+                gameRoomsData: gameRoomsDataClone
+            }
+        }
         case ACTION_TYPES.CREATE_GAME_ROOM_ERROR:
         case ACTION_TYPES.GET_GAME_ROOMS_ERROR:
         case ACTION_TYPES.JOIN_GAME_ROOM_ERROR:
@@ -139,7 +159,8 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.LEAVE_GAME_ROOM_ERROR:
         case ACTION_TYPES.REMOVE_GAME_ROOM_ERROR:
         case ACTION_TYPES.CHANGE_READY_STATUS_ERROR:
-        case ACTION_TYPES.START_GAME_ERROR: {
+        case ACTION_TYPES.START_GAME_ERROR:
+        case ACTION_TYPES.SET_BOARD_CELLS_ERROR:{
             return {
                 ...state,
                 isFetching: false,
