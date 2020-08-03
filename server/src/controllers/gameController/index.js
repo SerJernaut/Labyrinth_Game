@@ -122,7 +122,7 @@ module.exports.setBoardCellsToRoomById = async (req, res, next) => {
         gameData.gameStatus = GAME_STATUS.PLAYING;
         gameData.save();
         socketController.socketController.gameController.emitSendBoardCells(gameRoomId, boardCells);
-        res.send(gameData);
+        res.end();
     }
     catch(e) {
         next(e);
