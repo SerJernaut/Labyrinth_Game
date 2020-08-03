@@ -52,9 +52,10 @@ export const createGameRoomCreationRequestAction = (values, history) => ( {
   history
 } );
 
-export const createGameRoomCreationSuccessAction = gameRoomData => ( {
+export const createGameRoomCreationSuccessAction = (gameRoomData, isSocket) => ( {
   type: CREATE_GAME_ROOM_SUCCESS,
   gameRoomData,
+  isSocket
 } );
 
 export const createGameRoomCreationErrorAction = error => ( {

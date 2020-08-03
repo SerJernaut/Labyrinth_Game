@@ -30,8 +30,8 @@ class AppController extends WebSocket{
     }
 
     onCreateGameRoom = () => {
-        this.socket.on(CREATE_GAME_ROOM, (gameRoomData) => {
-            this.dispatch(createGameRoomCreationSuccessAction(gameRoomData))
+        this.socket.on(CREATE_GAME_ROOM, ({gameRoomData, isSocket}) => {
+            this.dispatch(createGameRoomCreationSuccessAction(gameRoomData, isSocket))
         })
     }
 

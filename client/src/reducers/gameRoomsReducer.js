@@ -25,7 +25,23 @@ function gameRoomsReducer (state = initialState, action) {
                 isFetching: true,
             };
         }
-        case ACTION_TYPES.CREATE_GAME_ROOM_SUCCESS:
+        case ACTION_TYPES.CREATE_GAME_ROOM_SUCCESS: {
+            const {gameRoomData, isSocket} = action;
+            const gameRoomsDataArr = [...gameRoomsDataClone.entries()];
+            if (isSocket) {
+                gameRoomsDataClone.set(gameRoomData._id, gameRoomData);
+            }
+            else {
+                gameRoomsDataClone.clear();
+                gameRoomsDataClone.set(gameRoomData._id, gameRoomData);
+                gameRoomsDataArr.forEach(data=> data[0] !== gameRoomData._id && gameRoomsDataClone.set(data[0], data[1]));
+            }
+            return {
+                ...state,
+                isFetching: false,
+                gameRoomsData: gameRoomsDataClone,
+            };
+        }
         case ACTION_TYPES.CHECK_IS_USER_IN_SOME_ROOM_SUCCESS:{
             const gameRoomsDataArr = [...gameRoomsDataClone.entries()];
             gameRoomsDataClone.clear();

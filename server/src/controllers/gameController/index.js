@@ -8,7 +8,7 @@ module.exports.createGameRoomDataAndSend = async (req, res, next) => {
         const gameRoomData = await gameQueries.createGameRoomDataByPredicate({owner: id, ...body}, id);
         const objGameRoomData = gameRoomData.toObject();
         const {_v, ...rest} = objGameRoomData;
-        socketController.socketController.appController.emitCreateGameRoom(rest);
+        socketController.socketController.appController.emitCreateGameRoom(rest, true);
         rest.isOwner = true;
         rest.isCurrentRoom = true;
         res.send (

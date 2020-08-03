@@ -8,8 +8,8 @@ class AppController extends WebSocket{
     anotherSubscribes (socket) {
     }
 
-    emitCreateGameRoom (gameRoomData) {
-        this.io.emit(CREATE_GAME_ROOM, gameRoomData)
+    emitCreateGameRoom (gameRoomData, isSocket) {
+        this.io.emit(CREATE_GAME_ROOM, {gameRoomData, isSocket})
     }
 
     emitJoinGameRoom (gameRoomData) {
