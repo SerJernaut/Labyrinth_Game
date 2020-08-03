@@ -13,6 +13,7 @@ import CONSTANTS from "../../../constants";
 import Button from "../../Button/Button";
 import {Link} from "react-router-dom";
 import {gameController} from "../../../api/ws/initSocket";
+import {Col, Container, Row} from "react-bootstrap";
 
 const usePrevious = (value) => {
     const ref = useRef();
@@ -20,6 +21,19 @@ const usePrevious = (value) => {
         ref.current = value;
     });
     return ref.current;
+}
+
+const chunkArray = (arr, chunk_size) =>{
+    let index;
+    const arrayLength = arr.length;
+    const tempArray = [];
+
+    for (index = 0; index < arrayLength; index += chunk_size) {
+        const chunk = arr.slice(index, index+chunk_size);
+        tempArray.push(chunk);
+    }
+
+    return tempArray;
 }
 
 
@@ -57,10 +71,9 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
         return () => gameRoomsData && gameRoomsData.size > 0 && gameController.unsubscribeGameRoom([...gameRoomsData.values()][0]._id);
     })
 
-
     if (gameRoomsData.size === 0) {return null}
 
-    const {_id, gameStatus, owner, players, maxPlayers, areaSize, isOwner, isReady} = [...gameRoomsData.values()][0];
+    const {_id, gameStatus, owner, players, maxPlayers, areaSize, isOwner, isReady, boardCells} = [...gameRoomsData.values()][0];
 
     const leaveGameRoomById = () => {
         leaveGameRoom(_id, history)
@@ -125,8 +138,28 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
 
     const playersNickNamesArr = players.map(player=> player.nickName);
 
+    const boardCellsPreparedRows = chunkArray(boardCells, Math.sqrt(areaSize));
+
+    const boardCellsRows = [];
+
+    boardCellsPreparedRows.forEach(boardCellsRow=> (
+        boardCellsRows.push(
+                <Row>
+                    {boardCellsRow.map((boardCell, index)=> (
+                        <Col key={index + boardCell.cellIndex} className="p-0">
+                            <div className={classNames(styles.boardCellContainer ,"border border-secondary")}>
+                                <div className={styles.plug}></div>
+                            </div>
+                        </Col>
+                    ))}
+                </Row>
+            )
+        )
+    )
+
     return (
-           gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED && <div className={styles.pageContainer}>
+        <>
+            {gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED && <div className={styles.pageContainer}>
                 <div className={styles.waitingRoomContainer}>
                     {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && players.every(player=> player.isReady) &&
                         <Button onClick={startGame}>Start game</Button>}
@@ -160,7 +193,13 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
 
                     <Link className='primaryLink' to={ '/' }>Show another existing play rooms</Link>
                 </div>
-            </div>
+            </div>}
+            {gameStatus === CONSTANTS.GAME_ROOM_STATUS.PLAYING &&
+                <Container fluid className='w-50'>
+                    {boardCellsRows}
+                </Container>
+            }
+        </>
     );
 };
 
