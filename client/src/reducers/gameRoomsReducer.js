@@ -1,5 +1,8 @@
 import ACTION_TYPES from '../actions/actionTypes.js';
 import _ from 'lodash';
+import CONSTANTS from "../constants";
+
+const {GAME_ROOM_STATUS} = CONSTANTS;
 
 const initialState = {
     gameRoomsData: new Map(),
@@ -119,6 +122,7 @@ function gameRoomsReducer (state = initialState, action) {
             const {gameRoomId, boardCells} = action;
             const gameRoomData = gameRoomsDataClone.get(gameRoomId);
             gameRoomData.boardCells = boardCells;
+            gameRoomData.gameStatus = GAME_ROOM_STATUS.PLAYING;
             gameRoomsDataClone.set(gameRoomId, gameRoomData);
             return {
                 ...state,
