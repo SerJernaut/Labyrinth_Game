@@ -62,7 +62,7 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
                     <div className="mb-md-2 mb-lg-2 mr-2 mr-md-0 mr-lg-0">
                         <Button className="mb-1 mb-md-0 mb-lg-0" disabled={disabled || players.length === NUMBER_OF_PLAYERS.MAX_GAME_PLAYERS || gameStatus !== GAME_ROOM_STATUS.EXPECTED} onClick={joinGameRoomById}>Join the game room</Button>
                     </div>
-                {gameStatus !== GAME_ROOM_STATUS.EXPECTED && <p className="attention">You cannot join the game, it's {gameStatus === GAME_ROOM_STATUS.PLAYING? 'already started' : 'ended'}</p>}
+                {!isCurrentRoom && gameStatus !== GAME_ROOM_STATUS.EXPECTED && <p className="attention">You cannot join the game, it's {gameStatus === GAME_ROOM_STATUS.PLAYING? 'already started' : 'ended'}</p>}
                 {isCurrentRoom && gameStatus === GAME_ROOM_STATUS.EXPECTED && <div>
                     <Link className='primaryLink' to={ `/game_room/${_id}` }><Button>
                         {`Return to ${isOwner? 'created': 'joined'} room`}
