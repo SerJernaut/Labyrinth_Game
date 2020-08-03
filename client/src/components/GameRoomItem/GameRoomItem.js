@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 import {Container, Row, Col} from 'react-bootstrap'
 
 
-const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, players, isCurrentRoom, owner: {nickName}}, joinGameRoom, history, disabled}) => {
+const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, players, isCurrentRoom, isOwner, owner: {nickName}}, joinGameRoom, history, disabled}) => {
 
     const joinGameRoomById = () => joinGameRoom(_id, history);
     const numberOfPlayersClassName = classNames({["enoughForGame"]: players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS}, {["notEnoughForGame"]: players.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
@@ -60,7 +60,7 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
                     </div>
                 {isCurrentRoom && gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED && <div>
                     <Link className='primaryLink' to={ `/game_room/${_id}` }><Button>
-                        Return to joined room
+                        {`Return to ${isOwner? 'created': 'joined'} room`}
                     </Button></Link>
                 </div>}
                 {isCurrentRoom && gameStatus === CONSTANTS.GAME_ROOM_STATUS.PLAYING && <div>
@@ -69,7 +69,7 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
                 </Button></Link>
                 </div>}
                 {gameStatus === CONSTANTS.GAME_ROOM_STATUS.ENDED && <div>
-                    <p>Game was ended</p>
+                    <p className="ended">Game was ended</p>
                 </div>}
             </div>
         </Container>

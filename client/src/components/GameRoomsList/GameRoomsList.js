@@ -34,6 +34,10 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
         return !!arrOfGameRoomsData.find(data => data.isCurrentRoom);
     }
 
+    const checkIsOwnerInSomeRoom = () => {
+        return !!arrOfGameRoomsData.find(data => data.isOwner);
+    }
+
     const disabled = checkIsCurrentGameRoom() || isFetching;
 
     const col8Offset2 = {
@@ -51,7 +55,7 @@ const GameRoomsList = ({hasMore, isFetching, gameRoomsData, getGameRooms, joinGa
         <Container fluid>
             <Row>
                 <Col xs={col10Offset1} sm={col10Offset1} md={col10Offset1} lg={col8Offset2}  >
-                    {checkIsCurrentGameRoom() && <h1 className={styles.header}>Return to joined room below, <br/> you can't be in two rooms simultaneously</h1>}
+                    {checkIsCurrentGameRoom() && <h1 className={styles.header}>{`Return to ${checkIsOwnerInSomeRoom()? 'created': 'joined'} room below, you can't be in two rooms simultaneously`}</h1>}
                     {!checkIsCurrentGameRoom() && <h1 className={styles.header}>Create own game room or join existing</h1>}
                         <div className="d-flex justify-content-center">
                             <Link className='primaryLink' to={ '/create_new_game_room' }><Button disabled={disabled}>

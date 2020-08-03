@@ -114,7 +114,7 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
 
     const readyPlayers = [];
     const ownerIndex = players.findIndex(player=> player.nickName === owner.nickName);
-    if(typeof ownerIndex === 'number') {
+    if(players && typeof ownerIndex === 'number' && players[ownerIndex]) {
         players[ownerIndex].isReady = true;
     }
     players.forEach(player=> player.isReady && readyPlayers.push(player.nickName));
@@ -128,11 +128,10 @@ const GameRoom = ({history, match, error, gameRoomsData, isFetching, checkIsUser
     return (
            gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED && <div className={styles.pageContainer}>
                 <div className={styles.waitingRoomContainer}>
-                    {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && players.every(player=> player.isReady)
-                        ?
-                        <Button onClick={startGame}>Start game</Button>
-                        :
-                        <p className={styles.msgForOwner}>Wait until all players press ready</p>}
+                    {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && players.every(player=> player.isReady) &&
+                        <Button onClick={startGame}>Start game</Button>}
+                    {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && !players.every(player=> player.isReady) &&
+                    <p className={styles.msgForOwner}>Wait until all players press ready</p>}
                     {isOwner && players.length === 1 && <p className={styles.msgForOwner}>You can not start the game solo, wait until other players join the game</p>}
                     {!isOwner && <Button onClick={changeReadyStatus}>I'm {isReady ? 'not': ''} ready to play</Button>}
                     <p>
