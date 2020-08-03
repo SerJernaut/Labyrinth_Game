@@ -4,7 +4,7 @@ import {
     createChangeReadyStatusRequestAction,
     createCheckIsUserInSomeRoomRequestAction,
     createLeaveGameRoomRequestAction,
-    createRemoveGameRoomRequestAction,
+    createRemoveGameRoomRequestAction, createSetBoardCellsRequestAction,
     createStartGameRequestAction,
 } from "../../../actions/actionCreators";
 import PropTypes from 'prop-types';
@@ -15,6 +15,7 @@ import Button from "../../Button/Button";
 import {Link} from "react-router-dom";
 import {gameController} from "../../../api/ws/initSocket";
 import {Col, Container, Row} from "react-bootstrap";
+import {toast} from "react-toastify/dist/core/toast";
 
 
 const usePrevious = (value) => {
@@ -39,7 +40,7 @@ const chunkArray = (arr, chunk_size) =>{
 }
 
 
-const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, error}, authStore: {user: {_id: userId}}, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, startGame}) => {
+const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, error}, authStore: {user: {_id: userId}}, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, startGame, setBoardCells}) => {
 
     const prevState = usePrevious({gameRoomsData});
 
@@ -163,6 +164,23 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
         )
     ))
 
+    const turnLeft = () => {
+        const boardCellsClone = _.cloneDeep(boardCells);
+        const currentBoardCellIndex = boardCellsClone.findIndex(boardCell=> boardCell.standingUsers.find(u=> u === userId))
+        const notAllowedIndexes = [];
+        for(let i = 0; i < areaSize; i+=areaSize) {
+            notAllowedIndexes.push(i);
+        }
+        if (notAllowedIndexes.find(i=> i === currentBoardCellIndex)) {
+            toast.error('You can not move left, no way here')
+        }
+        else {
+            boardCellsClone[currentBoardCellIndex].standingUsers = boardCellsClone[currentBoardCellIndex].standingUsers.filter(u=> u !== userId);
+            boardCellsClone[currentBoardCellIndex - 1].standingUsers.push(userId);
+            setBoardCells(_id, boardCellsClone)
+        }
+    }
+
     return (
         <>
             {gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED && <div className={styles.pageContainer}>
@@ -223,6 +241,7 @@ GameRoom.propTypes = {
     removeGameRoom: PropTypes.func.isRequired,
     changeReady: PropTypes.func.isRequired,
     startGame: PropTypes.func.isRequired,
+    setBoardCells: PropTypes.func.isRequired,
     error: PropTypes.object
 }
 
@@ -237,6 +256,7 @@ const mapDispatchToProps = dispatch => ({
     removeGameRoom: (gameRoomId, history) => dispatch(createRemoveGameRoomRequestAction(gameRoomId, history)),
     changeReady: (isReady, gameRoomId) => dispatch(createChangeReadyStatusRequestAction(isReady, gameRoomId)),
     startGame: (gameRoomId, boardCells) => dispatch(createStartGameRequestAction(gameRoomId, boardCells)),
+    setBoardCells: (gameRoomId, boardCells) => dispatch(createSetBoardCellsRequestAction(gameRoomId, boardCells))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
