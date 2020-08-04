@@ -17,6 +17,8 @@ import {gameController} from "../../../api/ws/initSocket";
 import {Col, Container, Row} from "react-bootstrap";
 import {toast} from "react-toastify/dist/core/toast";
 
+const {NUMBER_OF_PLAYERS, GAME_ROOM_STATUS, MOVE_DIRECTION} = CONSTANTS;
+
 
 const usePrevious = (value) => {
     const ref = useRef();
@@ -125,10 +127,10 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
     }
 
     const numberOfPlayersClassName = classNames(
-        {["enoughForGame"]: players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS},
-        {["notEnoughForGame"]: players.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
+        {["enoughForGame"]: players.length >= NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS},
+        {["notEnoughForGame"]: players.length < NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS});
     const gameStatusClassName = classNames(
-        {["expected"]: gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED});
+        {["expected"]: gameStatus === GAME_ROOM_STATUS.EXPECTED});
 
     const readyPlayers = [];
     const ownerIndex = players.findIndex(player=> player.nickName === owner.nickName);
@@ -137,7 +139,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
     }
     players.forEach(player=> player.isReady && readyPlayers.push(player.nickName));
 
-    const numberOfReadyPlayersClassName = classNames({["enoughForGame"]: readyPlayers.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && readyPlayers.length === players.length}, {["notEnoughForGame"]: readyPlayers.length < CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS || readyPlayers.length < players.length});
+    const numberOfReadyPlayersClassName = classNames({["enoughForGame"]: readyPlayers.length >= NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && readyPlayers.length === players.length}, {["notEnoughForGame"]: readyPlayers.length < NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS || readyPlayers.length < players.length});
 
     const changeReadyStatus = () => changeReady(!isReady, _id);
 
@@ -164,30 +166,85 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
         )
     ))
 
-    const turnLeft = () => {
+    const generateNotAllowedIndexes = moveDirection => {
+        const notAllowedToTurnCellsIndexes = [];
+        switch (moveDirection) {
+            case MOVE_DIRECTION.LEFT: {
+                for(let i = 0; i < areaSize; i+=areaSize) {
+                    notAllowedToTurnCellsIndexes.push(i);
+                }
+                break;
+            }
+            case MOVE_DIRECTION.RIGHT: {
+                for(let i = Math.sqrt(areaSize) - 1; i < areaSize; i+= areaSize) {
+                    notAllowedToTurnCellsIndexes.push(i);
+                }
+                break;
+            }
+            case MOVE_DIRECTION.TOP: {
+                for(let i = 0; i < Math.sqrt(areaSize) - 1; i++) {
+                    notAllowedToTurnCellsIndexes.push(i);
+                }
+                break;
+            }
+            case MOVE_DIRECTION.BOTTOM: {
+                for(let i = areaSize - 1; areaSize > areaSize - Math.sqrt(areaSize) - 1; i--) {
+                    notAllowedToTurnCellsIndexes.push(i);
+                }
+                break;
+            }
+        }
+        return notAllowedToTurnCellsIndexes;
+    }
+
+    const setNewBoardCellsValues = (moveDirection, boardCellsClone, currentBoardCellIndex) => {
+        boardCellsClone[currentBoardCellIndex].standingUsers = boardCellsClone[currentBoardCellIndex].standingUsers.filter(u=> u !== userId);
+        switch (moveDirection) {
+            case MOVE_DIRECTION.LEFT: {
+                const newCurrentBoardCellIndex = currentBoardCellIndex - 1;
+                boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(userId);
+                boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(userId);
+                break;
+            }
+            case MOVE_DIRECTION.RIGHT: {
+                const newCurrentBoardCellIndex = currentBoardCellIndex + 1;
+                boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(userId);
+                boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(userId);
+                break;
+            }
+            case MOVE_DIRECTION.TOP: {
+                const newCurrentBoardCellIndex = currentBoardCellIndex - Math.sqrt(areaSize);
+                boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(userId);
+                boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(userId);
+                break;
+            }
+            case MOVE_DIRECTION.BOTTOM: {
+                const newCurrentBoardCellIndex = currentBoardCellIndex + Math.sqrt(areaSize);
+                boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(userId);
+                boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(userId);
+                break;
+            }
+        }
+    }
+
+    const moveInTheSpecifiedDirection = (moveDirection) => {
         const boardCellsClone = _.cloneDeep(boardCells);
         const currentBoardCellIndex = boardCellsClone.findIndex(boardCell=> boardCell.standingUsers.find(u=> u === userId))
-        const notAllowedIndexes = [];
-        for(let i = 0; i < areaSize; i+=areaSize) {
-            notAllowedIndexes.push(i);
-        }
-        if (notAllowedIndexes.find(i=> i === currentBoardCellIndex)) {
-            toast.error('You can not move left, no way here')
+        if (generateNotAllowedIndexes(moveDirection).find(i=> i === currentBoardCellIndex)) {
+            toast.error(`You can not move ${moveDirection.toLowerCase()}, no way here`)
         }
         else {
-            boardCellsClone[currentBoardCellIndex].standingUsers = boardCellsClone[currentBoardCellIndex].standingUsers.filter(u=> u !== userId);
-            boardCellsClone[currentBoardCellIndex - 1].standingUsers.push(userId);
-            setBoardCells(_id, boardCellsClone)
+            setBoardCells(_id, setNewBoardCellsValues(moveDirection, boardCellsClone, currentBoardCellIndex))
         }
     }
 
     return (
         <>
-            {gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED && <div className={styles.pageContainer}>
+            {gameStatus === GAME_ROOM_STATUS.EXPECTED && <div className={styles.pageContainer}>
                 <div className={styles.waitingRoomContainer}>
-                    {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && players.every(player=> player.isReady) &&
+                    {isOwner && players.length >= NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && players.every(player=> player.isReady) &&
                         <Button onClick={startGameById}>Start game</Button>}
-                    {isOwner && players.length >= CONSTANTS.NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && !players.every(player=> player.isReady) &&
+                    {isOwner && players.length >= NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && !players.every(player=> player.isReady) &&
                     <p className={styles.msgForOwner}>Wait until all players press ready</p>}
                     {isOwner && players.length === 1 && <p className={styles.msgForOwner}>You can not start the game solo, wait until other players join the game</p>}
                     {!isOwner && <Button onClick={changeReadyStatus}>I'm {isReady ? 'not': ''} ready to play</Button>}
@@ -218,7 +275,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                     <Link className='primaryLink' to={ '/' }>Show another existing play rooms</Link>
                 </div>
             </div>}
-            {gameStatus === CONSTANTS.GAME_ROOM_STATUS.PLAYING &&
+            {gameStatus === GAME_ROOM_STATUS.PLAYING &&
                 <>
                 <Container fluid className='w-50'>
                     {boardCellsRows}

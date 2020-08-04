@@ -27,6 +27,12 @@ const CONSTANTS = {
     NUMBER_OF_PLAYERS: {
         MIN_GAME_PLAYERS: 2,
         MAX_GAME_PLAYERS: 5
+    },
+    MOVE_DIRECTION: {
+        LEFT: 'LEFT',
+        RIGHT: 'RIGHT',
+        TOP: 'TOP',
+        BOTTOM: 'BOTTOM'
     }
 }
 
