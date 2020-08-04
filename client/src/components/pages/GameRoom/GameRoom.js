@@ -174,7 +174,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
         const notAllowedToTurnCellsIndexes = [];
         switch (moveDirection) {
             case MOVE_DIRECTION.LEFT: {
-                for(let i = 0; i < areaSize; i+=areaSize) {
+                for(let i = 0; i < areaSize; i+=Math.sqrt(areaSize)) {
                     notAllowedToTurnCellsIndexes.push(i);
                 }
                 break;
@@ -235,7 +235,9 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
     const moveInTheSpecifiedDirection = moveDirection => {
         const boardCellsClone = _.cloneDeep(boardCells);
         const currentBoardCellIndex = boardCellsClone.findIndex(boardCell=> boardCell.standingUsers.find(u=> u === userId))
-        if (generateNotAllowedIndexes(moveDirection).find(i=> i === currentBoardCellIndex)) {
+        const notAllowedToTurnCellsIndexes = generateNotAllowedIndexes(moveDirection);
+        const currentBoardCellIndexAmongArrOfIndexes = notAllowedToTurnCellsIndexes.find(i=> i === currentBoardCellIndex)
+        if (currentBoardCellIndexAmongArrOfIndexes || currentBoardCellIndexAmongArrOfIndexes === 0) {
             toast.error(`You can not move ${moveDirection.toLowerCase()}, no way here`)
         }
         else {
