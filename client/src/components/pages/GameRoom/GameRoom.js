@@ -157,7 +157,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 <Row key={index}>
                     {boardCellsRow.map((boardCell, index)=> (
                         <Col key={index + boardCell.cellIndex} className="p-0">
-                            <div className={classNames(styles.boardCellContainer ,{[styles.explored]: boardCell.usersWhoExplored.find(id=> id === userId)})}>
+                            <div className={classNames(styles.boardCellContainer, {[styles.explored]: boardCell.usersWhoExplored.find(id=> id === userId)})}>
                                 <div className={classNames(styles.plug, "d-flex justify-content-center align-items-center")}>
                                     {boardCell.standingUsers.find(id => id === userId) && <div className={styles.stayingCircle}>
                                     </div>}
@@ -235,16 +235,22 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
     const moveInTheSpecifiedDirection = moveDirection => {
         const boardCellsClone = _.cloneDeep(boardCells);
         const currentBoardCellIndex = boardCellsClone.findIndex(boardCell=> boardCell.standingUsers.find(u=> u === userId))
-        const indexes = generateNotAllowedIndexes(moveDirection)
-        console.log(currentBoardCellIndex);
-        console.log(indexes)
         if (generateNotAllowedIndexes(moveDirection).find(i=> i === currentBoardCellIndex)) {
-            console.log(currentBoardCellIndex)
             toast.error(`You can not move ${moveDirection.toLowerCase()}, no way here`)
         }
         else {
-            console.log(currentBoardCellIndex)
-            setBoardCells(_id, setNewBoardCellsValues(moveDirection, boardCellsClone, currentBoardCellIndex))
+            const whoseMoveClone = _.cloneDeep(whoseMove);
+            const playersClone = _.cloneDeep(players);
+            const oldCurrentMovePlayerIndex = playersClone.findIndex(player=> player._id == whoseMoveClone._id);
+            const currentMovePlayerIndex =  oldCurrentMovePlayerIndex + 1;
+            let newWhoseMove;
+            if (currentMovePlayerIndex <= playersClone.length - 1) {
+                newWhoseMove = playersClone[currentMovePlayerIndex];
+            }
+            else {
+                newWhoseMove = playersClone[0];
+            }
+            setBoardCells(_id, setNewBoardCellsValues(moveDirection, boardCellsClone, currentBoardCellIndex), newWhoseMove)
         }
     }
 
@@ -343,7 +349,7 @@ const mapDispatchToProps = dispatch => ({
     removeGameRoom: (gameRoomId, history) => dispatch(createRemoveGameRoomRequestAction(gameRoomId, history)),
     changeReady: (isReady, gameRoomId) => dispatch(createChangeReadyStatusRequestAction(isReady, gameRoomId)),
     startGame: (gameRoomId, boardCells) => dispatch(createStartGameRequestAction(gameRoomId, boardCells)),
-    setBoardCells: (gameRoomId, boardCells) => dispatch(createSetBoardCellsRequestAction(gameRoomId, boardCells))
+    setBoardCells: (gameRoomId, boardCells, whoseMove) => dispatch(createSetBoardCellsRequestAction(gameRoomId, boardCells, whoseMove))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);

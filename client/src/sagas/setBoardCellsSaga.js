@@ -6,8 +6,8 @@ import {setBoardCells} from "../api/http/axios/gameController";
 
 export function * setBoardCellsSaga (action) {
     try {
-        const {gameRoomId, boardCells} = action;
-        yield setBoardCells({gameRoomId, boardCells});
+        const {gameRoomId, boardCells, whoseMove} = action;
+        yield setBoardCells({gameRoomId, boardCells, whoseMove});
     } catch (e) {
         yield put(createSetBoardCellsErrorAction(e.response));
     }

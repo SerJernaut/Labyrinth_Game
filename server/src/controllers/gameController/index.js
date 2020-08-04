@@ -130,20 +130,12 @@ module.exports.startGame = async (req, res, next) => {
 
 module.exports.setBoardCellsAndEmit = async (req, res, next) => {
     try{
-        const {body: {gameRoomId, boardCells}} = req;
+        const {body: {gameRoomId, boardCells, whoseMove}} = req;
         const gameData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});
         gameData.boardCells = boardCells;
-        const prevMovedPlayerIndex = gameData.players.findIndex(player=> player._id == gameData.whoseMove);
-        const currentMovePlayerIndex =  prevMovedPlayerIndex + 1;
-        if (currentMovePlayerIndex <= gameData.players.length - 1) {
-            gameData.whoseMove = gameData.players[prevMovedPlayerIndex + 1]._id;
-        }
-        else {
-            gameData.whoseMove = gameData.players[0]._id;
-        }
+        gameData.whoseMove = whoseMove._id;
         gameData.save();
-        const objGameData = gameData.toObject();
-        socketController.socketController.gameController.emitSendBoardCells(gameRoomId, boardCells, objGameData.whoseMove)
+        socketController.socketController.gameController.emitSendBoardCells(gameRoomId, boardCells, whoseMove)
         res.end();
     }
     catch (e) {

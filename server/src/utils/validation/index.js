@@ -38,17 +38,20 @@ const LIMIT_SKIP_SCHEMA = limitSkipSchema.and(...['limit', 'skip']);
 
 const gameIdSchema = Joi.number().integer();
 const boardCellsSchema = Joi.array()
+const whoseMove = Joi.object();
 
 const GAME_ID_SCHEMA = Joi.object( {
     gameRoomId: gameIdSchema.label('Game id').required()
 })
 
-const setBoardCellsSchema = Joi.object( {
+const setBoardCellsOrStartGameSchema = Joi.object( {
     gameRoomId: gameIdSchema.label('Game id'),
-    boardCells: boardCellsSchema.label('Board cells')
+    boardCells: boardCellsSchema.label('Board cells'),
+    whoseMove: whoseMove.label('Whose move')
 })
 
-const SET_BOARD_CELLS_SCHEMA = setBoardCellsSchema.and(...['gameRoomId', 'boardCells']);
+const START_GAME_SCHEMA = setBoardCellsOrStartGameSchema.and(...['gameRoomId', 'boardCells']);
+const SET_BOARD_CELLS_SCHEMA = setBoardCellsOrStartGameSchema.and(...['gameRoomId', 'boardCells', 'whoseMove']);
 
 
 module.exports = {
@@ -56,6 +59,7 @@ module.exports = {
     GAME_ROOM_SCHEMA,
     LIMIT_SKIP_SCHEMA,
     GAME_ID_SCHEMA,
+    START_GAME_SCHEMA,
     SET_BOARD_CELLS_SCHEMA
 }
 

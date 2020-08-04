@@ -1,5 +1,5 @@
 const gameController = require("../controllers/gameController");
-const {GAME_ROOM_SCHEMA, LIMIT_SKIP_SCHEMA, GAME_ID_SCHEMA, SET_BOARD_CELLS_SCHEMA} = require("../utils/validation");
+const {GAME_ROOM_SCHEMA, LIMIT_SKIP_SCHEMA, GAME_ID_SCHEMA, SET_BOARD_CELLS_SCHEMA, START_GAME_SCHEMA} = require("../utils/validation");
 const {createValidationMW} = require("../middlewares/validation/createValidationMW");
 const onlyForGameRoomOwner = require('../middlewares/game/onlyForGameRoomOwner');
 const userController = require('../controllers/userController/index');
@@ -42,7 +42,7 @@ gameRouter.post('/get_unready_player',
     userController.setIsReadyFalseAndEmit);
 
 gameRouter.post('/start_game',
-    createValidationMW(SET_BOARD_CELLS_SCHEMA),
+    createValidationMW(START_GAME_SCHEMA),
     gameController.startGame,
     userController.setAllPlayersReadyNull);
 
