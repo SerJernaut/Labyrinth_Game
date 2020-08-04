@@ -192,7 +192,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 break;
             }
             case MOVE_DIRECTION.BOTTOM: {
-                for(let i = areaSize - 1; areaSize > areaSize - Math.sqrt(areaSize) - 1; i--) {
+                for(let i = areaSize - 1; i > areaSize - Math.sqrt(areaSize) - 1; i--) {
                     notAllowedToTurnCellsIndexes.push(i);
                 }
                 break;
