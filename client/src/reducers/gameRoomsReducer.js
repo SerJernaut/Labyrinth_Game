@@ -134,17 +134,10 @@ function gameRoomsReducer (state = initialState, action) {
             }
         }
         case ACTION_TYPES.SET_BOARD_CELLS_SUCCESS: {
-            const {gameRoomId, boardCells} = action;
+            const {gameRoomId, boardCells, whoseMove} = action;
             const gameRoomData = gameRoomsDataClone.get(gameRoomId);
             gameRoomData.boardCells = boardCells;
-            const prevMovedPlayerIndex = gameRoomData.players.findIndex(player=> _.isEqual(player,gameRoomData.whoseMove));
-            const currentMovePlayerIndex =  prevMovedPlayerIndex + 1;
-            if (currentMovePlayerIndex <= gameRoomData.players.length - 1) {
-                gameRoomData.whoseMove = gameRoomData.players[prevMovedPlayerIndex + 1];
-            }
-            else {
-                gameRoomData.whoseMove = gameRoomData.players[0];
-            }
+            gameRoomData.whoseMove = whoseMove;
             gameRoomsDataClone.set(gameRoomId, gameRoomData);
             return {
                 ...state,
