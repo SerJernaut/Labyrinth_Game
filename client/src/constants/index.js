@@ -33,6 +33,12 @@ const CONSTANTS = {
         RIGHT: 'RIGHT',
         TOP: 'TOP',
         BOTTOM: 'BOTTOM'
+    },
+    HANDLE_KEYS: {
+        LEFT: 'left',
+        RIGHT: 'right',
+        UP: 'up',
+        DOWN: 'down'
     }
 }
 

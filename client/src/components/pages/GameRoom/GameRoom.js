@@ -15,9 +15,13 @@ import Button from "../../Button/Button";
 import {Link} from "react-router-dom";
 import {gameController} from "../../../api/ws/initSocket";
 import {Col, Container, Row} from "react-bootstrap";
-import {toast} from "react-toastify/dist/core/toast";
+import {toast} from "react-toastify";
+import _ from 'lodash';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
 
-const {NUMBER_OF_PLAYERS, GAME_ROOM_STATUS, MOVE_DIRECTION} = CONSTANTS;
+const {NUMBER_OF_PLAYERS, GAME_ROOM_STATUS, MOVE_DIRECTION, HANDLE_KEYS} = CONSTANTS;
+
+const HANDLE_KEYS_ARR = Object.values(HANDLE_KEYS).map(value=> value);
 
 
 const usePrevious = (value) => {
@@ -182,7 +186,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 break;
             }
             case MOVE_DIRECTION.TOP: {
-                for(let i = 0; i < Math.sqrt(areaSize) - 1; i++) {
+                for(let i = 0; i < Math.sqrt(areaSize); i++) {
                     notAllowedToTurnCellsIndexes.push(i);
                 }
                 break;
@@ -225,16 +229,39 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 break;
             }
         }
+        return boardCellsClone;
     }
 
-    const moveInTheSpecifiedDirection = (moveDirection) => {
+    const moveInTheSpecifiedDirection = moveDirection => {
         const boardCellsClone = _.cloneDeep(boardCells);
         const currentBoardCellIndex = boardCellsClone.findIndex(boardCell=> boardCell.standingUsers.find(u=> u === userId))
+        const indexes = generateNotAllowedIndexes(moveDirection)
+        console.log(currentBoardCellIndex);
+        console.log(indexes)
         if (generateNotAllowedIndexes(moveDirection).find(i=> i === currentBoardCellIndex)) {
+            console.log(currentBoardCellIndex)
             toast.error(`You can not move ${moveDirection.toLowerCase()}, no way here`)
         }
         else {
+            console.log(currentBoardCellIndex)
             setBoardCells(_id, setNewBoardCellsValues(moveDirection, boardCellsClone, currentBoardCellIndex))
+        }
+    }
+
+    const matchKeyWithMoveDirection = key => {
+        switch (key) {
+            case HANDLE_KEYS.LEFT: {
+                return MOVE_DIRECTION.LEFT;
+            }
+            case HANDLE_KEYS.RIGHT: {
+                return MOVE_DIRECTION.RIGHT;
+            }
+            case HANDLE_KEYS.UP: {
+                return MOVE_DIRECTION.TOP;
+            }
+            case HANDLE_KEYS.DOWN: {
+                return MOVE_DIRECTION.BOTTOM
+            }
         }
     }
 
@@ -280,8 +307,11 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 <Container fluid className='w-50'>
                     {boardCellsRows}
                 </Container>
-                {whoseMove && whoseMove._id === userId && <h1 className="h1">Take a step, all players waiting until you take a step</h1>}
-                {whoseMove._id !== userId && <h1 className="h1">Wait until {whoseMove.nickName} take a step</h1>}
+                {whoseMove && whoseMove._id === userId && <h1 className="h1 mb-0">Take a step, all players waiting until you take a step</h1>}
+                    {whoseMove && whoseMove._id === userId && HANDLE_KEYS_ARR.map(key=> (<KeyboardEventHandler handleKeys={[key]}
+                    onKeyEvent={(key, e)=> moveInTheSpecifiedDirection(matchKeyWithMoveDirection(key))}
+                    />))}
+                {whoseMove._id !== userId && <h1 className="h1 mb-0">Wait until {whoseMove.nickName} take a step</h1>}
                 </>
             }
         </>
