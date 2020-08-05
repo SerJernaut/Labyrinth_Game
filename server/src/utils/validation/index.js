@@ -38,20 +38,22 @@ const LIMIT_SKIP_SCHEMA = limitSkipSchema.and(...['limit', 'skip']);
 
 const gameIdSchema = Joi.number().integer();
 const boardCellsSchema = Joi.array()
-const whoseMove = Joi.object();
+const objectSchema = Joi.object();
 
 const GAME_ID_SCHEMA = Joi.object( {
     gameRoomId: gameIdSchema.label('Game id').required()
 })
 
-const setBoardCellsOrStartGameSchema = Joi.object( {
+const setBoardCellsOrStartGameOrSetWinnerSchema = Joi.object( {
     gameRoomId: gameIdSchema.label('Game id'),
     boardCells: boardCellsSchema.label('Board cells'),
-    whoseMove: whoseMove.label('Whose move')
+    whoseMove: objectSchema.label('Whose move'),
+    winner: objectSchema.label('Winner')
 })
 
-const START_GAME_SCHEMA = setBoardCellsOrStartGameSchema.and(...['gameRoomId', 'boardCells']);
-const SET_BOARD_CELLS_SCHEMA = setBoardCellsOrStartGameSchema.and(...['gameRoomId', 'boardCells', 'whoseMove']);
+const START_GAME_SCHEMA = setBoardCellsOrStartGameOrSetWinnerSchema.and(...['gameRoomId', 'boardCells']);
+const SET_BOARD_CELLS_SCHEMA = setBoardCellsOrStartGameOrSetWinnerSchema.and(...['gameRoomId', 'boardCells', 'whoseMove']);
+const SET_WINNER_SCHEMA = setBoardCellsOrStartGameOrSetWinnerSchema.and(...['gameRoomId', 'winner']);
 
 
 module.exports = {
@@ -60,6 +62,7 @@ module.exports = {
     LIMIT_SKIP_SCHEMA,
     GAME_ID_SCHEMA,
     START_GAME_SCHEMA,
-    SET_BOARD_CELLS_SCHEMA
+    SET_BOARD_CELLS_SCHEMA,
+    SET_WINNER_SCHEMA
 }
 
