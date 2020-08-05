@@ -63,7 +63,9 @@ module.exports.checkIsUserInSomeRoomAndSendResult = async (req, res, next) => {
         const player = currentGameRoom.players.find(player=> player._id == _id);
         currentGameRoom.isOwner = currentGameRoom.owner._id == _id;
         currentGameRoom.isReady = player.isReady;
-        currentGameRoom.isCurrentRoom = true;
+        if (currentGameRoom.gameStatus !== GAME_STATUS.ENDED) {
+            currentGameRoom.isCurrentRoom = true;
+        }
         res.send(currentGameRoom);
     }
     catch(e) {

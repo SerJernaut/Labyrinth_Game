@@ -151,6 +151,7 @@ function gameRoomsReducer (state = initialState, action) {
             const gameRoomData = gameRoomsDataClone.get(gameRoomId);
             gameRoomData.winner = winner;
             gameRoomData.gameStatus = GAME_ROOM_STATUS.ENDED;
+            gameRoomData.isCurrentRoom = false;
             gameRoomsDataClone.set(gameRoomId, gameRoomData);
             return {
                 ...state,
