@@ -41,10 +41,10 @@ const GameRoomItem = ({gameRoomData: {_id, gameStatus, maxPlayers, areaSize, pla
                 </p></Col>
             </Row>
             <Row className={primaryRowMg}>
-                <Col>
+                {gameStatus !== GAME_ROOM_STATUS.ENDED &&  <Col>
                     <p>Number of players: <br/><span className={numberOfPlayersClassName}>{players.length}</span><span className={styles.item}>{gameStatus === CONSTANTS.GAME_ROOM_STATUS.EXPECTED &&  `/${maxPlayers}`}</span>
                 </p>
-                </Col>
+                </Col>}
                 <Col>
                     <p>
                         Room owner: <br/><span className={styles.item}>{nickName}</span>
