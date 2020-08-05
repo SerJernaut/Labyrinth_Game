@@ -68,6 +68,12 @@ class GameController extends WebSocket{
 
     onSendWinner = () => {
         this.socket.on(SEND_WINNER, ({gameRoomId, winner})=> {
+            if (this.getState().authStore.user._id === winner._id) {
+                toast.success('You found the treasure and won the game! Congratulations!')
+            }
+            else {
+                toast.error(`${winner.nickName} won the game! You lost!`)
+            }
             this.dispatch(createSetWinnerSuccessAction(gameRoomId, winner))
         })
     }
