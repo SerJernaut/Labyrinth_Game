@@ -157,7 +157,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 <Row key={index}>
                     {boardCellsRow.map((boardCell, index)=> (
                         <Col key={index + boardCell.cellIndex} className="p-0">
-                            <div className={classNames(styles.boardCellContainer, {[styles.explored]: boardCell.usersWhoExplored.find(id=> id === user._id)})}>
+                            <div className={classNames(styles.boardCellContainer, {[styles.explored]: boardCell.usersWhoExplored.find(id=> id === user._id)}, {[styles.hasTreasure]: boardCell.hasTreasure})}>
                                 <div className={classNames(styles.plug, "d-flex justify-content-center align-items-center")}>
                                     {boardCell.standingUsers.find(id => id === user._id) && <div className={styles.stayingCircle}>
                                     </div>}
@@ -180,7 +180,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 break;
             }
             case MOVE_DIRECTION.RIGHT: {
-                for(let i = Math.sqrt(areaSize) - 1; i < areaSize; i+= areaSize) {
+                for(let i = Math.sqrt(areaSize) - 1; i < areaSize; i+= Math.sqrt(areaSize)) {
                     notAllowedToTurnCellsIndexes.push(i);
                 }
                 break;
@@ -206,7 +206,6 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
         boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(user._id);
         if (boardCellsClone[newCurrentBoardCellIndex].hasTreasure) {
             setWinner(_id, user);
-            toast.success( `It's a treasure! You are winner!`)
         }
     }
 
@@ -316,17 +315,17 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 </div>
             </div>}
             {gameStatus !== GAME_ROOM_STATUS.EXPECTED &&
-                <>
-                <Container fluid className='w-50'>
+                <div className="d-flex flex-column justify-content-center min-vh-100">
+                <Container fluid className={classNames(styles.container)}>
                     {boardCellsRows}
                 </Container>
-                {gameStatus === GAME_ROOM_STATUS.PLAYING && whoseMove && whoseMove._id === user._id && <h1 className="h1 mb-0">Take a step, all players waiting until you take a step</h1>}
+                {gameStatus === GAME_ROOM_STATUS.PLAYING && whoseMove && whoseMove._id === user._id && <h1 className={classNames("mb-0", styles.notice)}>Take a step, all players waiting until you take a step</h1>}
                 {gameStatus === GAME_ROOM_STATUS.PLAYING && whoseMove && whoseMove._id === user._id && HANDLE_KEYS_ARR.map(key=> (<KeyboardEventHandler handleKeys={[key]}
                     onKeyEvent={(key, e)=> moveInTheSpecifiedDirection(matchKeyWithMoveDirection(key))}
                     />))}
-                {gameStatus === GAME_ROOM_STATUS.PLAYING && whoseMove._id !== user._id && <h1 className="h1 mb-0">Wait until {whoseMove.nickName} take a step</h1>}
-                {gameStatus === GAME_ROOM_STATUS.ENDED && winner && <h1 className="h1 mb-0">{winner.nickName === user.nickName ? 'You' : winner.nickName} won the game!</h1>}
-                    </>
+                {gameStatus === GAME_ROOM_STATUS.PLAYING && whoseMove._id !== user._id && <h1 className={classNames("mb-0", styles.notice)}>Wait until {whoseMove.nickName} take a step</h1>}
+                {gameStatus === GAME_ROOM_STATUS.ENDED && winner && <h1 className={classNames("mb-0", styles.notice)}>{winner.nickName === user.nickName ? 'You' : winner.nickName} won the game!</h1>}
+                </div>
             }
 
         </>
