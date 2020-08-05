@@ -63,9 +63,7 @@ module.exports.checkIsUserInSomeRoomAndSendResult = async (req, res, next) => {
         const player = currentGameRoom.players.find(player=> player._id == _id);
         currentGameRoom.isOwner = currentGameRoom.owner._id == _id;
         currentGameRoom.isReady = player.isReady;
-        if (currentGameRoom.gameStatus !== GAME_STATUS.ENDED) {
-            currentGameRoom.isCurrentRoom = true;
-        }
+        currentGameRoom.isCurrentRoom = currentGameRoom.gameStatus !== GAME_STATUS.ENDED;
         res.send(currentGameRoom);
     }
     catch(e) {
@@ -151,6 +149,7 @@ module.exports.setWinnerAndEmit = async (req, res, next) => {
         const gameData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});
         gameData.winner = winner._id;
         gameData.gameStatus = GAME_STATUS.ENDED;
+        gameData.players = [];
         gameData.save();
         socketController.socketController.gameController.emitSendWinner(gameRoomId, winner);
         res.end();
