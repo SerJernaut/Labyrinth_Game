@@ -16,7 +16,8 @@ const SOCKET = {
   UNSUBSCRIBE_GAME_ROOM: 'unsubscribeGameRoom',
   REMOVE_GAME_ROOM: 'removeGameRoom',
   CHANGE_READY_STATUS: 'changeReadyStatus',
-  SEND_BOARD_CELLS: 'sendBoardCells'
+  SEND_BOARD_CELLS: 'sendBoardCells',
+  SEND_WINNER: 'sendWinner'
 };
 const SERVER_PORT = 3001;
 const MONGODB_URL = 'mongodb://localhost:27017/labyrinth_db';

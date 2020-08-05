@@ -22,6 +22,7 @@ const CONSTANTS = {
         SUBSCRIBE_GAME_ROOM: 'subscribeGameRoom',
         UNSUBSCRIBE_GAME_ROOM: 'unsubscribeGameRoom',
         REMOVE_GAME_ROOM: 'removeGameRoom',
+        SEND_WINNER: 'sendWinner',
         SEND_BOARD_CELLS: 'sendBoardCells'
     },
     NUMBER_OF_PLAYERS: {
@@ -39,7 +40,7 @@ const CONSTANTS = {
         RIGHT: 'right',
         UP: 'up',
         DOWN: 'down'
-    }
+    },
 }
 
 export default CONSTANTS;

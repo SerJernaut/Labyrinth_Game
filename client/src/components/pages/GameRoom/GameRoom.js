@@ -4,7 +4,7 @@ import {
     createChangeReadyStatusRequestAction,
     createCheckIsUserInSomeRoomRequestAction,
     createLeaveGameRoomRequestAction,
-    createRemoveGameRoomRequestAction, createSetBoardCellsRequestAction,
+    createRemoveGameRoomRequestAction, createSetBoardCellsRequestAction, createSetWinnerRequestAction,
     createStartGameRequestAction,
 } from "../../../actions/actionCreators";
 import PropTypes from 'prop-types';
@@ -46,7 +46,7 @@ const chunkArray = (arr, chunk_size) =>{
 }
 
 
-const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, error}, authStore: {user: {_id: userId}}, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, startGame, setBoardCells}) => {
+const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, error}, authStore: {user}, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, startGame, setBoardCells, setWinner}) => {
 
     const prevState = usePrevious({gameRoomsData});
 
@@ -84,7 +84,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
 
     if (gameRoomsData.size === 0) {return null}
 
-    const {_id, gameStatus, owner, players, maxPlayers, areaSize, isOwner, isReady, boardCells, whoseMove} = [...gameRoomsData.values()][0];
+    const {_id, gameStatus, owner, players, maxPlayers, areaSize, isOwner, isReady, boardCells, whoseMove, winner} = [...gameRoomsData.values()][0];
 
     const leaveGameRoomById = () => {
         leaveGameRoom(_id, history)
@@ -157,9 +157,9 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 <Row key={index}>
                     {boardCellsRow.map((boardCell, index)=> (
                         <Col key={index + boardCell.cellIndex} className="p-0">
-                            <div className={classNames(styles.boardCellContainer, {[styles.explored]: boardCell.usersWhoExplored.find(id=> id === userId)})}>
+                            <div className={classNames(styles.boardCellContainer, {[styles.explored]: boardCell.usersWhoExplored.find(id=> id === user._id)})}>
                                 <div className={classNames(styles.plug, "d-flex justify-content-center align-items-center")}>
-                                    {boardCell.standingUsers.find(id => id === userId) && <div className={styles.stayingCircle}>
+                                    {boardCell.standingUsers.find(id => id === user._id) && <div className={styles.stayingCircle}>
                                     </div>}
                                 </div>
                             </div>
@@ -201,31 +201,36 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
         return notAllowedToTurnCellsIndexes;
     }
 
-    const setNewBoardCellsValues = (moveDirection, boardCellsClone, currentBoardCellIndex) => {
-        boardCellsClone[currentBoardCellIndex].standingUsers = boardCellsClone[currentBoardCellIndex].standingUsers.filter(u=> u !== userId);
+    const setNewBoardCellsValues = (boardCellsClone, newCurrentBoardCellIndex) => {
+        boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(user._id);
+        boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(user._id);
+        if (boardCellsClone[newCurrentBoardCellIndex].hasTreasure) {
+            setWinner(_id, user);
+            toast.success( `It's a treasure! You are winner!`)
+        }
+    }
+
+    const generateNewCurrentBoardCellIndexAndSetNewData = (moveDirection, boardCellsClone, currentBoardCellIndex) => {
+        boardCellsClone[currentBoardCellIndex].standingUsers = boardCellsClone[currentBoardCellIndex].standingUsers.filter(u=> u !== user._id);
         switch (moveDirection) {
             case MOVE_DIRECTION.LEFT: {
                 const newCurrentBoardCellIndex = currentBoardCellIndex - 1;
-                boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(userId);
-                boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(userId);
+                setNewBoardCellsValues(boardCellsClone, newCurrentBoardCellIndex);
                 break;
             }
             case MOVE_DIRECTION.RIGHT: {
                 const newCurrentBoardCellIndex = currentBoardCellIndex + 1;
-                boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(userId);
-                boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(userId);
+                setNewBoardCellsValues(boardCellsClone, newCurrentBoardCellIndex);
                 break;
             }
             case MOVE_DIRECTION.TOP: {
                 const newCurrentBoardCellIndex = currentBoardCellIndex - Math.sqrt(areaSize);
-                boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(userId);
-                boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(userId);
+                setNewBoardCellsValues(boardCellsClone, newCurrentBoardCellIndex);
                 break;
             }
             case MOVE_DIRECTION.BOTTOM: {
                 const newCurrentBoardCellIndex = currentBoardCellIndex + Math.sqrt(areaSize);
-                boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(userId);
-                boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(userId);
+                setNewBoardCellsValues(boardCellsClone, newCurrentBoardCellIndex);
                 break;
             }
         }
@@ -234,7 +239,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
 
     const moveInTheSpecifiedDirection = moveDirection => {
         const boardCellsClone = _.cloneDeep(boardCells);
-        const currentBoardCellIndex = boardCellsClone.findIndex(boardCell=> boardCell.standingUsers.find(u=> u === userId))
+        const currentBoardCellIndex = boardCellsClone.findIndex(boardCell=> boardCell.standingUsers.find(u=> u === user._id))
         const notAllowedToTurnCellsIndexes = generateNotAllowedIndexes(moveDirection);
         const currentBoardCellIndexAmongArrOfIndexes = notAllowedToTurnCellsIndexes.find(i=> i === currentBoardCellIndex)
         if (currentBoardCellIndexAmongArrOfIndexes || currentBoardCellIndexAmongArrOfIndexes === 0) {
@@ -252,7 +257,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
             else {
                 newWhoseMove = playersClone[0];
             }
-            setBoardCells(_id, setNewBoardCellsValues(moveDirection, boardCellsClone, currentBoardCellIndex), newWhoseMove)
+            setBoardCells(_id, generateNewCurrentBoardCellIndexAndSetNewData(moveDirection, boardCellsClone, currentBoardCellIndex), newWhoseMove)
         }
     }
 
@@ -310,18 +315,20 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                     <Link className='primaryLink' to={ '/' }>Show another existing play rooms</Link>
                 </div>
             </div>}
-            {gameStatus === GAME_ROOM_STATUS.PLAYING &&
+            {gameStatus !== GAME_ROOM_STATUS.EXPECTED &&
                 <>
                 <Container fluid className='w-50'>
                     {boardCellsRows}
                 </Container>
-                {whoseMove && whoseMove._id === userId && <h1 className="h1 mb-0">Take a step, all players waiting until you take a step</h1>}
-                    {whoseMove && whoseMove._id === userId && HANDLE_KEYS_ARR.map(key=> (<KeyboardEventHandler handleKeys={[key]}
+                {gameStatus === GAME_ROOM_STATUS.PLAYING && whoseMove && whoseMove._id === user._id && <h1 className="h1 mb-0">Take a step, all players waiting until you take a step</h1>}
+                {gameStatus === GAME_ROOM_STATUS.PLAYING && whoseMove && whoseMove._id === user._id && HANDLE_KEYS_ARR.map(key=> (<KeyboardEventHandler handleKeys={[key]}
                     onKeyEvent={(key, e)=> moveInTheSpecifiedDirection(matchKeyWithMoveDirection(key))}
                     />))}
-                {whoseMove._id !== userId && <h1 className="h1 mb-0">Wait until {whoseMove.nickName} take a step</h1>}
-                </>
+                {gameStatus === GAME_ROOM_STATUS.PLAYING && whoseMove._id !== user._id && <h1 className="h1 mb-0">Wait until {whoseMove.nickName} take a step</h1>}
+                {gameStatus === GAME_ROOM_STATUS.ENDED && winner && <h1 className="h1 mb-0">{winner.nickName === user.nickName ? 'You' : winner.nickName} won the game!</h1>}
+                    </>
             }
+
         </>
     );
 };
@@ -337,6 +344,7 @@ GameRoom.propTypes = {
     changeReady: PropTypes.func.isRequired,
     startGame: PropTypes.func.isRequired,
     setBoardCells: PropTypes.func.isRequired,
+    setWinner: PropTypes.func.isRequired,
     error: PropTypes.object
 }
 
@@ -351,7 +359,8 @@ const mapDispatchToProps = dispatch => ({
     removeGameRoom: (gameRoomId, history) => dispatch(createRemoveGameRoomRequestAction(gameRoomId, history)),
     changeReady: (isReady, gameRoomId) => dispatch(createChangeReadyStatusRequestAction(isReady, gameRoomId)),
     startGame: (gameRoomId, boardCells) => dispatch(createStartGameRequestAction(gameRoomId, boardCells)),
-    setBoardCells: (gameRoomId, boardCells, whoseMove) => dispatch(createSetBoardCellsRequestAction(gameRoomId, boardCells, whoseMove))
+    setBoardCells: (gameRoomId, boardCells, whoseMove) => dispatch(createSetBoardCellsRequestAction(gameRoomId, boardCells, whoseMove)),
+    setWinner: (gameRoomId, winner) => dispatch(createSetWinnerRequestAction(gameRoomId, winner))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);

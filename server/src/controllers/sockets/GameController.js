@@ -5,7 +5,9 @@ const {SOCKET: {
     SEND_JOINED_GAME_ROOM_PLAYER,
     SEND_LEFT_GAME_ROOM_PLAYER,
     CHANGE_READY_STATUS,
-    SEND_BOARD_CELLS}} = require('../../constants')
+    SEND_BOARD_CELLS,
+    SEND_WINNER
+}} = require('../../constants')
 
 
 class GameController extends WebSocket{
@@ -43,6 +45,11 @@ class GameController extends WebSocket{
     emitSendBoardCells (gameRoomId, boardCells, whoseMove) {
         this.io.to(gameRoomId).emit(SEND_BOARD_CELLS, {gameRoomId, boardCells, whoseMove})
     }
+
+    emitSendWinner (gameRoomId, winner) {
+        this.io.to(gameRoomId).emit(SEND_WINNER, {gameRoomId, winner})
+    }
+
 }
 
 module.exports = GameController;

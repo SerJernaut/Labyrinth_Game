@@ -1,5 +1,5 @@
 const gameController = require("../controllers/gameController");
-const {GAME_ROOM_SCHEMA, LIMIT_SKIP_SCHEMA, GAME_ID_SCHEMA, SET_BOARD_CELLS_SCHEMA, START_GAME_SCHEMA} = require("../utils/validation");
+const {GAME_ROOM_SCHEMA, LIMIT_SKIP_SCHEMA, GAME_ID_SCHEMA, SET_BOARD_CELLS_SCHEMA, START_GAME_SCHEMA, SET_WINNER_SCHEMA} = require("../utils/validation");
 const {createValidationMW} = require("../middlewares/validation/createValidationMW");
 const onlyForGameRoomOwner = require('../middlewares/game/onlyForGameRoomOwner');
 const userController = require('../controllers/userController/index');
@@ -48,6 +48,10 @@ gameRouter.post('/start_game',
 
 gameRouter.post('/set_board_cells',
     createValidationMW(SET_BOARD_CELLS_SCHEMA),
-    gameController.setBoardCellsAndEmit)
+    gameController.setBoardCellsAndEmit);
+
+gameRouter.post('/set_winner',
+    createValidationMW(SET_WINNER_SCHEMA),
+    gameController.setWinnerAndEmit);
 
 module.exports = gameRouter;

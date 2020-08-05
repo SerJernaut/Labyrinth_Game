@@ -142,3 +142,18 @@ module.exports.setBoardCellsAndEmit = async (req, res, next) => {
         next(e);
     }
 }
+
+module.exports.setWinnerAndEmit = async (req, res, next) => {
+    try{
+        const {body: {gameRoomId, winner}} = req;
+        const gameData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});
+        gameData.winner = winner._id;
+        gameData.gameStatus = GAME_STATUS.ENDED;
+        gameData.save();
+        socketController.socketController.gameController.emitSendWinner(gameRoomId, winner);
+        res.end();
+    }
+    catch(e) {
+        next(e);
+    }
+}

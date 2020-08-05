@@ -10,3 +10,4 @@ export const getReadyPlayer = (data) => axiosInstance.post('/get_ready_player', 
 export const getUnreadyPlayer = (data) => axiosInstance.post('/get_unready_player', data);
 export const startGame = (data) => axiosInstance.post('/start_game', data);
 export const setBoardCells = (data) => axiosInstance.post('/set_board_cells', data);
+export const setWinner = (data) => axiosInstance.post('/set_winner', data);

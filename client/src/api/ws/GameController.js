@@ -2,7 +2,7 @@ import WebSocket from "./WebSocket";
 import CONSTANTS from "../../constants";
 import {toast} from "react-toastify";
 import {
-    createChangeReadyStatusSuccessAction, createSetBoardCellsSuccessAction,
+    createChangeReadyStatusSuccessAction, createSetBoardCellsSuccessAction, createSetWinnerSuccessAction,
     createStartGameSuccessAction
 } from "../../actions/actionCreators";
 
@@ -12,7 +12,8 @@ const {SOCKET: {
     SEND_JOINED_GAME_ROOM_PLAYER,
     SEND_LEFT_GAME_ROOM_PLAYER,
     CHANGE_READY_STATUS,
-    SEND_BOARD_CELLS}} = CONSTANTS
+    SEND_BOARD_CELLS,
+    SEND_WINNER}} = CONSTANTS
 
 class GameController extends WebSocket{
     constructor(dispatch, getState, room) {
@@ -25,6 +26,7 @@ class GameController extends WebSocket{
         this.onSendLeftGameRoomPlayer();
         this.onChangeReadyStatus();
         this.onSendBoardCells();
+        this.onSendWinner();
     };
 
     subscribeGameRoom = (id) => {
@@ -61,6 +63,12 @@ class GameController extends WebSocket{
             else {
                 this.dispatch(createSetBoardCellsSuccessAction(gameRoomId, boardCells, whoseMove))
             }
+        })
+    }
+
+    onSendWinner = () => {
+        this.socket.on(SEND_WINNER, ({gameRoomId, winner})=> {
+            this.dispatch(createSetWinnerSuccessAction(gameRoomId, winner))
         })
     }
 }
