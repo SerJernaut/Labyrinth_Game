@@ -12,7 +12,7 @@ const schema = {
 };
 
 
-const refreshTokenSchema = mongoose.Schema(schema);
+const refreshTokenSchema = mongoose.Schema(schema, { versionKey: false });
 const RefreshToken = mongoose.model("RefreshToken", refreshTokenSchema);
 
 module.exports = RefreshToken;

@@ -8,12 +8,11 @@ module.exports.createGameRoomDataAndSend = async (req, res, next) => {
         const {authorizationData: {_id: id}, body} = req;
         const gameRoomData = await gameQueries.createGameRoomDataByPredicate({owner: id, ...body}, id);
         const objGameRoomData = gameRoomData.toObject();
-        const {_v, ...rest} = objGameRoomData;
-        socketController.socketController.appController.emitCreateGameRoom(rest, true);
-        rest.isOwner = true;
-        rest.isCurrentRoom = true;
+        socketController.socketController.appController.emitCreateGameRoom(objGameRoomData, true);
+        objGameRoomData.isOwner = true;
+        objGameRoomData.isCurrentRoom = true;
         res.send (
-                rest
+            objGameRoomData
         )
     } catch (e) {
         next(e);
@@ -23,8 +22,7 @@ module.exports.createGameRoomDataAndSend = async (req, res, next) => {
 module.exports.getPaginatedGameRoomsAndSend = async (req, res, next) => {
     try{
         const {body: {skip, limit}, authorizationData: {_id}} = req;
-        let gameRoomsData = await gameQueries.getGameRoomsByPredicate({}, skip, limit);
-        gameRoomsData = gameRoomsData.map(({__v, ...rest})=> rest);
+        const gameRoomsData = await gameQueries.getGameRoomsByPredicate({}, skip, limit);
         if (skip === 0) {
             const firstGameRoomData = gameRoomsData[0];
             if (firstGameRoomData) {

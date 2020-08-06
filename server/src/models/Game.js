@@ -24,13 +24,13 @@ const schema = {
         enum: [9, 16, 25],
         required: true,
     },
-    players: [{...modelRefs.userRef, unique: true, required: true}],
+    players: [{...modelRefs.userRef, required: true}],
     whoseMove: { ...modelRefs.userRef, required: false},
     boardCells: [boardCellSchema],
     winner: {...modelRefs.userRef}
 };
 
-const gameSchema = mongoose.Schema(schema);
+const gameSchema = mongoose.Schema(schema, { versionKey: false });
 autoIncrement.initialize(mongoose.connection);
 gameSchema.plugin(autoIncrement.plugin, "Game");
 const Game = mongoose.model("Game", gameSchema);

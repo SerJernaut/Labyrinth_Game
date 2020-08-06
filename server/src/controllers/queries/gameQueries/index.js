@@ -5,7 +5,7 @@ module.exports.createGameRoomDataByPredicate = async (predicate, ownerId) => {
     let createdGame = await Game.create(predicate);
         createdGame.players.push(ownerId);
         createdGame.save();
-        createdGame = await createdGame.populate('owner', '-password -__v').populate('players', '-password -__v').execPopulate();
+        createdGame = await createdGame.populate('owner', '-password ').populate('players', '-password').execPopulate();
     if (createdGame) {
         return createdGame;
     }
@@ -13,7 +13,7 @@ module.exports.createGameRoomDataByPredicate = async (predicate, ownerId) => {
 }
 
 module.exports.getGameRoomsByPredicate = async (predicate, skip, limit) => {
-    const foundedGameRooms = await Game.find(predicate).lean().populate('owner', '-password -__v').skip(skip).limit(limit);
+    const foundedGameRooms = await Game.find(predicate).lean().populate('owner', '-password').skip(skip).limit(limit);
     if (foundedGameRooms) {
         return foundedGameRooms;
     }
@@ -21,7 +21,7 @@ module.exports.getGameRoomsByPredicate = async (predicate, skip, limit) => {
 }
 
 module.exports.updateGameRoomByPredicate = async (findParam, updateParam) => {
-    const updatedGame = await Game.findByIdAndUpdate(findParam, updateParam, {new: true}).lean().populate('owner', '-password -__v').populate('players', '-password -__v');
+    const updatedGame = await Game.findByIdAndUpdate(findParam, updateParam, {new: true}).lean().populate('owner', '-password').populate('players', '-password');
     if (updatedGame) {
         return updatedGame;
     }
@@ -29,15 +29,15 @@ module.exports.updateGameRoomByPredicate = async (findParam, updateParam) => {
 }
 
 module.exports.checkIsUserInSomeRoom = async (userId) => {
-    const foundedGameRoom = await Game.findOne({players: {"$in": [userId]}}).lean().populate('owner', '-password -__v').populate('players', '-password -__v').populate('whoseMove', '-password -__v').populate('winner', '-password -__v');
+    const foundedGameRoom = await Game.findOne({players: {"$in": [userId]}}).lean().populate('owner', '-password').populate('players', '-password').populate('whoseMove', '-password').populate('winner', '-password');
     if (foundedGameRoom) {
-        return ((({__v, ...rest})=> rest) (foundedGameRoom))
+        return foundedGameRoom;
     }
     throw new NotFoundError('can not find the room')
 }
 
 module.exports.findGameRoomDataByPredicate = async (predicate) => {
-    const foundedGameRoom = await Game.findOne(predicate).populate('players', '-password -__v');
+    const foundedGameRoom = await Game.findOne(predicate).populate('players', '-password');
     if (foundedGameRoom) {
         return foundedGameRoom;
     }

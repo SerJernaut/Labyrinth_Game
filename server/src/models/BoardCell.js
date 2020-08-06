@@ -17,7 +17,7 @@ const schema = {
     }
 };
 
-const boardCellSchema = mongoose.Schema(schema);
+const boardCellSchema = mongoose.Schema(schema, { versionKey: false });
 const BoardCell = mongoose.model("BoardCell", boardCellSchema);
 
 module.exports = {boardCellSchema, BoardCell};
