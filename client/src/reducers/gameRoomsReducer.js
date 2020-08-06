@@ -23,8 +23,7 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.REMOVE_GAME_ROOM_REQUEST:
         case ACTION_TYPES.CHANGE_READY_STATUS_REQUEST:
         case ACTION_TYPES.START_GAME_REQUEST:
-        case ACTION_TYPES.SET_BOARD_CELLS_REQUEST:
-        case ACTION_TYPES.SET_WINNER_REQUEST: {
+        case ACTION_TYPES.SET_BOARD_CELLS_REQUEST: {
             return {
                 ...state,
                 isFetching: true,
@@ -135,23 +134,16 @@ function gameRoomsReducer (state = initialState, action) {
             }
         }
         case ACTION_TYPES.SET_BOARD_CELLS_SUCCESS: {
-            const {gameRoomId, boardCells, whoseMove} = action;
+            const {gameRoomId, boardCells, whoseMove, winner} = action;
             const gameRoomData = gameRoomsDataClone.get(gameRoomId);
             gameRoomData.boardCells = boardCells;
-            gameRoomData.whoseMove = whoseMove;
-            gameRoomsDataClone.set(gameRoomId, gameRoomData);
-            return {
-                ...state,
-                isFetching: false,
-                gameRoomsData: gameRoomsDataClone
+            if (whoseMove) {
+                gameRoomData.whoseMove = whoseMove;
             }
-        }
-        case ACTION_TYPES.SET_WINNER_SUCCESS: {
-            const {gameRoomId, winner} = action;
-            const gameRoomData = gameRoomsDataClone.get(gameRoomId);
-            gameRoomData.winner = winner;
-            gameRoomData.gameStatus = GAME_ROOM_STATUS.ENDED;
-            gameRoomData.isCurrentRoom = false;
+            else {
+                gameRoomData.winner = winner;
+                gameRoomData.gameStatus = GAME_ROOM_STATUS.ENDED;
+            }
             gameRoomsDataClone.set(gameRoomId, gameRoomData);
             return {
                 ...state,
@@ -167,8 +159,7 @@ function gameRoomsReducer (state = initialState, action) {
         case ACTION_TYPES.REMOVE_GAME_ROOM_ERROR:
         case ACTION_TYPES.CHANGE_READY_STATUS_ERROR:
         case ACTION_TYPES.START_GAME_ERROR:
-        case ACTION_TYPES.SET_BOARD_CELLS_ERROR:
-        case ACTION_TYPES.SET_WINNER_ERROR: {
+        case ACTION_TYPES.SET_BOARD_CELLS_ERROR: {
             return {
                 ...state,
                 isFetching: false,

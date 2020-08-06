@@ -50,8 +50,5 @@ gameRouter.post('/set_board_cells',
     createValidationMW(SET_BOARD_CELLS_SCHEMA),
     gameController.setBoardCellsAndEmit);
 
-gameRouter.post('/set_winner',
-    createValidationMW(SET_WINNER_SCHEMA),
-    gameController.setWinnerAndEmit);
 
 module.exports = gameRouter;

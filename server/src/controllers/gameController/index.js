@@ -1,6 +1,7 @@
 const gameQueries = require('../queries/gameQueries');
 const socketController = require("../../app");
 const {GAME_STATUS} = require('../../constants')
+const userQueries = require('../queries/userQueries')
 
 module.exports.createGameRoomDataAndSend = async (req, res, next) => {
     try {
@@ -130,31 +131,27 @@ module.exports.startGame = async (req, res, next) => {
 
 module.exports.setBoardCellsAndEmit = async (req, res, next) => {
     try{
-        const {body: {gameRoomId, boardCells, whoseMove}} = req;
+        const {body: {gameRoomId, boardCells, whoseMove}, authorizationData: {_id}} = req;
         const gameData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});
         gameData.boardCells = boardCells;
-        gameData.whoseMove = whoseMove._id;
-        gameData.save();
-        socketController.socketController.gameController.emitSendBoardCells(gameRoomId, boardCells, whoseMove)
-        res.end();
+        if (boardCells.find(boardCell=> boardCell.hasTreasure && !!boardCell.standingUsers.find(id=> id === _id))){
+            const user = await userQueries.findUserByPredicate({_id});
+            gameData.winner = _id;
+            gameData.gameStatus = GAME_STATUS.ENDED;
+            gameData.players = [];
+            console.log(gameData.winner)
+            gameData.save();
+            socketController.socketController.gameController.emitSendBoardCells(gameRoomId, boardCells, null, user)
+        }
+        else {
+            gameData.whoseMove = whoseMove._id;
+            console.log(gameData.whoseMove)
+            gameData.save();
+            socketController.socketController.gameController.emitSendBoardCells(gameRoomId, boardCells, whoseMove, null)
+        }
+        res.end()
     }
     catch (e) {
-        next(e);
-    }
-}
-
-module.exports.setWinnerAndEmit = async (req, res, next) => {
-    try{
-        const {body: {gameRoomId, winner}} = req;
-        const gameData = await gameQueries.findGameRoomDataByPredicate({_id: gameRoomId});
-        gameData.winner = winner._id;
-        gameData.gameStatus = GAME_STATUS.ENDED;
-        gameData.players = [];
-        gameData.save();
-        socketController.socketController.gameController.emitSendWinner(gameRoomId, winner);
-        res.end();
-    }
-    catch(e) {
         next(e);
     }
 }

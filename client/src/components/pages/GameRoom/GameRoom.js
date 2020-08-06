@@ -4,7 +4,8 @@ import {
     createChangeReadyStatusRequestAction,
     createCheckIsUserInSomeRoomRequestAction,
     createLeaveGameRoomRequestAction,
-    createRemoveGameRoomRequestAction, createSetBoardCellsRequestAction, createSetWinnerRequestAction,
+    createRemoveGameRoomRequestAction,
+    createSetBoardCellsRequestAction,
     createStartGameRequestAction,
 } from "../../../actions/actionCreators";
 import PropTypes from 'prop-types';
@@ -46,7 +47,7 @@ const chunkArray = (arr, chunk_size) =>{
 }
 
 
-const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, error}, authStore: {user}, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, startGame, setBoardCells, setWinner}) => {
+const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, error}, authStore: {user}, checkIsUserInSomeRoom, leaveGameRoom, removeGameRoom, changeReady, startGame, setBoardCells}) => {
 
     const prevState = usePrevious({gameRoomsData});
 
@@ -151,7 +152,6 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
 
     const boardCellsPreparedRows = chunkArray(boardCells, Math.sqrt(areaSize));
 
-
     const boardCellsRows = boardCellsPreparedRows.map((boardCellsRow, index)=> (
       (
                 <Row key={index}>
@@ -204,9 +204,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
     const setNewBoardCellsValues = (boardCellsClone, newCurrentBoardCellIndex) => {
         boardCellsClone[newCurrentBoardCellIndex].standingUsers.push(user._id);
         boardCellsClone[newCurrentBoardCellIndex].usersWhoExplored.push(user._id);
-        if (boardCellsClone[newCurrentBoardCellIndex].hasTreasure) {
-            setWinner(_id, user);
-        }
+
     }
 
     const generateNewCurrentBoardCellIndexAndSetNewData = (moveDirection, boardCellsClone, currentBoardCellIndex) => {
@@ -343,7 +341,6 @@ GameRoom.propTypes = {
     changeReady: PropTypes.func.isRequired,
     startGame: PropTypes.func.isRequired,
     setBoardCells: PropTypes.func.isRequired,
-    setWinner: PropTypes.func.isRequired,
     error: PropTypes.object
 }
 
@@ -359,7 +356,6 @@ const mapDispatchToProps = dispatch => ({
     changeReady: (isReady, gameRoomId) => dispatch(createChangeReadyStatusRequestAction(isReady, gameRoomId)),
     startGame: (gameRoomId, boardCells) => dispatch(createStartGameRequestAction(gameRoomId, boardCells)),
     setBoardCells: (gameRoomId, boardCells, whoseMove) => dispatch(createSetBoardCellsRequestAction(gameRoomId, boardCells, whoseMove)),
-    setWinner: (gameRoomId, winner) => dispatch(createSetWinnerRequestAction(gameRoomId, winner))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);

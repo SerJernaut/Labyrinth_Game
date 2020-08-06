@@ -32,9 +32,6 @@ const {AUTH_REQUEST,
   SET_BOARD_CELLS_REQUEST,
   SET_BOARD_CELLS_SUCCESS,
   SET_BOARD_CELLS_ERROR,
-  SET_WINNER_REQUEST,
-  SET_WINNER_SUCCESS,
-  SET_WINNER_ERROR
   } = ACTION_TYPES;
 
 export const createAuthRequestAction = (values, isRegistration) => ( {
@@ -204,11 +201,12 @@ export const createSetBoardCellsRequestAction = (gameRoomId, boardCells, whoseMo
   whoseMove
 })
 
-export const createSetBoardCellsSuccessAction = (gameRoomId, boardCells, whoseMove) => ({
+export const createSetBoardCellsSuccessAction = (gameRoomId, boardCells, whoseMove, winner) => ({
   type: SET_BOARD_CELLS_SUCCESS,
   gameRoomId,
   boardCells,
-  whoseMove
+  whoseMove,
+  winner
 })
 
 export const createSetBoardCellsErrorAction = error => ({
@@ -216,21 +214,5 @@ export const createSetBoardCellsErrorAction = error => ({
   error
 })
 
-export const createSetWinnerRequestAction = (gameRoomId, winner) => ({
-  type: SET_WINNER_REQUEST,
-  gameRoomId,
-  winner
-})
-
-export const createSetWinnerSuccessAction = (gameRoomId, winner) => ({
-  type: SET_WINNER_SUCCESS,
-  gameRoomId,
-  winner
-})
-
-export const createSetWinnerErrorAction = error => ({
-  type: SET_WINNER_ERROR,
-  error
-})
 
 
