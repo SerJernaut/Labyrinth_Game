@@ -157,7 +157,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                 <Row key={index}>
                     {boardCellsRow.map((boardCell, index)=> (
                         <Col key={index + boardCell.cellIndex} className="p-0">
-                            <div className={classNames(styles.boardCellContainer, {[styles.explored]: boardCell.usersWhoExplored.find(id=> id === user._id)}, {[styles.hasTreasure]: boardCell.hasTreasure})}>
+                            <div className={classNames(styles.boardCellContainer, {[styles.explored]: boardCell.usersWhoExplored.find(id=> id === user._id)}, {[styles.hasTreasure]: boardCell.hasTreasure && boardCell.standingUsers.find(id=> id === user._id)})}>
                                 <div className={classNames(styles.plug, "d-flex justify-content-center align-items-center")}>
                                     {boardCell.standingUsers.find(id => id === user._id) && <div className={styles.stayingCircle}>
                                     </div>}
