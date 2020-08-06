@@ -113,8 +113,8 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
         });
 
         players.forEach(player=> {
-            const standingBoardCellIndex = Math.floor(Math.random() * areaSize);
             while (true) {
+                const standingBoardCellIndex = Math.floor(Math.random() * areaSize);
                 if (standingBoardCellIndex !== treasureBoardCellIndex) {
                     boardCells[standingBoardCellIndex].standingUsers.push(player._id);
                     boardCells[standingBoardCellIndex].usersWhoExplored.push(player._id);
