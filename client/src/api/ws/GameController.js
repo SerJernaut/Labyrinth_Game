@@ -38,13 +38,17 @@ class GameController extends WebSocket{
 
     onSendJoinedGameRoomPlayer = () => {
         this.socket.on(SEND_JOINED_GAME_ROOM_PLAYER, (newPlayerNickName)=> {
-            toast.success(`${newPlayerNickName} joined the room`)
+            if(this.getState().authStore.user.nickName !== newPlayerNickName) {
+                toast.success(`${newPlayerNickName} joined the room`)
+            }
         })
     }
 
     onSendLeftGameRoomPlayer = () => {
         this.socket.on(SEND_LEFT_GAME_ROOM_PLAYER, (leftGamePlayerNickName)=> {
-            toast.error(`${leftGamePlayerNickName} left the room`)
+            if(this.getState().authStore.user.nickName !== leftGamePlayerNickName) {
+                toast.error(`${leftGamePlayerNickName} left the room`)
+            }
         })
     }
 

@@ -104,7 +104,6 @@ module.exports.removeGameRoomById = async (req, res, next) => {
         await gameQueries.removeGameRoomByPredicate({_id: gameRoomId});
         socketController.socketController.appController.emitRemoveGameRoom(gameRoomId);
         res.end()
-
     }
     catch(e) {
         next(e);
