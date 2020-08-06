@@ -170,6 +170,7 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
         )
     ))
 
+
     const generateNotAllowedIndexes = moveDirection => {
         const notAllowedToTurnCellsIndexes = [];
         switch (moveDirection) {
@@ -280,11 +281,11 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
             {gameStatus === GAME_ROOM_STATUS.EXPECTED && <div className={styles.pageContainer}>
                 <div className={styles.waitingRoomContainer}>
                     {isOwner && players.length >= NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && players.every(player=> player.isReady) &&
-                        <Button onClick={startGameById}>Start game</Button>}
+                        <Button disabled={isFetching} onClick={startGameById}>Start game</Button>}
                     {isOwner && players.length >= NUMBER_OF_PLAYERS.MIN_GAME_PLAYERS && !players.every(player=> player.isReady) &&
                     <p className={styles.msgForOwner}>Wait until all players press ready</p>}
                     {isOwner && players.length === 1 && <p className={styles.msgForOwner}>You can not start the game solo, wait until other players join the game</p>}
-                    {!isOwner && <Button onClick={changeReadyStatus}>I'm {isReady ? 'not': ''} ready to play</Button>}
+                    {!isOwner && <Button disabled={isFetching} onClick={changeReadyStatus}>I'm {isReady ? 'not': ''} ready to play</Button>}
                     <p>
                         Game room status: <span className={gameStatusClassName}>{gameStatus}</span>
                     </p>
@@ -306,8 +307,8 @@ const GameRoom = ({history, match, gameRoomsStore: {gameRoomsData, isFetching, e
                     <p>
                         Labyrinth area size: <span>{areaSize}</span>
                     </p>
-                    {!isOwner && <Button onClick={leaveGameRoomById}>Leave game room</Button>}
-                    {isOwner && <Button onClick={removeGameRoomById}>Remove game room</Button>}
+                    {!isOwner && <Button disabled={isFetching} onClick={leaveGameRoomById}>Leave game room</Button>}
+                    {isOwner && <Button disabled={isFetching} onClick={removeGameRoomById}>Remove game room</Button>}
 
                     <Link className='primaryLink' to={ '/' }>Show another existing play rooms</Link>
                 </div>

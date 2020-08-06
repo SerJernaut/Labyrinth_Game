@@ -12,6 +12,12 @@
   color: black
   span
     font-weight: 800
+  @media screen and (max-width: 576px)
+    padding: 0 40px
+  p:not(:first-child)
+    @media screen and (max-width: 576px)
+      font-size: 18px
+      text-align: center
 
 .msgForOwner
   color: red
